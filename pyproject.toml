@@ -40,7 +40,7 @@ source = ["retrocookie"]
 
 [tool.coverage.report]
 show_missing = true
-fail_under = 100
+fail_under = 35
 
 [build-system]
 requires = ["poetry>=0.12"]
