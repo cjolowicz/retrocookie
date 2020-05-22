@@ -12,7 +12,10 @@ from .core import retrocookie
 @click.option(
     "--url",
     metavar="URL",
-    help="Repository URL for the template instance  [default: <URL of origin>-instance]",
+    help=(
+        "Repository URL for the template instance"
+        "  [default: <URL of origin>-instance]"
+    ),
 )
 @click.option(
     "--ref",

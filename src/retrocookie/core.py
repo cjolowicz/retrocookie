@@ -82,6 +82,7 @@ def get_replacements(
     context: Dict[str, str], whitelist: Container[str], blacklist: Container[str],
 ) -> List[Tuple[str, str]]:
     """Create replacements to be applied to commits from the template instance."""
+
     def ref(key: str) -> str:
         return f"{{{{cookiecutter.{key}}}}}"
 
