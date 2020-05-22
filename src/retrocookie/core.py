@@ -77,6 +77,7 @@ def rewrite_commits(
     whitelist: Container[str],
     blacklist: Container[str],
 ) -> None:
+    """Rewrite commits for template."""
     context = load_context()
     replacements = get_replacements(context, whitelist, blacklist)
     filter_branch(branch, template_directory, replacements)
