@@ -3,7 +3,12 @@ import json
 import subprocess  # noqa: S404
 import tempfile
 from pathlib import Path
-from typing import cast, Container, Dict, List, Optional, Tuple
+from typing import cast
+from typing import Container
+from typing import Dict
+from typing import List
+from typing import Optional
+from typing import Tuple
 
 
 NAMESPACE = "retrocookie"

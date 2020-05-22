@@ -1,9 +1,11 @@
 """Command-line interface."""
-from typing import Container, Optional
+from typing import Container
+from typing import Optional
 
 import click
 
-from .core import retrocookie, cleanup
+from .core import cleanup
+from .core import retrocookie
 
 
 @click.command()
