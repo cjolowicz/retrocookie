@@ -21,7 +21,7 @@ def exists_remote(remote: str) -> bool:
         ["git", "remote"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        text=True,
+        universal_newlines=True,
         check=True,
     )
     remotes = process.stdout.split()
@@ -45,7 +45,7 @@ def get_remote_url(remote: str) -> str:
         ["git", "remote", "get-url", remote],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        text=True,
+        universal_newlines=True,
         check=True,
     )
     return process.stdout.strip()
@@ -127,7 +127,7 @@ def get_current_branch() -> str:
         ["git", "rev-parse", "--abbrev-ref", "HEAD"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        text=True,
+        universal_newlines=True,
         check=True,
     )
     return process.stdout.strip()
@@ -179,7 +179,7 @@ def exists_branch(branch: str) -> bool:
         ["git", "show-ref", "--verify", "--quiet", "refs/heads/{branch}"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        text=True,
+        universal_newlines=True,
     )
     return process.returncode == 0
 
@@ -200,7 +200,7 @@ def find_branches() -> List[str]:
         ],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        text=True,
+        universal_newlines=True,
         check=True,
     )
     return process.stdout.split()
