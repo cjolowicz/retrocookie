@@ -3,7 +3,7 @@ import json
 import subprocess  # noqa: S404
 import tempfile
 from pathlib import Path
-from typing import cast, Container, Dict, List, Optional
+from typing import cast, Container, Dict, List, Optional, Tuple
 
 
 NAMESPACE = "retrocookie"
@@ -52,19 +52,6 @@ def create_branch(branch: str, remote: str, ref: str) -> None:
     )
 
 
-def load_context(
-    whitelist: Container[str], blacklist: Container[str]
-) -> Dict[str, str]:
-    with Path(".cookiecutter.json").open() as io:
-        data = cast(Dict[str, str], json.load(io))
-
-    return {
-        key: value
-        for key, value in data.items()
-        if key not in blacklist and not (whitelist and key not in whitelist)
-    }
-
-
 def find_template_directory() -> Path:
     tokens = "{{", "cookiecutter", "}}"
     for path in Path.cwd().iterdir():
@@ -73,28 +60,48 @@ def find_template_directory() -> Path:
     raise Exception("cannot find template directory")
 
 
-def filter_branch(
-    branch: str, template_directory: Path, context: Dict[str, str]
-) -> None:
+def load_context() -> Dict[str, str]:
+    with Path(".cookiecutter.json").open() as io:
+        return cast(Dict[str, str], json.load(io))
+
+
+def get_replacements(
+    context: Dict[str, str], whitelist: Container[str], blacklist: Container[str],
+) -> List[Tuple[str, str]]:
     def ref(key: str) -> str:
         return f"{{{{cookiecutter.{key}}}}}"
 
+    replacements = [
+        (value, ref(key))
+        for key, value in context.items()
+        if key not in blacklist and not (whitelist and key not in whitelist)
+    ]
+    replacements.extend(
+        [(token, token.join(('{{ "', '" }}'))) for token in ("{{", "}}")]
+    )
+
+    return replacements
+
+
+def filter_branch(
+    branch: str, template_directory: Path, replacements: List[Tuple[str, str]]
+) -> None:
     command = [
         "git",
         "filter-repo",
         "--force",
         f"--refs={branch}",
         f"--to-subdirectory-filter={template_directory.name}",
-        *(f"--path-rename={value}:{ref(key)}" for key, value in context.items()),
+        *(f"--path-rename={old}:{new}" for old, new in replacements),
     ]
 
     with tempfile.TemporaryDirectory() as tmpdir:
-        replacements = Path(tmpdir) / "replacements.txt"
-        replacements.write_text(
-            "\n".join(f"{value}==>{ref(key)}" for key, value in context.items())
+        replacements_file = Path(tmpdir) / "replacements.txt"
+        replacements_file.write_text(
+            "\n".join(f"{old}==>{new}" for old, new in replacements)
         )
 
-        command.append(f"--replace-text={replacements}")
+        command.append(f"--replace-text={replacements_file}")
         subprocess.run(command, check=True)
 
 
@@ -138,8 +145,9 @@ def retrocookie(
         add_remote(REMOTE, url)
         fetch_remote(REMOTE, ref)
         create_branch(branch, REMOTE, ref)
-        context = load_context(whitelist, blacklist)
-        filter_branch(branch, template_directory, context)
+        context = load_context()
+        replacements = get_replacements(context, whitelist, blacklist)
+        filter_branch(branch, template_directory, replacements)
         switch_branch(original_branch)
     finally:
         if exists_remote(REMOTE):
