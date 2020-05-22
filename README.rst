@@ -36,13 +36,13 @@ Retrocookie
 Features
 --------
 
-* TODO
+* Import commits from a Cookiecutter instance into the template
 
 
 Requirements
 ------------
 
-* TODO
+* Python 3.6+
 
 
 Installation
