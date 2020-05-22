@@ -16,6 +16,7 @@ REMOTE = "retrocookie-instance"
 
 
 def exists_remote(remote: str) -> bool:
+    """Return True if the remote exists."""
     process = subprocess.run(
         ["git", "remote"],
         stdout=subprocess.PIPE,
@@ -28,15 +29,18 @@ def exists_remote(remote: str) -> bool:
 
 
 def add_remote(remote: str, url: str) -> None:
+    """Add the remote with the given URL. Disallow push."""
     subprocess.run(["git", "remote", "add", remote, url], check=True)
     subprocess.run(["git", "remote", "set-url", "--push", remote, "none"], check=True)
 
 
 def remove_remote(remote: str) -> None:
+    """Remove the remote."""
     subprocess.run(["git", "remote", "remove", remote], check=True)
 
 
 def get_remote_url(remote: str) -> str:
+    """Return the URL of the remote."""
     process = subprocess.run(
         ["git", "remote", "get-url", remote],
         stdout=subprocess.PIPE,
@@ -48,16 +52,19 @@ def get_remote_url(remote: str) -> str:
 
 
 def fetch_remote(remote: str, ref: str) -> None:
+    """Fetch ref from the remote."""
     subprocess.run(["git", "fetch", "--no-tags", remote, ref], check=True)
 
 
 def create_branch(branch: str, remote: str, ref: str) -> None:
+    """Create a local branch for the remote ref. Reset it if it exists."""
     subprocess.run(
         ["git", "switch", "--force-create", branch, f"{REMOTE}/{ref}"], check=True,
     )
 
 
 def find_template_directory() -> Path:
+    """Locate the subdirectory with the project template."""
     tokens = "{{", "cookiecutter", "}}"
     for path in Path.cwd().iterdir():
         if path.is_dir() and all(x in path.name for x in tokens):
@@ -66,6 +73,7 @@ def find_template_directory() -> Path:
 
 
 def load_context() -> Dict[str, str]:
+    """Load the context from the .cookiecutter.json file."""
     with Path(".cookiecutter.json").open() as io:
         return cast(Dict[str, str], json.load(io))
 
@@ -73,6 +81,7 @@ def load_context() -> Dict[str, str]:
 def get_replacements(
     context: Dict[str, str], whitelist: Container[str], blacklist: Container[str],
 ) -> List[Tuple[str, str]]:
+    """Create replacements to be applied to commits from the template instance."""
     def ref(key: str) -> str:
         return f"{{{{cookiecutter.{key}}}}}"
 
@@ -91,6 +100,7 @@ def get_replacements(
 def filter_branch(
     branch: str, template_directory: Path, replacements: List[Tuple[str, str]]
 ) -> None:
+    """Rewrite commits from the template instance to use template variables."""
     command = [
         "git",
         "filter-repo",
@@ -111,6 +121,7 @@ def filter_branch(
 
 
 def get_current_branch() -> str:
+    """Return the current branch."""
     process = subprocess.run(
         ["git", "rev-parse", "--abbrev-ref", "HEAD"],
         stdout=subprocess.PIPE,
@@ -122,10 +133,12 @@ def get_current_branch() -> str:
 
 
 def switch_branch(branch: str) -> None:
+    """Switch the current branch."""
     subprocess.run(["git", "switch", branch], check=True)
 
 
 def guess_remote_url() -> str:
+    """Guess the URL of the template instance."""
     url = get_remote_url("origin")
     if url.endswith(".git"):
         url = url[: -len(".git")]
@@ -160,6 +173,7 @@ def retrocookie(
 
 
 def exists_branch(branch: str) -> bool:
+    """Return True if the branch exists."""
     process = subprocess.run(
         ["git", "show-ref", "--verify", "--quiet", "refs/heads/{branch}"],
         stdout=subprocess.PIPE,
@@ -170,10 +184,12 @@ def exists_branch(branch: str) -> bool:
 
 
 def remove_branch(branch: str) -> None:
+    """Remove the branch."""
     subprocess.run(["git", "branch", "--delete", "--force", branch], check=True)
 
 
 def find_branches() -> List[str]:
+    """Find branches created by this program."""
     process = subprocess.run(
         [
             "git",
@@ -190,6 +206,7 @@ def find_branches() -> List[str]:
 
 
 def cleanup(branch: Optional[str]) -> None:
+    """Remove branches and remotes created by this program."""
     branches = (
         [branch] if branch is not None and exists_branch(branch) else find_branches()
     )
