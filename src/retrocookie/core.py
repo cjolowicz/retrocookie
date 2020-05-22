@@ -60,6 +60,28 @@ def guess_remote_url() -> str:
     return f"{url}-instance.git"
 
 
+def fetch_commits(url: str, ref: str, branch: str) -> None:
+    """Fetch commits from the template instance."""
+    if git.exists_remote(REMOTE):
+        git.remove_remote(REMOTE)
+
+    git.add_remote(REMOTE, url)
+    git.fetch_remote(REMOTE, ref)
+    git.create_branch(branch, REMOTE, ref)
+    git.remove_remote(REMOTE)
+
+
+def rewrite_commits(
+    branch: str,
+    template_directory: Path,
+    whitelist: Container[str],
+    blacklist: Container[str],
+) -> None:
+    context = load_context()
+    replacements = get_replacements(context, whitelist, blacklist)
+    filter_branch(branch, template_directory, replacements)
+
+
 def retrocookie(
     url: Optional[str], ref: str, whitelist: Container[str], blacklist: Container[str],
 ) -> None:
@@ -71,20 +93,10 @@ def retrocookie(
     original_branch = git.get_current_branch()
     branch = f"{NAMESPACE}/{ref}"
 
-    if git.exists_remote(REMOTE):
-        git.remove_remote(REMOTE)
+    fetch_commits(url, ref, branch)
+    rewrite_commits(branch, template_directory, whitelist, blacklist)
 
-    try:
-        git.add_remote(REMOTE, url)
-        git.fetch_remote(REMOTE, ref)
-        git.create_branch(branch, REMOTE, ref)
-        context = load_context()
-        replacements = get_replacements(context, whitelist, blacklist)
-        filter_branch(branch, template_directory, replacements)
-        git.switch_branch(original_branch)
-    finally:
-        if git.exists_remote(REMOTE):
-            git.remove_remote(REMOTE)
+    git.switch_branch(original_branch)
 
 
 def filter_branch(
