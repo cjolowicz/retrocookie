@@ -98,10 +98,6 @@ class Repository:
         """Switch the current branch."""
         self._git("switch", branch)
 
-    def move_branch(self, *args: str) -> None:
-        """Move the branch."""
-        self._git("branch", "--move", *args)
-
     def find_branches(self, namespace: str) -> List[str]:
         """Find branches under the given namespace."""
         process = self._git(
