@@ -72,15 +72,6 @@ def remote(ref: str) -> str:
     return f"{REMOTE}/{ref}"
 
 
-def fetch_commits(url: str, ref: str, base: str) -> None:
-    """Fetch commits from the template instance."""
-    git.add_remote(REMOTE, url)
-    git.fetch_remote(REMOTE, ref, base)
-    git.create_branch(local(ref), remote(ref))
-    git.create_branch(local(base), remote(base))
-    git.remove_remote(REMOTE)
-
-
 def rewrite_commits(
     template_directory: Path,
     whitelist: Container[str],
@@ -93,6 +84,15 @@ def rewrite_commits(
     git.filter_branch(
         subdirectory=template_directory.name, replacements=replacements, cwd=directory,
     )
+
+
+def fetch_commits(url: str, ref: str, base: str) -> None:
+    """Fetch commits from the template instance."""
+    git.add_remote(REMOTE, url)
+    git.fetch_remote(REMOTE, ref, base)
+    git.create_branch(local(ref), remote(ref))
+    git.create_branch(local(base), remote(base))
+    git.remove_remote(REMOTE)
 
 
 def harvest_commits(branch: str, base: str, ref: str, onto: str) -> None:
