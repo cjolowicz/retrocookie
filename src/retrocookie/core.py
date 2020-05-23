@@ -1,12 +1,10 @@
 """Core module."""
 import json
 import subprocess  # noqa: S404
-import tempfile
 from pathlib import Path
 from typing import cast
 from typing import Container
 from typing import Dict
-from typing import Iterable
 from typing import List
 from typing import Optional
 from typing import Tuple
@@ -61,29 +59,6 @@ def get_replacements(
     return replacements
 
 
-def filter_branch(
-    refs: Iterable[str], subdirectory: str, replacements: List[Tuple[str, str]]
-) -> None:
-    """Rewrite commits from the template instance to use template variables."""
-    command = [
-        "git",
-        "filter-repo",
-        "--force",
-        f"--to-subdirectory-filter={subdirectory}",
-        *(f"--path-rename={old}:{new}" for old, new in replacements),
-        *(f"--refs={ref}" for ref in refs),
-    ]
-
-    with tempfile.TemporaryDirectory() as tmpdir:
-        replacements_file = Path(tmpdir) / "replacements.txt"
-        replacements_file.write_text(
-            "\n".join(f"{old}==>{new}" for old, new in replacements)
-        )
-
-        command.append(f"--replace-text={replacements_file}")
-        subprocess.run(command, check=True)
-
-
 def local(ref: str) -> str:
     return f"{NAMESPACE}/{ref}"
 
@@ -114,7 +89,7 @@ def rewrite_commits(
     """Rewrite commits for template."""
     context = load_context()
     replacements = get_replacements(context, whitelist, blacklist)
-    filter_branch(
+    git.filter_branch(
         refs=(local(ref), local(base)),
         subdirectory=template_directory.name,
         replacements=replacements,

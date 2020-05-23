@@ -1,6 +1,9 @@
 """Git interface."""
 import subprocess  # noqa: S404
+import tempfile
+from typing import Iterable
 from typing import List
+from typing import Tuple
 
 
 def exists_remote(remote: str) -> bool:
@@ -108,3 +111,26 @@ def find_branches(namespace: str) -> List[str]:
 
 def rebase(*args: str) -> None:
     subprocess.run(["git", "rebase", *args], check=True)
+
+
+def filter_branch(
+    refs: Iterable[str], subdirectory: str, replacements: List[Tuple[str, str]]
+) -> None:
+    """Rewrite commits from the template instance to use template variables."""
+    command = [
+        "git",
+        "filter-repo",
+        "--force",
+        f"--to-subdirectory-filter={subdirectory}",
+        *(f"--path-rename={old}:{new}" for old, new in replacements),
+        *(f"--refs={ref}" for ref in refs),
+    ]
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        replacements_file = Path(tmpdir) / "replacements.txt"
+        replacements_file.write_text(
+            "\n".join(f"{old}==>{new}" for old, new in replacements)
+        )
+
+        command.append(f"--replace-text={replacements_file}")
+        subprocess.run(command, check=True)
