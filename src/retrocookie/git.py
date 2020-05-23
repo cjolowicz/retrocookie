@@ -136,3 +136,6 @@ def filter_branch(
 
         command.append(f"--replace-text={replacements_file}")
         subprocess.run(command, check=True)
+
+    # Rewrite replacements.
+    subprocess.run(["git", "filter-repo", "--force",], check=True)
