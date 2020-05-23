@@ -39,12 +39,19 @@ def get_remote_url(remote: str) -> str:
     return process.stdout.strip()
 
 
-def fetch_remote(remote: str, ref: str) -> None:
+def fetch_remote(remote: str, *refs: str) -> None:
     """Fetch ref from the remote."""
-    subprocess.run(["git", "fetch", "--no-tags", remote, ref], check=True)
+    subprocess.run(["git", "fetch", "--no-tags", remote, *refs], check=True)
 
 
-def create_branch(branch: str, remote: str, ref: str) -> None:
+def create_branch(branch: str, ref: str) -> None:
+    """Create a branch."""
+    subprocess.run(
+        ["git", "switch", "--create", branch, ref], check=True,
+    )
+
+
+def create_local_branch(branch: str, remote: str, ref: str) -> None:
     """Create a local branch for the remote ref. Reset it if it exists."""
     subprocess.run(
         ["git", "switch", "--force-create", branch, f"{remote}/{ref}"], check=True,
@@ -84,6 +91,11 @@ def switch_branch(branch: str) -> None:
     subprocess.run(["git", "switch", branch], check=True)
 
 
+def move_branch(*args: str) -> None:
+    """Move the branch."""
+    subprocess.run(["git", "branch", "--move", *args], check=True)
+
+
 def find_branches(namespace: str) -> List[str]:
     """Find branches under the given namespace."""
     process = subprocess.run(
@@ -99,3 +111,7 @@ def find_branches(namespace: str) -> List[str]:
         check=True,
     )
     return process.stdout.split()
+
+
+def rebase(*args: str) -> None:
+    subprocess.run(["git", "rebase", *args], check=True)

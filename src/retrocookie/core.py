@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import cast
 from typing import Container
 from typing import Dict
+from typing import Iterable
 from typing import List
 from typing import Optional
 from typing import Tuple
@@ -60,19 +61,21 @@ def guess_remote_url() -> str:
     return f"{url}-instance.git"
 
 
-def fetch_commits(url: str, ref: str, branch: str) -> None:
+def fetch_commits(url: str, ref: str, base: str) -> None:
     """Fetch commits from the template instance."""
     if git.exists_remote(REMOTE):
         git.remove_remote(REMOTE)
 
     git.add_remote(REMOTE, url)
-    git.fetch_remote(REMOTE, ref)
-    git.create_branch(branch, REMOTE, ref)
+    git.fetch_remote(REMOTE, ref, base)
+    git.create_local_branch(f"{NAMESPACE}/{ref}", REMOTE, ref)
+    git.create_local_branch(f"{NAMESPACE}/{base}", REMOTE, base)
     git.remove_remote(REMOTE)
 
 
 def rewrite_commits(
-    branch: str,
+    ref: str,
+    base: str,
     template_directory: Path,
     whitelist: Container[str],
     blacklist: Container[str],
@@ -80,37 +83,54 @@ def rewrite_commits(
     """Rewrite commits for template."""
     context = load_context()
     replacements = get_replacements(context, whitelist, blacklist)
-    filter_branch(branch, template_directory, replacements)
+    filter_branch(
+        refs=(f"{NAMESPACE}/{ref}", f"{NAMESPACE}/{base}"),
+        subdirectory=template_directory.name,
+        replacements=replacements,
+    )
+
+
+def harvest_commits(branch: str, base: str, ref: str, onto: str) -> None:
+    """Rebase commits and clean up."""
+    git.rebase(f"{NAMESPACE}/{base}", "{NAMESPACE}/{ref}", "--onto={onto}")
+    git.move_branch(f"{NAMESPACE}/{ref}", branch)
+    git.remove_branch(f"{NAMESPACE}/base")
 
 
 def retrocookie(
-    url: Optional[str], ref: str, whitelist: Container[str], blacklist: Container[str],
+    url: Optional[str],
+    ref: str,
+    whitelist: Container[str],
+    blacklist: Container[str],
+    base: str = "master",
+    branch: Optional[str] = None,
 ) -> None:
     """Import commits from instance repository into template repository."""
     if url is None:
         url = guess_remote_url()
 
+    if branch is None:
+        branch = ref
+
     template_directory = find_template_directory()
     original_branch = git.get_current_branch()
-    branch = f"{NAMESPACE}/{ref}"
 
-    fetch_commits(url, ref, branch)
-    rewrite_commits(branch, template_directory, whitelist, blacklist)
-
-    git.switch_branch(original_branch)
+    fetch_commits(url, ref, base)
+    rewrite_commits(ref, base, template_directory, whitelist, blacklist)
+    harvest_commits(branch, base, ref, onto=original_branch)
 
 
 def filter_branch(
-    branch: str, template_directory: Path, replacements: List[Tuple[str, str]]
+    refs: Iterable[str], subdirectory: str, replacements: List[Tuple[str, str]]
 ) -> None:
     """Rewrite commits from the template instance to use template variables."""
     command = [
         "git",
         "filter-repo",
         "--force",
-        f"--refs={branch}",
-        f"--to-subdirectory-filter={template_directory.name}",
+        f"--to-subdirectory-filter={subdirectory}",
         *(f"--path-rename={old}:{new}" for old, new in replacements),
+        *(f"--refs={ref}" for ref in refs),
     ]
 
     with tempfile.TemporaryDirectory() as tmpdir:
