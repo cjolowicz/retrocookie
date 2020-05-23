@@ -21,8 +21,8 @@ from .core import retrocookie
     "--ref",
     "-r",
     metavar="REF",
-    default="master",
-    help="Remote reference to fetch",
+    required=True,
+    help="Remote reference to fetch (required)",
 )
 @click.option(
     "--base",
