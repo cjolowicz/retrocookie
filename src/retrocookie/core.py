@@ -107,8 +107,8 @@ def retrocookie(
     ref: str,
     *,
     base: str = "master",
+    local: Optional[str] = None,
     url: Optional[str],
-    branch: Optional[str] = None,
     whitelist: Container[str] = (),
     blacklist: Container[str] = (),
 ) -> None:
@@ -116,15 +116,15 @@ def retrocookie(
     if url is None:
         url = guess_remote_url()
 
-    if branch is None:
-        branch = ref
+    if local is None:
+        local = ref
 
     template_directory = find_template_directory()
     original_branch = git.get_current_branch()
 
     fetch_commits(url, ref, base)
     rewrite_commits(ref, base, template_directory, whitelist, blacklist)
-    harvest_commits(branch, base, ref, onto=original_branch)
+    harvest_commits(local, base, ref, onto=original_branch)
 
 
 def cleanup(branch: Optional[str]) -> None:
