@@ -20,18 +20,6 @@ class Repository:
     ) -> subprocess.CompletedProcess[str]:
         return subprocess.run(["git", *args], check=check, cwd=self.path, **kwargs)
 
-    def add_worktree(self, branch: str, directory: Path) -> None:
-        """Add a worktree at the given directory, creating the given branch."""
-        self._git("worktree", "add", "-b", branch, str(directory))
-
-    def remove_worktree(self, directory: Path) -> None:
-        """Remove the worktree located at the given directory."""
-        self._git("worktree", "remove", str(directory))
-
-    def merge_ff(self, ref: str) -> None:
-        """Fast-forward to ref."""
-        self._git("merge", "--ff-only", ref)
-
     @classmethod
     def clone(cls, url: str, directory: Path) -> "Repository":
         """Clone the repository."""
@@ -113,6 +101,18 @@ class Repository:
     def rebase(self, upstream: str, branch: str, onto: str) -> None:
         """Rebase."""
         self._git("rebase", upstream, branch, f"--onto={onto}")
+
+    def merge_ff(self, ref: str) -> None:
+        """Fast-forward to ref."""
+        self._git("merge", "--ff-only", ref)
+
+    def add_worktree(self, branch: str, directory: Path) -> None:
+        """Add a worktree at the given directory, creating the given branch."""
+        self._git("worktree", "add", "-b", branch, str(directory))
+
+    def remove_worktree(self, directory: Path) -> None:
+        """Remove the worktree located at the given directory."""
+        self._git("worktree", "remove", str(directory))
 
     def filter_repo(
         self, subdirectory: str, replacements: List[Tuple[str, str]]
