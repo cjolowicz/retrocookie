@@ -78,20 +78,6 @@ class Repository:
         """Create a branch."""
         self._git("switch", "--create", branch, ref)
 
-    def exists_branch(self, branch: str) -> bool:
-        """Return True if the branch exists."""
-        process = self._git(
-            "show-ref",
-            "--verify",
-            "--quiet",
-            "refs/heads/{branch}",
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            universal_newlines=True,
-            check=False,
-        )
-        return process.returncode == 0
-
     def remove_branch(self, branch: str) -> None:
         """Remove the branch."""
         self._git("branch", "--delete", "--force", branch)
