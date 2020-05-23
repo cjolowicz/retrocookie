@@ -86,20 +86,22 @@ def rewrite_commits(
     )
 
 
-def fetch_commits(url: str, ref: str, base: str) -> None:
+def fetch_commits(directory: Path, ref: str, base: str) -> None:
     """Fetch commits from the template instance."""
-    git.add_remote(REMOTE, url)
+    git.add_remote(REMOTE, str(directory))
     git.fetch_remote(REMOTE, ref, base)
     git.create_branch(local(ref), remote(ref))
     git.create_branch(local(base), remote(base))
     git.remove_remote(REMOTE)
 
 
-def harvest_commits(branch: str, base: str, ref: str, onto: str) -> None:
+def harvest_commits(branch: str, base: str, ref: str) -> None:
     """Rebase commits and clean up."""
-    git.rebase(local(base), local(ref), f"--onto={onto}")
-    git.move_branch(local(ref), branch)
+    git.rebase(local(base), local(ref), f"--onto={branch}")
+    git.switch_branch(branch)
+    git.merge_ff(local(ref))
     git.remove_branch(local(base))
+    git.remove_branch(local(ref))
 
 
 @contextlib.contextmanager
@@ -109,6 +111,19 @@ def temporary_repository(url: str) -> Iterator[Path]:
         directory = Path(tmpdir) / "instance"
         git.clone(url, directory)
         yield directory
+
+
+@contextlib.contextmanager
+def temporary_worktree(branch: str) -> Iterator[Path]:
+    """Use a temporary worktree creating the given branch."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        directory = Path(tmpdir) / branch
+        git.add_worktree(branch, directory)
+
+        try:
+            yield directory
+        finally:
+            git.remove_worktree(directory)
 
 
 def cleanup() -> None:
@@ -142,10 +157,10 @@ def retrocookie(
         branch = ref
 
     template_directory = find_template_directory()
-    onto = git.get_current_branch()
 
-    with temporary_repository(url) as directory:
-        rewrite_commits(template_directory, whitelist, blacklist, directory)
-        fetch_commits(str(directory), ref, base)
+    with temporary_worktree(branch) as worktree:
+        with temporary_repository(url) as directory:
+            rewrite_commits(template_directory, whitelist, blacklist, directory)
+            fetch_commits(directory, ref, base)
 
-    harvest_commits(branch, base, ref, onto)
+        harvest_commits(branch, base, ref)

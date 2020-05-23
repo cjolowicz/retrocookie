@@ -7,6 +7,21 @@ from typing import Optional
 from typing import Tuple
 
 
+def add_worktree(branch: str, directory: Path) -> None:
+    """Add a worktree at the given directory, creating the given branch."""
+    subprocess.run(["git", "worktree", "add", "-b", branch, str(directory)], check=True)
+
+
+def remove_worktree(directory: Path) -> None:
+    """Remove the worktree located at the given directory."""
+    subprocess.run(["git", "worktree", "remove", str(directory)], check=True)
+
+
+def merge_ff(ref: str) -> None:
+    """Fast-forward to ref."""
+    subprocess.run(["git", "merge", "--ff-only", ref], check=True)
+
+
 def clone(url: str, directory: Path) -> None:
     """Clone the repository."""
     subprocess.run(["git", "clone", url, str(directory)], check=True)
