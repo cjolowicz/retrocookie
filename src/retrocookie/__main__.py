@@ -23,6 +23,12 @@ from .core import retrocookie
     metavar="REF",
     default="master",
     help="Remote reference to fetch",
+)
+@click.option(
+    "--base",
+    metavar="REF",
+    default="master",
+    help="Remote reference from which to rebase",
     show_default=True,
 )
 @click.option(
@@ -46,6 +52,7 @@ from .core import retrocookie
 def main(
     url: Optional[str],
     ref: str,
+    base: str,
     whitelist: Container[str],
     blacklist: Container[str],
     delete: bool,
@@ -54,7 +61,7 @@ def main(
     if delete:
         cleanup(ref)
     else:
-        retrocookie(url, ref, whitelist, blacklist)
+        retrocookie(url, ref, whitelist, blacklist, base)
 
 
 if __name__ == "__main__":
