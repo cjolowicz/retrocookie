@@ -1,4 +1,5 @@
 """Git interface."""
+from pathlib import Path
 import subprocess  # noqa: S404
 import tempfile
 from typing import Iterable
