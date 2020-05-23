@@ -53,7 +53,7 @@ def main(
 ) -> None:
     """Retrocookie imports commits into Cookiecutter templates."""
     retrocookie(
-        ref, base=base, local=local, url=url, whitelist=whitelist, blacklist=blacklist,
+        ref, base=base, branch=local, url=url, whitelist=whitelist, blacklist=blacklist,
     )
 
 

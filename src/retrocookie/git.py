@@ -1,10 +1,15 @@
 """Git interface."""
-from pathlib import Path
 import subprocess  # noqa: S404
 import tempfile
-from typing import Iterable
+from pathlib import Path
 from typing import List
+from typing import Optional
 from typing import Tuple
+
+
+def clone(url: str, directory: Path) -> None:
+    """Clone the repository."""
+    subprocess.run(["git", "clone", url, str(directory)], check=True)
 
 
 def exists_remote(remote: str) -> bool:
@@ -21,9 +26,8 @@ def exists_remote(remote: str) -> bool:
 
 
 def add_remote(remote: str, url: str) -> None:
-    """Add the remote with the given URL. Disallow push."""
+    """Add the remote with the given URL."""
     subprocess.run(["git", "remote", "add", remote, url], check=True)
-    subprocess.run(["git", "remote", "set-url", "--push", remote, "none"], check=True)
 
 
 def remove_remote(remote: str) -> None:
@@ -111,21 +115,19 @@ def find_branches(namespace: str) -> List[str]:
 
 
 def rebase(*args: str) -> None:
+    """Rebase."""
     subprocess.run(["git", "rebase", *args], check=True)
 
 
 def filter_branch(
-    refs: Iterable[str], subdirectory: str, replacements: List[Tuple[str, str]]
+    subdirectory: str, replacements: List[Tuple[str, str]], cwd: Optional[Path] = None,
 ) -> None:
     """Rewrite commits from the template instance to use template variables."""
     command = [
         "git",
         "filter-repo",
-        "--force",
-        "--replace-refs=update-and-add",
         f"--to-subdirectory-filter={subdirectory}",
         *(f"--path-rename={old}:{new}" for old, new in replacements),
-        *(f"--refs={ref}" for ref in refs),
     ]
 
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -135,7 +137,4 @@ def filter_branch(
         )
 
         command.append(f"--replace-text={replacements_file}")
-        subprocess.run(command, check=True)
-
-    # Rewrite replacements.
-    subprocess.run(["git", "filter-repo", "--force",], check=True)
+        subprocess.run(command, check=True, cwd=cwd)

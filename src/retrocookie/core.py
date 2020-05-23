@@ -1,10 +1,12 @@
 """Core module."""
+import contextlib
 import json
-import subprocess  # noqa: S404
+import tempfile
 from pathlib import Path
 from typing import cast
 from typing import Container
 from typing import Dict
+from typing import Iterator
 from typing import List
 from typing import Optional
 from typing import Tuple
@@ -33,9 +35,10 @@ def find_template_directory() -> Path:
     raise Exception("cannot find template directory")
 
 
-def load_context() -> Dict[str, str]:
+def load_context(repository: Path) -> Dict[str, str]:
     """Load the context from the .cookiecutter.json file."""
-    with Path(".cookiecutter.json").open() as io:
+    path = repository / ".cookiecutter.json"
+    with path.open() as io:
         return cast(Dict[str, str], json.load(io))
 
 
@@ -60,10 +63,12 @@ def get_replacements(
 
 
 def local(ref: str) -> str:
+    """Prefix ref by NAMESPACE."""
     return f"{NAMESPACE}/{ref}"
 
 
 def remote(ref: str) -> str:
+    """Prefix ref by REMOTE."""
     return f"{REMOTE}/{ref}"
 
 
@@ -77,19 +82,16 @@ def fetch_commits(url: str, ref: str, base: str) -> None:
 
 
 def rewrite_commits(
-    ref: str,
-    base: str,
     template_directory: Path,
     whitelist: Container[str],
     blacklist: Container[str],
+    directory: Path,
 ) -> None:
     """Rewrite commits for template."""
-    context = load_context()
+    context = load_context(directory)
     replacements = get_replacements(context, whitelist, blacklist)
     git.filter_branch(
-        refs=(local(ref), local(base)),
-        subdirectory=template_directory.name,
-        replacements=replacements,
+        subdirectory=template_directory.name, replacements=replacements, cwd=directory,
     )
 
 
@@ -100,11 +102,20 @@ def harvest_commits(branch: str, base: str, ref: str, onto: str) -> None:
     git.remove_branch(local(base))
 
 
+@contextlib.contextmanager
+def temporary_repository(url: str) -> Iterator[Path]:
+    """Clone URL to temporary directory."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        directory = Path(tmpdir) / "instance"
+        git.clone(url, directory)
+        yield directory
+
+
 def retrocookie(
     ref: str,
     *,
     base: str = "master",
-    local: Optional[str] = None,
+    branch: Optional[str] = None,
     url: Optional[str],
     whitelist: Container[str] = (),
     blacklist: Container[str] = (),
@@ -115,15 +126,17 @@ def retrocookie(
     if url is None:
         url = guess_remote_url()
 
-    if local is None:
-        local = ref
+    if branch is None:
+        branch = ref
 
     template_directory = find_template_directory()
-    original_branch = git.get_current_branch()
+    onto = git.get_current_branch()
 
-    fetch_commits(url, ref, base)
-    rewrite_commits(ref, base, template_directory, whitelist, blacklist)
-    harvest_commits(local, base, ref, onto=original_branch)
+    with temporary_repository(url) as directory:
+        rewrite_commits(template_directory, whitelist, blacklist, directory)
+        fetch_commits(str(directory), ref, base)
+
+    harvest_commits(branch, base, ref, onto)
 
 
 def cleanup() -> None:
