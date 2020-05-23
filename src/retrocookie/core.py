@@ -92,20 +92,18 @@ def fetch_commits(
     """Fetch the rewritten commits."""
     repository.add_remote(REMOTE, str(remote.path))
     repository.fetch_remote(REMOTE, base, ref)
-    repository.create_branch(_local(base), _remote(base))
     repository.create_branch(_local(ref), _remote(ref))
-    repository.remove_remote(REMOTE)
 
 
 def harvest_commits(
     repository: git.Repository, branch: str, base: str, ref: str
 ) -> None:
     """Rebase commits and clean up."""
-    repository.rebase(_local(base), _local(ref), onto=branch)
+    repository.rebase(_remote(base), _local(ref), onto=branch)
     repository.switch_branch(branch)
     repository.merge_ff(_local(ref))
-    repository.remove_branch(_local(base))
     repository.remove_branch(_local(ref))
+    repository.remove_remote(REMOTE)
 
 
 @contextlib.contextmanager
@@ -169,5 +167,4 @@ def retrocookie(
         with temporary_repository(url) as remote:
             rewrite_commits(remote, template_directory, whitelist, blacklist)
             fetch_commits(worktree, remote, base, ref)
-
-        harvest_commits(worktree, branch, base, ref)
+            harvest_commits(worktree, branch, base, ref)

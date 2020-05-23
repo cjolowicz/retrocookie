@@ -7,13 +7,18 @@ from typing import List
 from typing import Optional
 from typing import Tuple
 
+import pygit2
+
 
 class Repository:
     """Git repository."""
 
-    def __init__(self, path: Optional[Path] = None) -> None:
+    def __init__(
+        self, path: Optional[Path] = None, repo: Optional[pygit2.Repository] = None,
+    ) -> None:
         """Initialize."""
         self.path = path or Path.cwd()
+        self.repo = repo or pygit2.Repository(self.path)
 
     def _git(
         self, *args: str, check: bool = True, **kwargs: Any
@@ -21,82 +26,55 @@ class Repository:
         return subprocess.run(["git", *args], check=check, cwd=self.path, **kwargs)
 
     @classmethod
-    def clone(cls, url: str, directory: Path) -> "Repository":
+    def clone(cls, url: str, path: Path) -> "Repository":
         """Clone the repository."""
-        repository = cls(directory)
-        subprocess.run(["git", "clone", url, str(directory)], check=True)
-        return repository
+        repo = pygit2.clone_repository(url, path)
+        return cls(path, repo)
 
     def exists_remote(self, remote: str) -> bool:
         """Return True if the remote exists."""
-        process = self._git(
-            "remote",
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            universal_newlines=True,
-        )
-        remotes = process.stdout.split()
-        return remote in remotes
+        return remote in self.repo.remotes
 
     def add_remote(self, remote: str, url: str) -> None:
         """Add the remote with the given URL."""
-        self._git("remote", "add", remote, url)
+        self.repo.remotes.create(remote, url)
 
     def remove_remote(self, remote: str) -> None:
         """Remove the remote."""
-        self._git("remote", "remove", remote)
+        self.repo.remotes.delete(remote)
 
     def get_remote_url(self, remote: str) -> str:
         """Return the URL of the remote."""
-        process = self._git(
-            "remote",
-            "get-url",
-            remote,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            universal_newlines=True,
-        )
-        return process.stdout.strip()
+        return self.repo.remotes[remote].url  # type: ignore[no-any-return]
 
     def fetch_remote(self, remote: str, *refs: str) -> None:
         """Fetch ref from the remote."""
-        self._git("fetch", "--no-tags", remote, *refs)
+        self.repo.remotes[remote].fetch(refspecs=list(refs))  # FIXME: --no-tags?
 
     def create_branch(self, branch: str, ref: str) -> None:
         """Create a branch."""
-        self._git("switch", "--create", branch, ref)
+        commit = self.repo.branches[ref].peel()
+        self.repo.branches.create(branch, commit)
 
     def remove_branch(self, branch: str) -> None:
         """Remove the branch."""
-        self._git("branch", "--delete", "--force", branch)
+        self.repo.branches.delete(branch)
 
     def get_current_branch(self) -> str:
         """Return the current branch."""
-        process = self._git(
-            "rev-parse",
-            "--abbrev-ref",
-            "HEAD",
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            universal_newlines=True,
-        )
-        return process.stdout.strip()
+        return self.repo.head.shorthand  # type: ignore[no-any-return]
 
     def switch_branch(self, branch: str) -> None:
         """Switch the current branch."""
-        self._git("switch", branch)
+        self.repo.checkout(self.repo.branches[branch])
 
     def find_branches(self, namespace: str) -> List[str]:
         """Find branches under the given namespace."""
-        process = self._git(
-            "for-each-ref",
-            "--format=%(refname:short)",
-            f"refs/heads/{namespace}/",
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            universal_newlines=True,
-        )
-        return process.stdout.split()
+        return [
+            branch
+            for branch in self.repo.branches.local
+            if branch.startswith(f"{namespace}/")
+        ]
 
     def rebase(self, upstream: str, branch: str, onto: str) -> None:
         """Rebase."""
