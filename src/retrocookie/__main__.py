@@ -32,6 +32,9 @@ from .core import retrocookie
     show_default=True,
 )
 @click.option(
+    "--local", metavar="REF", help="Local branch name  [default: --ref]",
+)
+@click.option(
     "--whitelist",
     "-w",
     metavar="VAR",
@@ -53,6 +56,7 @@ def main(
     url: Optional[str],
     ref: str,
     base: str,
+    local: Optional[str],
     whitelist: Container[str],
     blacklist: Container[str],
     delete: bool,
@@ -61,7 +65,14 @@ def main(
     if delete:
         cleanup(ref)
     else:
-        retrocookie(ref, base=base, url=url, whitelist=whitelist, blacklist=blacklist)
+        retrocookie(
+            ref,
+            base=base,
+            local=local,
+            url=url,
+            whitelist=whitelist,
+            blacklist=blacklist,
+        )
 
 
 if __name__ == "__main__":
