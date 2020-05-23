@@ -4,7 +4,7 @@ from typing import Optional
 
 import click
 
-from .core import cleanup
+from .core import cleanup as _cleanup
 from .core import retrocookie
 
 
@@ -43,9 +43,7 @@ from .core import retrocookie
     multiple=True,
     help="Do not rewrite these Cookiecutter variables",
 )
-@click.option(
-    "--delete", "-d", is_flag=True, help="Clean up any left over branches"
-)
+@click.option("--cleanup", is_flag=True, help="Clean up any left over branches")
 @click.version_option()
 def main(
     url: Optional[str],
@@ -54,11 +52,11 @@ def main(
     local: Optional[str],
     whitelist: Container[str],
     blacklist: Container[str],
-    delete: bool,
+    cleanup: bool,
 ) -> None:
     """Retrocookie imports commits into Cookiecutter templates."""
-    if delete:
-        cleanup(ref)
+    if cleanup:
+        _cleanup()
     else:
         retrocookie(
             ref,

@@ -127,15 +127,9 @@ def retrocookie(
     harvest_commits(local, base, ref, onto=original_branch)
 
 
-def cleanup(branch: Optional[str]) -> None:
+def cleanup() -> None:
     """Remove branches and remotes created by this program."""
-    branches = (
-        [branch]
-        if branch is not None and git.exists_branch(branch)
-        else git.find_branches(NAMESPACE)
-    )
-
-    for branch in branches:
+    for branch in git.find_branches(NAMESPACE):
         git.remove_branch(branch)
 
     if git.exists_remote(REMOTE):
