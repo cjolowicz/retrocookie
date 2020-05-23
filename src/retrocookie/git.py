@@ -122,6 +122,7 @@ def filter_branch(
         "git",
         "filter-repo",
         "--force",
+        "--replace-refs=update-and-add",
         f"--to-subdirectory-filter={subdirectory}",
         *(f"--path-rename={old}:{new}" for old, new in replacements),
         *(f"--refs={ref}" for ref in refs),
