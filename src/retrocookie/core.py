@@ -18,6 +18,14 @@ NAMESPACE = "retrocookie"
 REMOTE = "retrocookie-instance"
 
 
+def guess_remote_url() -> str:
+    """Guess the URL of the template instance."""
+    url = git.get_remote_url("origin")
+    if url.endswith(".git"):
+        url = url[: -len(".git")]
+    return f"{url}-instance.git"
+
+
 def find_template_directory() -> Path:
     """Locate the subdirectory with the project template."""
     tokens = "{{", "cookiecutter", "}}"
@@ -53,12 +61,27 @@ def get_replacements(
     return replacements
 
 
-def guess_remote_url() -> str:
-    """Guess the URL of the template instance."""
-    url = git.get_remote_url("origin")
-    if url.endswith(".git"):
-        url = url[: -len(".git")]
-    return f"{url}-instance.git"
+def filter_branch(
+    refs: Iterable[str], subdirectory: str, replacements: List[Tuple[str, str]]
+) -> None:
+    """Rewrite commits from the template instance to use template variables."""
+    command = [
+        "git",
+        "filter-repo",
+        "--force",
+        f"--to-subdirectory-filter={subdirectory}",
+        *(f"--path-rename={old}:{new}" for old, new in replacements),
+        *(f"--refs={ref}" for ref in refs),
+    ]
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        replacements_file = Path(tmpdir) / "replacements.txt"
+        replacements_file.write_text(
+            "\n".join(f"{old}==>{new}" for old, new in replacements)
+        )
+
+        command.append(f"--replace-text={replacements_file}")
+        subprocess.run(command, check=True)
 
 
 def fetch_commits(url: str, ref: str, base: str) -> None:
@@ -118,29 +141,6 @@ def retrocookie(
     fetch_commits(url, ref, base)
     rewrite_commits(ref, base, template_directory, whitelist, blacklist)
     harvest_commits(branch, base, ref, onto=original_branch)
-
-
-def filter_branch(
-    refs: Iterable[str], subdirectory: str, replacements: List[Tuple[str, str]]
-) -> None:
-    """Rewrite commits from the template instance to use template variables."""
-    command = [
-        "git",
-        "filter-repo",
-        "--force",
-        f"--to-subdirectory-filter={subdirectory}",
-        *(f"--path-rename={old}:{new}" for old, new in replacements),
-        *(f"--refs={ref}" for ref in refs),
-    ]
-
-    with tempfile.TemporaryDirectory() as tmpdir:
-        replacements_file = Path(tmpdir) / "replacements.txt"
-        replacements_file.write_text(
-            "\n".join(f"{old}==>{new}" for old, new in replacements)
-        )
-
-        command.append(f"--replace-text={replacements_file}")
-        subprocess.run(command, check=True)
 
 
 def cleanup(branch: Optional[str]) -> None:
