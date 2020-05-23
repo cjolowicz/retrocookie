@@ -4,6 +4,7 @@ from typing import Optional
 
 import click
 
+from .core import cleanup
 from .core import retrocookie
 
 
@@ -52,6 +53,7 @@ def main(
     blacklist: Container[str],
 ) -> None:
     """Retrocookie imports commits into Cookiecutter templates."""
+    cleanup()
     retrocookie(
         ref, base=base, branch=local, url=url, whitelist=whitelist, blacklist=blacklist,
     )

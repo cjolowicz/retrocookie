@@ -148,8 +148,6 @@ def retrocookie(
     blacklist: Container[str] = (),
 ) -> None:
     """Import commits from instance repository into template repository."""
-    cleanup()
-
     if url is None:
         url = guess_remote_url()
 
