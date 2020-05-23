@@ -69,9 +69,6 @@ def remote(ref: str) -> str:
 
 def fetch_commits(url: str, ref: str, base: str) -> None:
     """Fetch commits from the template instance."""
-    if git.exists_remote(REMOTE):
-        git.remove_remote(REMOTE)
-
     git.add_remote(REMOTE, url)
     git.fetch_remote(REMOTE, ref, base)
     git.create_branch(local(ref), remote(ref))
@@ -113,6 +110,8 @@ def retrocookie(
     blacklist: Container[str] = (),
 ) -> None:
     """Import commits from instance repository into template repository."""
+    cleanup()
+
     if url is None:
         url = guess_remote_url()
 
