@@ -18,26 +18,26 @@ NAMESPACE = "retrocookie"
 REMOTE = "retrocookie-instance"
 
 
-def guess_remote_url() -> str:
+def guess_remote_url(repository: git.Repository) -> str:
     """Guess the URL of the template instance."""
-    url = git.get_remote_url("origin")
+    url = repository.get_remote_url("origin")
     if url.endswith(".git"):
         url = url[: -len(".git")]
     return f"{url}-instance.git"
 
 
-def find_template_directory() -> Path:
+def find_template_directory(repository: git.Repository) -> Path:
     """Locate the subdirectory with the project template."""
     tokens = "{{", "cookiecutter", "}}"
-    for path in Path.cwd().iterdir():
+    for path in repository.path.iterdir():
         if path.is_dir() and all(x in path.name for x in tokens):
             return path
     raise Exception("cannot find template directory")
 
 
-def load_context(repository: Path) -> Dict[str, str]:
+def load_context(repository: git.Repository) -> Dict[str, str]:
     """Load the context from the .cookiecutter.json file."""
-    path = repository / ".cookiecutter.json"
+    path = repository.path / ".cookiecutter.json"
     with path.open() as io:
         return cast(Dict[str, str], json.load(io))
 
@@ -62,80 +62,87 @@ def get_replacements(
     return replacements
 
 
-def local(ref: str) -> str:
+def _local(ref: str) -> str:
     """Prefix ref by NAMESPACE."""
     return f"{NAMESPACE}/{ref}"
 
 
-def remote(ref: str) -> str:
+def _remote(ref: str) -> str:
     """Prefix ref by REMOTE."""
     return f"{REMOTE}/{ref}"
 
 
 def rewrite_commits(
-    directory: Path,
+    repository: git.Repository,
     template_directory: Path,
     whitelist: Container[str],
     blacklist: Container[str],
 ) -> None:
-    """Rewrite commits for template."""
-    context = load_context(directory)
+    """Rewrite the repository using template variables."""
+    context = load_context(repository)
     replacements = get_replacements(context, whitelist, blacklist)
-    git.filter_branch(
-        subdirectory=template_directory.name, replacements=replacements, cwd=directory,
+    repository.filter_repo(
+        subdirectory=template_directory.name, replacements=replacements
     )
 
 
-def fetch_commits(worktree: Path, directory: Path, ref: str, base: str) -> None:
-    """Fetch commits from the template instance."""
-    git.add_remote(REMOTE, str(directory), cwd=worktree)
-    git.fetch_remote(REMOTE, ref, base, cwd=worktree)
-    git.create_branch(local(ref), remote(ref), cwd=worktree)
-    git.create_branch(local(base), remote(base), cwd=worktree)
-    git.remove_remote(REMOTE, cwd=worktree)
+def fetch_commits(
+    repository: git.Repository, remote: git.Repository, base: str, ref: str
+) -> None:
+    """Fetch the rewritten commits."""
+    repository.add_remote(REMOTE, str(remote.path))
+    repository.fetch_remote(REMOTE, base, ref)
+    repository.create_branch(_local(base), _remote(base))
+    repository.create_branch(_local(ref), _remote(ref))
+    repository.remove_remote(REMOTE)
 
 
-def harvest_commits(worktree: Path, branch: str, base: str, ref: str) -> None:
+def harvest_commits(
+    repository: git.Repository, branch: str, base: str, ref: str
+) -> None:
     """Rebase commits and clean up."""
-    git.rebase(local(base), local(ref), f"--onto={branch}", cwd=worktree)
-    git.switch_branch(branch, cwd=worktree)
-    git.merge_ff(local(ref), cwd=worktree)
-    git.remove_branch(local(base), cwd=worktree)
-    git.remove_branch(local(ref), cwd=worktree)
+    repository.rebase(_local(base), _local(ref), onto=branch)
+    repository.switch_branch(branch)
+    repository.merge_ff(_local(ref))
+    repository.remove_branch(_local(base))
+    repository.remove_branch(_local(ref))
 
 
 @contextlib.contextmanager
-def temporary_repository(url: str) -> Iterator[Path]:
+def temporary_repository(url: str) -> Iterator[git.Repository]:
     """Clone URL to temporary directory."""
     with tempfile.TemporaryDirectory() as tmpdir:
         directory = Path(tmpdir) / "instance"
-        git.clone(url, directory)
-        yield directory
+        yield git.Repository.clone(url, directory)
 
 
 @contextlib.contextmanager
-def temporary_worktree(branch: str) -> Iterator[Path]:
+def temporary_worktree(
+    repository: git.Repository, branch: str
+) -> Iterator[git.Repository]:
     """Use a temporary worktree creating the given branch."""
     with tempfile.TemporaryDirectory() as tmpdir:
         directory = Path(tmpdir) / branch
-        git.add_worktree(branch, directory)
+        repository.add_worktree(branch, directory)
 
         try:
-            yield directory
+            yield git.Repository(directory)
         finally:
-            git.remove_worktree(directory)
+            repository.remove_worktree(directory)
 
 
 def cleanup() -> None:
     """Remove branches and remotes created by this program."""
-    if git.get_current_branch().startswith(NAMESPACE):
-        git.switch_branch("master")
+    repository = git.Repository()
 
-    for branch in git.find_branches(NAMESPACE):
-        git.remove_branch(branch)
+    if repository.get_current_branch().startswith(NAMESPACE):
+        repository.switch_branch("master")
 
-    if git.exists_remote(REMOTE):
-        git.remove_remote(REMOTE)
+    for branch in repository.find_branches(NAMESPACE):
+        repository.remove_branch(branch)
+
+    if repository.exists_remote(REMOTE):
+        repository.remove_remote(REMOTE)
 
 
 def retrocookie(
@@ -148,17 +155,19 @@ def retrocookie(
     blacklist: Container[str] = (),
 ) -> None:
     """Import commits from instance repository into template repository."""
+    repository = git.Repository()
+
     if url is None:
-        url = guess_remote_url()
+        url = guess_remote_url(repository)
 
     if branch is None:
         branch = ref
 
-    template_directory = find_template_directory()
+    with temporary_worktree(repository, branch) as worktree:
+        template_directory = find_template_directory(worktree)
 
-    with temporary_worktree(branch) as worktree:
-        with temporary_repository(url) as directory:
-            rewrite_commits(directory, template_directory, whitelist, blacklist)
-            fetch_commits(worktree, directory, ref, base)
+        with temporary_repository(url) as remote:
+            rewrite_commits(remote, template_directory, whitelist, blacklist)
+            fetch_commits(worktree, remote, base, ref)
 
         harvest_commits(worktree, branch, base, ref)
