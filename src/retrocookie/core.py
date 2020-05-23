@@ -86,22 +86,22 @@ def rewrite_commits(
     )
 
 
-def fetch_commits(directory: Path, ref: str, base: str) -> None:
+def fetch_commits(worktree: Path, directory: Path, ref: str, base: str) -> None:
     """Fetch commits from the template instance."""
-    git.add_remote(REMOTE, str(directory))
-    git.fetch_remote(REMOTE, ref, base)
-    git.create_branch(local(ref), remote(ref))
-    git.create_branch(local(base), remote(base))
-    git.remove_remote(REMOTE)
+    git.add_remote(REMOTE, str(directory), cwd=worktree)
+    git.fetch_remote(REMOTE, ref, base, cwd=worktree)
+    git.create_branch(local(ref), remote(ref), cwd=worktree)
+    git.create_branch(local(base), remote(base), cwd=worktree)
+    git.remove_remote(REMOTE, cwd=worktree)
 
 
-def harvest_commits(branch: str, base: str, ref: str) -> None:
+def harvest_commits(worktree: Path, branch: str, base: str, ref: str) -> None:
     """Rebase commits and clean up."""
-    git.rebase(local(base), local(ref), f"--onto={branch}")
-    git.switch_branch(branch)
-    git.merge_ff(local(ref))
-    git.remove_branch(local(base))
-    git.remove_branch(local(ref))
+    git.rebase(local(base), local(ref), f"--onto={branch}", cwd=worktree)
+    git.switch_branch(branch, cwd=worktree)
+    git.merge_ff(local(ref), cwd=worktree)
+    git.remove_branch(local(base), cwd=worktree)
+    git.remove_branch(local(ref), cwd=worktree)
 
 
 @contextlib.contextmanager
@@ -159,6 +159,6 @@ def retrocookie(
     with temporary_worktree(branch) as worktree:
         with temporary_repository(url) as directory:
             rewrite_commits(directory, template_directory, whitelist, blacklist)
-            fetch_commits(directory, ref, base)
+            fetch_commits(worktree, directory, ref, base)
 
-        harvest_commits(branch, base, ref)
+        harvest_commits(worktree, branch, base, ref)
