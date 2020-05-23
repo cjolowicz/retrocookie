@@ -13,26 +13,21 @@ from .core import retrocookie
     "--url",
     metavar="URL",
     help=(
-        "Repository URL for the template instance"
-        "  [default: <URL of origin>-instance]"
+        "Repository URL of template instance" "  [default: <originurl>-instance.git]"
     ),
 )
 @click.option(
-    "--ref",
-    "-r",
-    metavar="REF",
-    required=True,
-    help="Remote reference to fetch (required)",
+    "--ref", "-r", metavar="REF", required=True, help="Remote reference to fetch",
 )
 @click.option(
     "--base",
     metavar="REF",
     default="master",
-    help="Remote reference from which to rebase",
+    help="Remote reference to rebase from",
     show_default=True,
 )
 @click.option(
-    "--local", metavar="REF", help="Local branch name  [default: --ref]",
+    "--local", metavar="REF", help="Local branch name  [default: same as --ref]",
 )
 @click.option(
     "--whitelist",
@@ -49,7 +44,7 @@ from .core import retrocookie
     help="Do not rewrite these Cookiecutter variables",
 )
 @click.option(
-    "--delete", "-d", is_flag=True, help="Clean up the branches created by this tool"
+    "--delete", "-d", is_flag=True, help="Clean up any left over branches"
 )
 @click.version_option()
 def main(
