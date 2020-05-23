@@ -73,10 +73,10 @@ def remote(ref: str) -> str:
 
 
 def rewrite_commits(
+    directory: Path,
     template_directory: Path,
     whitelist: Container[str],
     blacklist: Container[str],
-    directory: Path,
 ) -> None:
     """Rewrite commits for template."""
     context = load_context(directory)
@@ -160,7 +160,7 @@ def retrocookie(
 
     with temporary_worktree(branch) as worktree:
         with temporary_repository(url) as directory:
-            rewrite_commits(template_directory, whitelist, blacklist, directory)
+            rewrite_commits(directory, template_directory, whitelist, blacklist)
             fetch_commits(directory, ref, base)
 
         harvest_commits(branch, base, ref)
