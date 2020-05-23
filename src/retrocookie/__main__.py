@@ -61,7 +61,7 @@ def main(
     blacklist: Container[str],
     delete: bool,
 ) -> None:
-    """Retrocookie imports commits from template instances into the template."""
+    """Retrocookie imports commits into Cookiecutter templates."""
     if delete:
         cleanup(ref)
     else:
