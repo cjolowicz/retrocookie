@@ -111,6 +111,18 @@ def temporary_repository(url: str) -> Iterator[Path]:
         yield directory
 
 
+def cleanup() -> None:
+    """Remove branches and remotes created by this program."""
+    if git.get_current_branch().startswith(NAMESPACE):
+        git.switch_branch("master")
+
+    for branch in git.find_branches(NAMESPACE):
+        git.remove_branch(branch)
+
+    if git.exists_remote(REMOTE):
+        git.remove_remote(REMOTE)
+
+
 def retrocookie(
     ref: str,
     *,
@@ -137,15 +149,3 @@ def retrocookie(
         fetch_commits(str(directory), ref, base)
 
     harvest_commits(branch, base, ref, onto)
-
-
-def cleanup() -> None:
-    """Remove branches and remotes created by this program."""
-    if git.get_current_branch().startswith(NAMESPACE):
-        git.switch_branch("master")
-
-    for branch in git.find_branches(NAMESPACE):
-        git.remove_branch(branch)
-
-    if git.exists_remote(REMOTE):
-        git.remove_remote(REMOTE)
