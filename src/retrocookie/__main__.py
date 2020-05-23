@@ -4,7 +4,6 @@ from typing import Optional
 
 import click
 
-from .core import cleanup as _cleanup
 from .core import retrocookie
 
 
