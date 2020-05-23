@@ -51,13 +51,6 @@ def create_branch(branch: str, ref: str) -> None:
     )
 
 
-def create_local_branch(branch: str, remote: str, ref: str) -> None:
-    """Create a local branch for the remote ref. Reset it if it exists."""
-    subprocess.run(
-        ["git", "switch", "--force-create", branch, f"{remote}/{ref}"], check=True,
-    )
-
-
 def exists_branch(branch: str) -> bool:
     """Return True if the branch exists."""
     process = subprocess.run(

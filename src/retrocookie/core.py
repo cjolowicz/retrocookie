@@ -84,6 +84,14 @@ def filter_branch(
         subprocess.run(command, check=True)
 
 
+def local(ref: str) -> str:
+    return f"{NAMESPACE}/{ref}"
+
+
+def remote(ref: str) -> str:
+    return f"{REMOTE}/{ref}"
+
+
 def fetch_commits(url: str, ref: str, base: str) -> None:
     """Fetch commits from the template instance."""
     if git.exists_remote(REMOTE):
@@ -91,8 +99,8 @@ def fetch_commits(url: str, ref: str, base: str) -> None:
 
     git.add_remote(REMOTE, url)
     git.fetch_remote(REMOTE, ref, base)
-    git.create_local_branch(f"{NAMESPACE}/{ref}", REMOTE, ref)
-    git.create_local_branch(f"{NAMESPACE}/{base}", REMOTE, base)
+    git.create_branch(local(ref), remote(ref))
+    git.create_branch(local(base), remote(base))
     git.remove_remote(REMOTE)
 
 
@@ -107,7 +115,7 @@ def rewrite_commits(
     context = load_context()
     replacements = get_replacements(context, whitelist, blacklist)
     filter_branch(
-        refs=(f"{NAMESPACE}/{ref}", f"{NAMESPACE}/{base}"),
+        refs=(local(ref), local(base)),
         subdirectory=template_directory.name,
         replacements=replacements,
     )
@@ -115,9 +123,9 @@ def rewrite_commits(
 
 def harvest_commits(branch: str, base: str, ref: str, onto: str) -> None:
     """Rebase commits and clean up."""
-    git.rebase(f"{NAMESPACE}/{base}", "{NAMESPACE}/{ref}", "--onto={onto}")
-    git.move_branch(f"{NAMESPACE}/{ref}", branch)
-    git.remove_branch(f"{NAMESPACE}/base")
+    git.rebase(local(base), local(ref), "--onto={onto}")
+    git.move_branch(local(ref), branch)
+    git.remove_branch(local(base))
 
 
 def retrocookie(
