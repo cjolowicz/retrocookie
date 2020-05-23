@@ -128,6 +128,9 @@ def retrocookie(
 
 def cleanup() -> None:
     """Remove branches and remotes created by this program."""
+    if git.get_current_branch().startswith(NAMESPACE):
+        git.switch_branch("master")
+
     for branch in git.find_branches(NAMESPACE):
         git.remove_branch(branch)
 
