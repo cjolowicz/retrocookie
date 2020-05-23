@@ -61,7 +61,7 @@ def main(
     if delete:
         cleanup(ref)
     else:
-        retrocookie(url, ref, whitelist, blacklist, base)
+        retrocookie(ref, base=base, url=url, whitelist=whitelist, blacklist=blacklist)
 
 
 if __name__ == "__main__":

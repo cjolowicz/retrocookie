@@ -104,12 +104,13 @@ def harvest_commits(branch: str, base: str, ref: str, onto: str) -> None:
 
 
 def retrocookie(
-    url: Optional[str],
     ref: str,
-    whitelist: Container[str],
-    blacklist: Container[str],
+    *,
     base: str = "master",
+    url: Optional[str],
     branch: Optional[str] = None,
+    whitelist: Container[str] = (),
+    blacklist: Container[str] = (),
 ) -> None:
     """Import commits from instance repository into template repository."""
     if url is None:
