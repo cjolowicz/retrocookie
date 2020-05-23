@@ -95,7 +95,7 @@ def rewrite_commits(
 
 def harvest_commits(branch: str, base: str, ref: str, onto: str) -> None:
     """Rebase commits and clean up."""
-    git.rebase(local(base), local(ref), "--onto={onto}")
+    git.rebase(local(base), local(ref), f"--onto={onto}")
     git.move_branch(local(ref), branch)
     git.remove_branch(local(base))
 
