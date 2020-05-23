@@ -43,7 +43,6 @@ from .core import retrocookie
     multiple=True,
     help="Do not rewrite these Cookiecutter variables",
 )
-@click.option("--cleanup", is_flag=True, help="Clean up any left over branches")
 @click.version_option()
 def main(
     url: Optional[str],
@@ -52,20 +51,11 @@ def main(
     local: Optional[str],
     whitelist: Container[str],
     blacklist: Container[str],
-    cleanup: bool,
 ) -> None:
     """Retrocookie imports commits into Cookiecutter templates."""
-    if cleanup:
-        _cleanup()
-    else:
-        retrocookie(
-            ref,
-            base=base,
-            local=local,
-            url=url,
-            whitelist=whitelist,
-            blacklist=blacklist,
-        )
+    retrocookie(
+        ref, base=base, local=local, url=url, whitelist=whitelist, blacklist=blacklist,
+    )
 
 
 if __name__ == "__main__":
