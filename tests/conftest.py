@@ -104,3 +104,4 @@ def cookiecutter_instance_repository_with_topic(
     repository.commit(
         author=AUTHOR, author_email=AUTHOR_EMAIL, message="Update README.md"
     )
+    return repository
