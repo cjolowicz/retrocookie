@@ -13,12 +13,10 @@ import pygit2
 class Repository:
     """Git repository."""
 
-    def __init__(
-        self, path: Optional[Path] = None, repo: Optional[pygit2.Repository] = None,
-    ) -> None:
+    def __init__(self, path: Optional[Path] = None) -> None:
         """Initialize."""
         self.path = path or Path.cwd()
-        self.repo = repo or pygit2.Repository(self.path)
+        self.repo = pygit2.Repository(self.path)
 
     def git(
         self, *args: str, check: bool = True, **kwargs: Any
@@ -30,8 +28,9 @@ class Repository:
     @classmethod
     def clone(cls, url: str, path: Path) -> "Repository":
         """Clone the repository."""
-        repo = pygit2.clone_repository(url, path)
-        return cls(path, repo)
+        # pygit2 wheels for Windows and macOS lack SSH support.
+        subprocess.run(["git", "clone", url, str(path)], check=True)
+        return cls(path)
 
     def exists_remote(self, remote: str) -> bool:
         """Return True if the remote exists."""
