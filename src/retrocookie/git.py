@@ -20,7 +20,7 @@ class Repository:
         self.path = path or Path.cwd()
         self.repo = repo or pygit2.Repository(self.path)
 
-    def _git(
+    def git(
         self, *args: str, check: bool = True, **kwargs: Any
     ) -> subprocess.CompletedProcess[str]:
         return subprocess.run(["git", *args], check=check, cwd=self.path, **kwargs)
@@ -66,7 +66,7 @@ class Repository:
 
     def rebase(self, upstream: str, branch: str, onto: str) -> None:
         """Rebase."""
-        self._git("rebase", upstream, branch, f"--onto={onto}")
+        self.git("rebase", upstream, branch, f"--onto={onto}")
 
     def filter_repo(
         self, subdirectory: str, replacements: List[Tuple[str, str]]
@@ -84,4 +84,4 @@ class Repository:
             )
 
             options.append(f"--replace-text={replacements_file}")
-            self._git("filter-repo", *options)
+            self.git("filter-repo", *options)
