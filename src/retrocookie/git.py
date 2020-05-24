@@ -69,21 +69,3 @@ class Repository:
     def rebase(self, upstream: str, branch: str, onto: str) -> None:
         """Rebase."""
         self.git("rebase", upstream, branch, f"--onto={onto}")
-
-    def filter_repo(
-        self, subdirectory: str, replacements: List[Tuple[str, str]]
-    ) -> None:
-        """Rewrite commits from the template instance to use template variables."""
-        options = [
-            f"--to-subdirectory-filter={subdirectory}",
-            *(f"--path-rename={old}:{new}" for old, new in replacements),
-        ]
-
-        with tempfile.TemporaryDirectory() as tmpdir:
-            replacements_file = Path(tmpdir) / "replacements.txt"
-            replacements_file.write_text(
-                "\n".join(f"{old}==>{new}" for old, new in replacements)
-            )
-
-            options.append(f"--replace-text={replacements_file}")
-            self.git("filter-repo", *options)
