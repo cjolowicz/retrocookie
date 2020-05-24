@@ -14,7 +14,7 @@ from . import git
 
 
 class RepositoryFilter:
-    """Rewrite instance repository for import into template."""
+    """Perform path and blob replacements on repository."""
 
     def __init__(self, subdirectory: str, replacements: List[Tuple[str, str]]) -> None:
         self.subdirectory = subdirectory.encode()
