@@ -28,7 +28,7 @@ def find_template_directory(repository: git.Repository) -> Path:
     tokens = "{{", "cookiecutter", "}}"
     for path in repository.path.iterdir():
         if path.is_dir() and all(x in path.name for x in tokens):
-            return path
+            return path.relative_to(repository.path)
     raise Exception("cannot find template directory")
 
 
@@ -70,7 +70,7 @@ def rewrite_commits(
     replacements = get_replacements(context, whitelist, blacklist)
     filter_repository(
         repository=repository,
-        subdirectory=template_directory.name,
+        path=template_directory,
         replacements=replacements,
     )
 
