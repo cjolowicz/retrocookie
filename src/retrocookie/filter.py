@@ -26,7 +26,7 @@ def chdir(path: Path) -> Iterator[None]:
 
 
 class RepositoryFilter:
-    """Perform path and blob replacements on repository."""
+    """Perform path and blob replacements on a repository."""
 
     def __init__(
         self,
@@ -34,20 +34,24 @@ class RepositoryFilter:
         path: Path,
         replacements: Iterable[Tuple[str, str]],
     ) -> None:
+        """Initialize."""
         self.repository = repository
         self.path = str(path).encode()
         self.replacements = [(old.encode(), new.encode()) for old, new in replacements]
 
     def filename_callback(self, filename: bytes) -> bytes:
+        """Rewrite filenames."""
         for old, new in self.replacements:
             filename = filename.replace(old, new)
         return b"/".join((self.path, filename))
 
     def blob_callback(self, blob: Blob) -> None:
+        """Rewrite blobs."""
         for old, new in self.replacements:
             blob.data = blob.data.replace(old, new)
 
     def _create_filter(self) -> RepoFilter:
+        """Create the filter."""
         args = FilteringOptions.parse_args([], error_on_empty=False)
         return RepoFilter(
             args,
@@ -56,6 +60,7 @@ class RepositoryFilter:
         )
 
     def run(self) -> None:
+        """Run the filter."""
         with chdir(self.repository.path):
             repofilter = self._create_filter()
             repofilter.run()
@@ -64,5 +69,6 @@ class RepositoryFilter:
 def filter_repository(
     repository: git.Repository, path: Path, replacements: Iterable[Tuple[str, str]],
 ) -> None:
+    """Perform path and blob replacements on a repository."""
     repofilter = RepositoryFilter(repository, path, replacements)
     repofilter.run()
