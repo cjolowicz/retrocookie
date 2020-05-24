@@ -89,12 +89,11 @@ def cookiecutter_repository(cookiecutter_project: Path) -> git.Repository:
 
 @pytest.fixture
 def cookiecutter_instance(
-    cookiecutter_repository: git.Repository, tmp_path: Path
+    cookiecutter_repository: git.Repository, context: Dict[str, str], tmp_path: Path,
 ) -> Path:
-    path = tmp_path / "instance"
     template = str(cookiecutter_repository.path)
-    cookiecutter(template, no_input=True, output_dir=str(path))
-    return path
+    cookiecutter(template, no_input=True, output_dir=str(tmp_path))
+    return tmp_path / context["project_slug"]
 
 
 @pytest.fixture
