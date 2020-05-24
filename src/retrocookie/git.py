@@ -10,10 +10,12 @@ import pygit2
 class Repository:
     """Git repository."""
 
-    def __init__(self, path: Optional[Path] = None) -> None:
+    def __init__(
+        self, path: Optional[Path] = None, *, repo: Optional[pygit2.Repository] = None
+    ) -> None:
         """Initialize."""
-        self.path = path or Path.cwd()
-        self.repo = pygit2.Repository(self.path)
+        self.path = path or Path.cwd() if repo is None else Path(repo.path).parent
+        self.repo = repo or pygit2.Repository(self.path)
 
     def git(
         self, *args: str, check: bool = True, **kwargs: Any
@@ -24,6 +26,12 @@ class Repository:
         return subprocess.run(  # noqa: S603,S607
             ["git", *args], check=check, cwd=self.path, **kwargs
         )
+
+    @classmethod
+    def init(cls, path: Path) -> "Repository":
+        """Create a repository."""
+        repo = pygit2.init_repository(path)
+        return cls(path, repo=repo)
 
     @classmethod
     def clone(cls, url: str, path: Path) -> "Repository":
@@ -71,3 +79,46 @@ class Repository:
     def rebase(self, upstream: str, branch: str, onto: str) -> None:
         """Rebase."""
         self.git("rebase", upstream, branch, f"--onto={onto}")
+
+    def add(self, *paths: Path) -> None:
+        """Add paths to the index."""
+        for path in paths:
+            self.repo.index.add(
+                path.relative_to(self.path) if path.is_absolute() else path
+            )
+        else:
+            self.repo.index.add_all()
+        self.repo.index.write()
+
+    def commit(
+        self,
+        *,
+        author: str,
+        author_email: str,
+        message: str,
+        committer: Optional[str] = None,
+        committer_email: Optional[str] = None,
+    ):
+        """Create a commit."""
+        if committer is None:
+            committer = author
+
+        if committer_email is None:
+            committer_email = author_email
+
+        author_signature = pygit2.Signature(author, author_email)
+        committer_signature = pygit2.Signature(committer, committer_email)
+
+        try:
+            head = self.repo.head
+            refname = head.name
+            parents = [self.repo[head.target]]
+        except pygit2.GitError:
+            refname = "refs/heads/master"
+            parents = []
+
+        tree = self.repo.index.write_tree()
+
+        self.repo.create_commit(
+            refname, author_signature, committer_signature, message, tree, parents
+        )
