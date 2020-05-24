@@ -2,8 +2,8 @@
 import contextlib
 import os
 from pathlib import Path
-from typing import Iterator
 from typing import Iterable
+from typing import Iterator
 from typing import Tuple
 
 from git_filter_repo import Blob
