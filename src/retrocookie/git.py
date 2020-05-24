@@ -1,11 +1,8 @@
 """Git interface."""
 import subprocess  # noqa: S404
-import tempfile
 from pathlib import Path
 from typing import Any
-from typing import List
 from typing import Optional
-from typing import Tuple
 
 import pygit2
 
