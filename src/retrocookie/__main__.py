@@ -1,4 +1,5 @@
 """Command-line interface."""
+from pathlib import Path
 from typing import Container
 from typing import Optional
 
@@ -42,6 +43,9 @@ from .core import retrocookie
     multiple=True,
     help="Do not rewrite these Cookiecutter variables",
 )
+@click.option(
+    "--directory", "-C", metavar="DIR", help="Repository directory",
+)
 @click.version_option()
 def main(
     url: Optional[str],
@@ -50,10 +54,18 @@ def main(
     local: Optional[str],
     whitelist: Container[str],
     blacklist: Container[str],
+    directory: Optional[str],
 ) -> None:
     """Retrocookie imports commits into Cookiecutter templates."""
+    path = Path(directory) if directory else None
     retrocookie(
-        ref, base=base, branch=local, url=url, whitelist=whitelist, blacklist=blacklist,
+        ref,
+        base=base,
+        branch=local,
+        url=url,
+        whitelist=whitelist,
+        blacklist=blacklist,
+        path=path,
     )
 
 
