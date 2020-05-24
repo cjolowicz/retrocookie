@@ -73,9 +73,12 @@ def rewrite_commits(
 
 
 def apply_commits(
-    repository: git.Repository, branch: str, remote: str, base: str, ref: str
+    repository: git.Repository, remote: str, base: str, ref: str, branch: Optional[str],
 ) -> None:
     """Create <branch> with commits from <remote>/<base>..<remote>/<ref>."""
+    if branch is None:
+        branch = ref
+
     current = repository.get_current_branch()
     repository.fetch_remote(remote, base, ref)
     repository.create_branch(branch, f"{remote}/{ref}")
@@ -120,9 +123,6 @@ def retrocookie(
     template_directory = find_template_directory(repository)
     remote = "retrocookie"
 
-    if branch is None:
-        branch = ref
-
     if url is None:
         url = guess_remote_url(repository)
 
@@ -130,4 +130,4 @@ def retrocookie(
         rewrite_commits(instance, template_directory, whitelist, blacklist)
 
         with temporary_remote(repository, remote, str(instance.path)):
-            apply_commits(repository, branch, remote, base, ref)
+            apply_commits(repository, remote, base, ref, branch)
