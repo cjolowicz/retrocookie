@@ -29,6 +29,7 @@ class Repository:
     def clone(cls, url: str, path: Path) -> "Repository":
         """Clone the repository."""
         # pygit2 wheels for Windows and macOS lack SSH support.
+        # https://github.com/libgit2/pygit2/issues/994
         subprocess.run(  # noqa: S603,S607
             ["git", "clone", url, str(path)], check=True,
         )
