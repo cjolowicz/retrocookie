@@ -2,6 +2,8 @@
 import contextlib
 import os
 from pathlib import Path
+from typing import Any
+from typing import Dict
 from typing import Iterable
 from typing import Iterator
 from typing import Tuple
@@ -45,7 +47,7 @@ class RepositoryFilter:
             filename = filename.replace(old, new)
         return b"/".join((self.path, filename))
 
-    def blob_callback(self, blob: Blob) -> None:
+    def blob_callback(self, blob: Blob, metadata: Dict[str, Any]) -> None:
         """Rewrite blobs."""
         for old, new in self.replacements:
             blob.data = blob.data.replace(old, new)
