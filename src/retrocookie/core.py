@@ -12,6 +12,7 @@ from typing import Optional
 from typing import Tuple
 
 from . import git
+from .filter import filter_repository
 
 
 def guess_instance_url(repository: git.Repository) -> str:
@@ -67,8 +68,10 @@ def rewrite_commits(
     """Rewrite the repository using template variables."""
     context = load_context(repository)
     replacements = get_replacements(context, whitelist, blacklist)
-    repository.filter_repo(
-        subdirectory=template_directory.name, replacements=replacements
+    filter_repository(
+        repository=repository,
+        subdirectory=template_directory.name,
+        replacements=replacements,
     )
 
 
