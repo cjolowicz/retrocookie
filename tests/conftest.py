@@ -54,8 +54,21 @@ def cookiecutter_readme(cookiecutter_subdirectory: Path) -> Path:
 
 
 @pytest.fixture
+def dot_cookiecutter_json(cookiecutter_subdirectory: Path) -> Path:
+    path = cookiecutter_subdirectory / ".cookiecutter.json"
+    text = """\
+    {{ cookiecutter | jsonify }}
+    """
+    path.write_text(textwrap.dedent(text))
+    return path
+
+
+@pytest.fixture
 def cookiecutter_project(
-    cookiecutter_path: Path, cookiecutter_json: Path, cookiecutter_readme: Path
+    cookiecutter_path: Path,
+    cookiecutter_json: Path,
+    cookiecutter_readme: Path,
+    dot_cookiecutter_json: Path,
 ) -> Path:
     return cookiecutter_path
 
