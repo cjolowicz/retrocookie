@@ -111,7 +111,7 @@ def retrocookie(
     *,
     base: str = "master",
     branch: Optional[str] = None,
-    url: Optional[str],
+    url: Optional[str] = None,
     whitelist: Container[str] = (),
     blacklist: Container[str] = (),
 ) -> None:
