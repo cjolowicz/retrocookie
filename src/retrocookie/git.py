@@ -115,7 +115,7 @@ class Repository:
         try:
             head = self.repo.head
             refname = head.name
-            parents = [self.repo[head.target]]
+            parents = [head.target]
         except pygit2.GitError:
             refname = "refs/heads/master"
             parents = []
