@@ -53,7 +53,6 @@ def main(
     blacklist: Container[str],
 ) -> None:
     """Retrocookie imports commits into Cookiecutter templates."""
-    cleanup()
     retrocookie(
         ref, base=base, branch=local, url=url, whitelist=whitelist, blacklist=blacklist,
     )

@@ -92,18 +92,16 @@ def fetch_commits(
     """Fetch the rewritten commits."""
     repository.add_remote(REMOTE, str(remote.path))
     repository.fetch_remote(REMOTE, base, ref)
-    repository.create_branch(_local(ref), _remote(ref))
 
 
 def harvest_commits(
     repository: git.Repository, branch: str, base: str, ref: str
 ) -> None:
-    """Rebase commits and clean up."""
+    """Rebase commits onto branch and fast-forward."""
+    repository.create_branch(_local(ref), _remote(ref))
     repository.rebase(_remote(base), _local(ref), onto=branch)
     repository.switch_branch(branch)
     repository.merge_ff(_local(ref))
-    repository.remove_branch(_local(ref))
-    repository.remove_remote(REMOTE)
 
 
 @contextlib.contextmanager
@@ -143,6 +141,16 @@ def cleanup() -> None:
         repository.remove_remote(REMOTE)
 
 
+@contextlib.contextmanager
+def cleaning() -> Iterator[None]:
+    """Invoke cleanup on enter and exit."""
+    cleanup()
+    try:
+        yield
+    finally:
+        cleanup()
+
+
 def retrocookie(
     ref: str,
     *,
@@ -154,6 +162,7 @@ def retrocookie(
 ) -> None:
     """Import commits from instance repository into template repository."""
     repository = git.Repository()
+    template_directory = find_template_directory(repository)
 
     if url is None:
         url = guess_remote_url(repository)
@@ -161,10 +170,11 @@ def retrocookie(
     if branch is None:
         branch = ref
 
-    with temporary_worktree(repository, branch) as worktree:
-        template_directory = find_template_directory(worktree)
+    with temporary_repository(url) as remote:
+        rewrite_commits(remote, template_directory, whitelist, blacklist)
 
-        with temporary_repository(url) as remote:
-            rewrite_commits(remote, template_directory, whitelist, blacklist)
-            fetch_commits(worktree, remote, base, ref)
-            harvest_commits(worktree, branch, base, ref)
+        with cleaning():
+            fetch_commits(repository, remote, base, ref)
+
+            with temporary_worktree(repository, branch) as worktree:
+                harvest_commits(worktree, branch, base, ref)
