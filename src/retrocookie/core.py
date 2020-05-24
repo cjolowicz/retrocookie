@@ -14,7 +14,7 @@ from typing import Tuple
 from . import git
 
 
-def guess_remote_url(repository: git.Repository) -> str:
+def guess_instance_url(repository: git.Repository) -> str:
     """Guess the URL of the template instance."""
     url = repository.get_remote_url("origin")
     if url.endswith(".git"):
@@ -124,7 +124,7 @@ def retrocookie(
     remote = "retrocookie"
 
     if url is None:
-        url = guess_remote_url(repository)
+        url = guess_instance_url(repository)
 
     with temporary_repository(url) as instance:
         rewrite_commits(instance, template_directory, whitelist, blacklist)
