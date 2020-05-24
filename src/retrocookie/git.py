@@ -22,7 +22,9 @@ class Repository:
 
     def git(
         self, *args: str, check: bool = True, **kwargs: Any
-    ) -> subprocess.CompletedProcess[str]:
+    ) -> "subprocess.CompletedProcess[str]":
+        # FIXME: Use `from __future__ import annotations` instead of quoting.
+        # This requires Python 3.7+.
         return subprocess.run(["git", *args], check=check, cwd=self.path, **kwargs)
 
     @classmethod
