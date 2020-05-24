@@ -104,11 +104,11 @@ def cookiecutter_instance_repository(cookiecutter_instance: Path) -> git.Reposit
 
 @pytest.fixture
 def cookiecutter_instance_repository_with_topic(
-    cookiecutter_instance_repository: git.Repository
+    cookiecutter_instance_repository: git.Repository,
 ) -> git.Repository:
     repository = cookiecutter_instance_repository
     readme = repository.path / "README.md"
-    with readme.open(mode="w+") as io:
+    with readme.open(mode="a") as io:
         io.write("Lorem ipsum\n")
 
     repository.create_branch("topic")
