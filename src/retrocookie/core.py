@@ -119,9 +119,10 @@ def retrocookie(
     url: Optional[str] = None,
     whitelist: Container[str] = (),
     blacklist: Container[str] = (),
+    path: Optional[Path] = None,
 ) -> None:
     """Import commits from instance repository into template repository."""
-    repository = git.Repository()
+    repository = git.Repository(path)
     template_directory = find_template_directory(repository)
     remote = "retrocookie"
 
