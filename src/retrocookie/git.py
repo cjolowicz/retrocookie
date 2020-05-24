@@ -56,10 +56,6 @@ class Repository:
         commit = self.repo.branches[ref].peel()
         self.repo.branches.create(branch, commit)
 
-    def remove_branch(self, branch: str) -> None:
-        """Remove the branch."""
-        self.repo.branches.delete(branch)
-
     def get_current_branch(self) -> str:
         """Return the current branch."""
         return self.repo.head.shorthand  # type: ignore[no-any-return]
@@ -67,14 +63,6 @@ class Repository:
     def switch_branch(self, branch: str) -> None:
         """Switch the current branch."""
         self.repo.checkout(self.repo.branches[branch])
-
-    def find_branches(self, namespace: str) -> List[str]:
-        """Find branches under the given namespace."""
-        return [
-            branch
-            for branch in self.repo.branches.local
-            if branch.startswith(f"{namespace}/")
-        ]
 
     def rebase(self, upstream: str, branch: str, onto: str) -> None:
         """Rebase."""
