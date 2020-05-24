@@ -21,13 +21,17 @@ class Repository:
         """Invoke git."""
         # FIXME: Use `from __future__ import annotations` instead of quoting.
         # This requires Python 3.7+.
-        return subprocess.run(["git", *args], check=check, cwd=self.path, **kwargs)
+        return subprocess.run(  # noqa: S603,S607
+            ["git", *args], check=check, cwd=self.path, **kwargs
+        )
 
     @classmethod
     def clone(cls, url: str, path: Path) -> "Repository":
         """Clone the repository."""
         # pygit2 wheels for Windows and macOS lack SSH support.
-        subprocess.run(["git", "clone", url, str(path)], check=True)
+        subprocess.run(  # noqa: S603,S607
+            ["git", "clone", url, str(path)], check=True,
+        )
         return cls(path)
 
     def exists_remote(self, remote: str) -> bool:
