@@ -47,16 +47,14 @@ def get_replacements(
     def ref(key: str) -> str:
         return f"{{{{cookiecutter.{key}}}}}"
 
+    escape = [(token, token.join(('{{ "', '" }}'))) for token in ("{{", "}}")]
     replacements = [
         (value, ref(key))
         for key, value in context.items()
         if key not in blacklist and not (whitelist and key not in whitelist)
     ]
-    replacements.extend(
-        [(token, token.join(('{{ "', '" }}'))) for token in ("{{", "}}")]
-    )
 
-    return replacements
+    return escape + replacements
 
 
 def rewrite_commits(
