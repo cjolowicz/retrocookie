@@ -24,11 +24,11 @@ def test_cookiecutter_instance_commit(
     cookiecutter_instance_repository_with_topic: git.Repository,
 ) -> None:
     """It succeeds."""
-    path = cookiecutter_repository.path
-    url = str(cookiecutter_instance_repository_with_topic.path)
+    cookiecutter = cookiecutter_repository
+    instance = cookiecutter_instance_repository_with_topic
 
-    retrocookie("topic", path=path, url=url)
-    cookiecutter_repository.switch_branch("topic")
+    retrocookie("topic", path=cookiecutter.path, url=str(instance.path))
+    cookiecutter.switch_branch("topic")
 
-    readme = path / "README.md"
+    readme = cookiecutter.path / "README.md"
     assert "Lorem ipsum" in readme.read_text()
