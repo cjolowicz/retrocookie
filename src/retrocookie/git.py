@@ -37,7 +37,7 @@ class Repository:
 
     def exists_remote(self, remote: str) -> bool:
         """Return True if the remote exists."""
-        return remote in self.repo.remotes
+        return remote in {r.name for r in self.repo.remotes}
 
     def add_remote(self, remote: str, url: str) -> None:
         """Add the remote with the given URL."""
