@@ -42,7 +42,7 @@ def load_context(repository: git.Repository) -> Dict[str, str]:
 def get_replacements(
     context: Dict[str, str], whitelist: Container[str], blacklist: Container[str],
 ) -> List[Tuple[str, str]]:
-    """Create replacements to be applied to commits from the template instance."""
+    """Return replacements to be applied to commits from the template instance."""
 
     def ref(key: str) -> str:
         return f"{{{{cookiecutter.{key}}}}}"
