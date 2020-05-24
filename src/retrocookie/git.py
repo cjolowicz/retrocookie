@@ -80,18 +80,6 @@ class Repository:
         """Rebase."""
         self._git("rebase", upstream, branch, f"--onto={onto}")
 
-    def merge_ff(self, ref: str) -> None:
-        """Fast-forward to ref."""
-        self._git("merge", "--ff-only", ref)
-
-    def add_worktree(self, branch: str, directory: Path) -> None:
-        """Add a worktree at the given directory, creating the given branch."""
-        self._git("worktree", "add", "-b", branch, str(directory))
-
-    def remove_worktree(self, directory: Path) -> None:
-        """Remove the worktree located at the given directory."""
-        self._git("worktree", "remove", str(directory))
-
     def filter_repo(
         self, subdirectory: str, replacements: List[Tuple[str, str]]
     ) -> None:

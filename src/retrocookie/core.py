@@ -14,10 +14,6 @@ from typing import Tuple
 from . import git
 
 
-NAMESPACE = "retrocookie"
-REMOTE = "retrocookie-instance"
-
-
 def guess_remote_url(repository: git.Repository) -> str:
     """Guess the URL of the template instance."""
     url = repository.get_remote_url("origin")
@@ -62,16 +58,6 @@ def get_replacements(
     return replacements
 
 
-def _local(ref: str) -> str:
-    """Prefix ref by NAMESPACE."""
-    return f"{NAMESPACE}/{ref}"
-
-
-def _remote(ref: str) -> str:
-    """Prefix ref by REMOTE."""
-    return f"{REMOTE}/{ref}"
-
-
 def rewrite_commits(
     repository: git.Repository,
     template_directory: Path,
@@ -86,22 +72,14 @@ def rewrite_commits(
     )
 
 
-def fetch_commits(
-    repository: git.Repository, remote: git.Repository, base: str, ref: str
+def apply_commits(
+    repository: git.Repository, branch: str, remote: str, base: str, ref: str
 ) -> None:
-    """Fetch the rewritten commits."""
-    repository.add_remote(REMOTE, str(remote.path))
-    repository.fetch_remote(REMOTE, base, ref)
-
-
-def harvest_commits(
-    repository: git.Repository, branch: str, base: str, ref: str
-) -> None:
-    """Rebase commits onto branch and fast-forward."""
-    repository.create_branch(_local(ref), _remote(ref))
-    repository.rebase(_remote(base), _local(ref), onto=branch)
-    repository.switch_branch(branch)
-    repository.merge_ff(_local(ref))
+    """Create <branch> with commits from <remote>/<base>..<remote>/<ref>."""
+    current = repository.get_current_branch()
+    repository.fetch_remote(remote, base, ref)
+    repository.create_branch(branch, f"{remote}/{ref}")
+    repository.rebase(upstream=f"{remote}/{base}", branch=branch, onto=current)
 
 
 @contextlib.contextmanager
@@ -113,42 +91,19 @@ def temporary_repository(url: str) -> Iterator[git.Repository]:
 
 
 @contextlib.contextmanager
-def temporary_worktree(
-    repository: git.Repository, branch: str
-) -> Iterator[git.Repository]:
-    """Use a temporary worktree creating the given branch."""
-    with tempfile.TemporaryDirectory() as tmpdir:
-        directory = Path(tmpdir) / branch
-        repository.add_worktree(branch, directory)
+def temporary_remote(
+    repository: git.Repository, remote: str, url: str
+) -> Iterator[None]:
+    if repository.exists_remote(remote):
+        repository.remove_remote(remote)
 
-        try:
-            yield git.Repository(directory)
-        finally:
-            repository.remove_worktree(directory)
+    repository.add_remote(remote, url)
 
-
-def cleanup() -> None:
-    """Remove branches and remotes created by this program."""
-    repository = git.Repository()
-
-    if repository.get_current_branch().startswith(NAMESPACE):
-        repository.switch_branch("master")
-
-    for branch in repository.find_branches(NAMESPACE):
-        repository.remove_branch(branch)
-
-    if repository.exists_remote(REMOTE):
-        repository.remove_remote(REMOTE)
-
-
-@contextlib.contextmanager
-def cleaning() -> Iterator[None]:
-    """Invoke cleanup on enter and exit."""
-    cleanup()
     try:
         yield
     finally:
-        cleanup()
+        if repository.exists_remote(remote):
+            repository.remove_remote(remote)
 
 
 def retrocookie(
@@ -163,18 +118,16 @@ def retrocookie(
     """Import commits from instance repository into template repository."""
     repository = git.Repository()
     template_directory = find_template_directory(repository)
-
-    if url is None:
-        url = guess_remote_url(repository)
+    remote = "retrocookie"
 
     if branch is None:
         branch = ref
 
-    with temporary_repository(url) as remote:
-        rewrite_commits(remote, template_directory, whitelist, blacklist)
+    if url is None:
+        url = guess_remote_url(repository)
 
-        with cleaning():
-            fetch_commits(repository, remote, base, ref)
+    with temporary_repository(url) as instance:
+        rewrite_commits(instance, template_directory, whitelist, blacklist)
 
-            with temporary_worktree(repository, branch) as worktree:
-                harvest_commits(worktree, branch, base, ref)
+        with temporary_remote(repository, remote, str(instance.path)):
+            apply_commits(repository, branch, remote, base, ref)
