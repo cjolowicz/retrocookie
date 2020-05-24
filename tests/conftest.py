@@ -5,8 +5,13 @@ from pathlib import Path
 from typing import Dict
 
 import pytest
+from cookiecutter.main import cookiecutter
 
 from retrocookie import git
+
+
+AUTHOR = "user"
+AUTHOR_EMAIL = "user@example.com"
 
 
 @pytest.fixture
@@ -16,7 +21,7 @@ def context() -> Dict[str, str]:
 
 @pytest.fixture
 def cookiecutter_path(tmp_path: Path) -> Path:
-    path = tmp_path / "cookiecutter-example"
+    path = tmp_path / "cookiecutter"
     path.mkdir()
     return path
 
@@ -55,11 +60,47 @@ def cookiecutter_project(
     return cookiecutter_path
 
 
-@pytest.fixture
-def cookiecutter_repository(cookiecutter_project: Path) -> git.Repository:
-    repository = git.Repository.init(cookiecutter_project)
+def make_repository(path: Path) -> git.Repository:
+    repository = git.Repository.init(path)
     repository.add()
     repository.commit(
-        author="user", author_email="user@example.com", message="Initial commit"
+        author=AUTHOR, author_email=AUTHOR_EMAIL, message="Initial commit"
     )
     return repository
+
+
+@pytest.fixture
+def cookiecutter_repository(cookiecutter_project: Path) -> git.Repository:
+    return make_repository(cookiecutter_project)
+
+
+@pytest.fixture
+def cookiecutter_instance(
+    cookiecutter_repository: git.Repository, tmp_path: Path
+) -> Path:
+    path = tmp_path / "instance"
+    template = str(cookiecutter_repository.path)
+    cookiecutter(template, no_input=True, output_dir=str(path))
+    return path
+
+
+@pytest.fixture
+def cookiecutter_instance_repository(cookiecutter_instance: Path) -> git.Repository:
+    return make_repository(cookiecutter_instance)
+
+
+@pytest.fixture
+def cookiecutter_instance_repository_with_topic(
+    cookiecutter_instance_repository: git.Repository
+) -> git.Repository:
+    repository = cookiecutter_instance_repository
+    readme = repository.path / "README.md"
+    with readme.open(mode="w+") as io:
+        io.write("Lorem ipsum\n")
+
+    repository.create_branch("topic")
+    repository.switch_branch("topic")
+    repository.add(readme)
+    repository.commit(
+        author=AUTHOR, author_email=AUTHOR_EMAIL, message="Update README.md"
+    )
