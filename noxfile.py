@@ -133,6 +133,7 @@ def mypy(session: Session) -> None:
     args = session.posargs or locations
     install_package(session)
     install(session, "mypy")
+    session.install("nox")
     session.run("mypy", *args)
 
 
