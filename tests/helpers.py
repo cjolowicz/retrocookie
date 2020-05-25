@@ -49,5 +49,3 @@ def commit(repository: git.Repository, path: Path) -> None:
 
 def in_template(path: Path) -> Path:
     return "{{ cookiecutter.project_slug }}" / path
-
-
