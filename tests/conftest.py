@@ -16,11 +16,13 @@ AUTHOR_EMAIL = "user@example.com"
 
 @pytest.fixture
 def context() -> Dict[str, str]:
+    """Cookiecutter context dictionary."""
     return {"project_slug": "example"}
 
 
 @pytest.fixture
 def cookiecutter_path(tmp_path: Path) -> Path:
+    """Cookiecutter path."""
     path = tmp_path / "cookiecutter"
     path.mkdir()
     return path
@@ -28,6 +30,7 @@ def cookiecutter_path(tmp_path: Path) -> Path:
 
 @pytest.fixture
 def cookiecutter_json(cookiecutter_path: Path, context: Dict[str, str]) -> Path:
+    """The cookiecutter.json file."""
     path = cookiecutter_path / "cookiecutter.json"
     text = json.dumps(context)
     path.write_text(text)
@@ -36,6 +39,7 @@ def cookiecutter_json(cookiecutter_path: Path, context: Dict[str, str]) -> Path:
 
 @pytest.fixture
 def cookiecutter_subdirectory(cookiecutter_path: Path) -> Path:
+    """The template directory in the cookiecutter."""
     path = cookiecutter_path / "{{ cookiecutter.project_slug }}"
     path.mkdir()
     return path
@@ -43,6 +47,7 @@ def cookiecutter_subdirectory(cookiecutter_path: Path) -> Path:
 
 @pytest.fixture
 def cookiecutter_readme(cookiecutter_subdirectory: Path) -> Path:
+    """The README file in the cookiecutter."""
     path = cookiecutter_subdirectory / "README.md"
     text = """\
     # {{ cookiecutter.project_slug }}
@@ -55,6 +60,7 @@ def cookiecutter_readme(cookiecutter_subdirectory: Path) -> Path:
 
 @pytest.fixture
 def dot_cookiecutter_json(cookiecutter_subdirectory: Path) -> Path:
+    """The .cookiecutter.json file in the cookiecutter."""
     path = cookiecutter_subdirectory / ".cookiecutter.json"
     text = """\
     {{ cookiecutter | jsonify }}
@@ -70,10 +76,12 @@ def cookiecutter_project(
     cookiecutter_readme: Path,
     dot_cookiecutter_json: Path,
 ) -> Path:
+    """The cookiecutter."""
     return cookiecutter_path
 
 
 def make_repository(path: Path) -> git.Repository:
+    """Turn a directory into a git repository."""
     repository = git.Repository.init(path)
     repository.add()
     repository.commit(
@@ -84,6 +92,7 @@ def make_repository(path: Path) -> git.Repository:
 
 @pytest.fixture
 def cookiecutter_repository(cookiecutter_project: Path) -> git.Repository:
+    """The cookiecutter repository."""
     return make_repository(cookiecutter_project)
 
 
@@ -91,6 +100,7 @@ def cookiecutter_repository(cookiecutter_project: Path) -> git.Repository:
 def cookiecutter_instance(
     cookiecutter_repository: git.Repository, context: Dict[str, str], tmp_path: Path,
 ) -> Path:
+    """The cookiecutter instance."""
     template = str(cookiecutter_repository.path)
     cookiecutter(template, no_input=True, output_dir=str(tmp_path))
     return tmp_path / context["project_slug"]
@@ -98,4 +108,5 @@ def cookiecutter_instance(
 
 @pytest.fixture
 def cookiecutter_instance_repository(cookiecutter_instance: Path) -> git.Repository:
+    """The cookiecutter instance repository."""
     return make_repository(cookiecutter_instance)
