@@ -28,6 +28,32 @@ def test_append(
         assert text in read(cookiecutter, in_template(path))
 
 
+def test_append_with_guess(
+    cookiecutter_repository: git.Repository,
+    cookiecutter_instance_repository: git.Repository,
+    tmp_path: Path,
+) -> None:
+    """It succeeds."""
+    cookiecutter = git.Repository.clone(
+        url=str(cookiecutter_repository.path), path=tmp_path / "clone"
+    )
+    instance = git.Repository.clone(
+        url=str(cookiecutter_instance_repository.path),
+        path=f"{cookiecutter_repository.path}-instance",
+    )
+    path = Path("README.md")
+    text = "Lorem Ipsum\n"
+
+    with branch(instance, "topic"):
+        append(instance, path, text)
+        commit(instance, path)
+
+    retrocookie("topic", path=cookiecutter.path)
+
+    with branch(cookiecutter, "topic"):
+        assert text in read(cookiecutter, in_template(path))
+
+
 def test_guess_instance_url_fails(tmp_path: Path) -> None:
     """It raises an exception when there is no remote URL."""
     repository = git.Repository.init(tmp_path)
