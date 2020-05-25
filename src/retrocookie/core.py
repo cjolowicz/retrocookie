@@ -20,7 +20,8 @@ def guess_instance_url(repository: git.Repository) -> str:
     url = repository.get_remote_url("origin")
     if url.endswith(".git"):
         url = url[: -len(".git")]
-    return f"{url}-instance.git"
+        return f"{url}-instance.git"
+    return f"{url}-instance"
 
 
 def find_template_directory(repository: git.Repository) -> Path:
