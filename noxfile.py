@@ -141,8 +141,7 @@ def mypy(session: Session) -> None:
 def tests(session: Session) -> None:
     """Run the test suite."""
     install_package(session)
-    install(session, "coverage[toml]", "pytest", "cookiecutter")
-    session.install("pygments")
+    install(session, "cookiecutter", "coverage[toml]", "pygments", "pytest")
     try:
         session.run("coverage", "run", "--parallel", "-m", "pytest", *session.posargs)
     finally:
