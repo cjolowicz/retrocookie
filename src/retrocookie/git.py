@@ -104,7 +104,7 @@ class Repository:
         message: str,
         committer: Optional[str] = None,
         committer_email: Optional[str] = None,
-    ):
+    ) -> None:
         """Create a commit."""
         if committer is None:
             committer = author
