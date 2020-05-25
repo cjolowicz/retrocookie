@@ -1,18 +1,26 @@
 """Tests for core module."""
+from pathlib import Path
+
 from retrocookie import git
 from retrocookie import retrocookie
 
+from .helpers import *
 
-def test_core(
+
+def test_append(
     cookiecutter_repository: git.Repository,
-    cookiecutter_instance_repository_with_topic: git.Repository,
+    cookiecutter_instance_repository: git.Repository,
 ) -> None:
     """It succeeds."""
-    cookiecutter = cookiecutter_repository
-    instance = cookiecutter_instance_repository_with_topic
+    cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
+    path = Path("README.md")
+    text = "Lorem Ipsum\n"
+
+    with branch(instance, "topic"):
+        append(instance, path, text)
+        commit(instance, path)
 
     retrocookie("topic", path=cookiecutter.path, url=str(instance.path))
-    cookiecutter.switch_branch("topic")
 
-    readme = cookiecutter.path / "{{ cookiecutter.project_slug }}" / "README.md"
-    assert "Lorem ipsum" in readme.read_text()
+    with branch(cookiecutter, "topic"):
+        assert text in read(cookiecutter, in_template(path))
