@@ -1,11 +1,8 @@
 """Interface for git-filter-repo."""
-import contextlib
-import os
 from pathlib import Path
 from typing import Any
 from typing import Dict
 from typing import Iterable
-from typing import Iterator
 from typing import Tuple
 
 from git_filter_repo import Blob
