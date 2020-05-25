@@ -14,5 +14,5 @@ def test_core(
     retrocookie("topic", path=cookiecutter.path, url=str(instance.path))
     cookiecutter.switch_branch("topic")
 
-    readme = cookiecutter.path / "README.md"
+    readme = cookiecutter.path / "{{ cookiecutter.project_slug }}" / "README.md"
     assert "Lorem ipsum" in readme.read_text()
