@@ -29,6 +29,7 @@ sphinx = "^3.0.3"
 sphinx-autobuild = "^0.7.1"
 pre-commit = "^2.4.0"
 cookiecutter = "^1.7.2"
+pygments = "^2.6.1"
 
 [tool.poetry.scripts]
 retrocookie = "retrocookie.__main__:main"
