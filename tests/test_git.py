@@ -5,6 +5,7 @@ from retrocookie import git
 
 
 def test_commit(tmp_path: Path):
+    """It creates a commit."""
     repository = git.Repository.init(tmp_path)
     repository.commit(
         author="author",
