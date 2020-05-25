@@ -75,6 +75,9 @@ class Repository:
         """Return the current branch."""
         return self.repo.head.shorthand  # type: ignore[no-any-return]
 
+    def exists_branch(self, branch: str) -> bool:
+        return branch in self.repo.branches
+
     def switch_branch(self, branch: str) -> None:
         """Switch the current branch."""
         self.repo.checkout(self.repo.branches[branch])
