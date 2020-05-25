@@ -45,7 +45,7 @@ def get_replacements(
     """Return replacements to be applied to commits from the template instance."""
 
     def ref(key: str) -> str:
-        return f"{{{{cookiecutter.{key}}}}}"
+        return f"{{{{ cookiecutter.{key} }}}}"
 
     escape = [(token, token.join(('{{ "', '" }}'))) for token in ("{{", "}}")]
     replacements = [
