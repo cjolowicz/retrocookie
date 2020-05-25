@@ -5,7 +5,9 @@ from typing import Iterable
 import pytest
 from click.testing import CliRunner
 
-from .helpers import *
+from .helpers import append
+from .helpers import branch
+from .helpers import commit
 from retrocookie import __main__
 from retrocookie import git
 from retrocookie import utils
