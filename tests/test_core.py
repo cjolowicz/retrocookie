@@ -3,11 +3,11 @@ from pathlib import Path
 from typing import Optional
 
 import pytest
+
+from .helpers import *
 from retrocookie import core
 from retrocookie import git
 from retrocookie import retrocookie
-
-from .helpers import *
 
 
 def test_append(
@@ -71,4 +71,3 @@ def test_temporary_remote_skips_non_existing(tmp_path: Path) -> None:
         repository.remove_remote("upstream")
 
     assert not repository.exists_remote("upstream")
-
