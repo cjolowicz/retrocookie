@@ -43,7 +43,7 @@ def test_append_with_guess(
     )
     instance = git.Repository.clone(
         url=str(cookiecutter_instance_repository.path),
-        path=f"{cookiecutter_repository.path}-instance",
+        path=Path(f"{cookiecutter_repository.path}-instance"),
     )
     path = Path("README.md")
     text = "Lorem Ipsum\n"
