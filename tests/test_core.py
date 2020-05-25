@@ -36,7 +36,7 @@ def test_guess_instance_url_fails(tmp_path: Path) -> None:
 
 
 @pytest.mark.parametrize(
-    "url", ["https://example.com/user/repo.git", "https://example.com/user/repo",]
+    "url", ["https://example.com/user/repo.git", "https://example.com/user/repo"]
 )
 def test_guess_instance_url_succeeds(tmp_path: Path, url: str) -> None:
     """It returns an instance URL based on the cookiecutter's remote URL."""

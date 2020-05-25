@@ -24,7 +24,7 @@ def test_help(runner: CliRunner) -> None:
 
 
 @pytest.mark.parametrize(
-    "options", [[], ["--local=other"],],
+    "options", [[], ["--local=other"]],
 )
 def test_main(
     runner: CliRunner,
