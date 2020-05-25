@@ -36,14 +36,23 @@ def test_guess_instance_url_fails(tmp_path: Path) -> None:
 
 
 @pytest.mark.parametrize(
-    "url", ["https://example.com/user/repo.git", "https://example.com/user/repo"]
+    "url, expected",
+    [
+        (
+            "https://example.com/user/repository.git",
+            "https://example.com/user/repository-instance.git",
+        ),
+        (
+            "https://example.com/user/repository",
+            "https://example.com/user/repository-instance",
+        ),
+    ],
 )
-def test_guess_instance_url_succeeds(tmp_path: Path, url: str) -> None:
+def test_guess_instance_url_succeeds(tmp_path: Path, url: str, expected: str) -> None:
     """It returns an instance URL based on the cookiecutter's remote URL."""
     repository = git.Repository.init(tmp_path)
     repository.add_remote("origin", url)
-    url = core.guess_instance_url(repository)
-    assert url.endswith("-instance.git")
+    assert expected == core.guess_instance_url(repository)
 
 
 def test_find_template_directory_fails(tmp_path: Path) -> None:
