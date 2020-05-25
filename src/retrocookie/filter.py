@@ -13,18 +13,7 @@ from git_filter_repo import FilteringOptions
 from git_filter_repo import RepoFilter
 
 from . import git
-
-
-@contextlib.contextmanager
-def chdir(path: Path) -> Iterator[None]:
-    """Context manager for changing the directory."""
-    old = Path.cwd()
-    os.chdir(path)
-
-    try:
-        yield
-    finally:
-        os.chdir(old)
+from . import utils
 
 
 class RepositoryFilter:
@@ -63,7 +52,7 @@ class RepositoryFilter:
 
     def run(self) -> None:
         """Run the filter."""
-        with chdir(self.repository.path):
+        with utils.chdir(self.repository.path):
             repofilter = self._create_filter()
             repofilter.run()
 
