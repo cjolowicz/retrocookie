@@ -75,6 +75,12 @@ jobs:
           restore-keys: |
             ${{ steps.pre-commit-cache.outputs.result }}-
 
+      - name: Configure git
+        if: matrix.session == 'tests'
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+
       - name: Run Nox
         run: |
           nox --force-color
