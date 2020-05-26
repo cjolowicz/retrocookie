@@ -67,17 +67,17 @@ Under the hood,
 Retrocookie clones the generated project to a temporary directory
 and rewrites the clone using git-filter-repo_.
 It then fetches the rewritten branch into the template,
-and uses `git rebase`_ to copy the commits onto your current branch.
+and uses `git rebase`_ to copy the commits onto a new branch,
+off your current branch.
 
 Maybe you're thinking,
 how can this possibly work?
 Rewriting a generated project as a project template is
 like replacing the output of a program by its code.
 And you're right.
-
 But while the general problem of reconstructing the template code is unsolvable,
 in practise it is often enough to perform simple replacements of template variables.
-One reason this often works is that
+One reason this works so well is that
 the rewrite only needs to be correct for the handful of commits you're importing.
 
 When it doesn't work,
@@ -99,6 +99,7 @@ Requirements
 ------------
 
 * Python 3.6+
+* git >= 2.22.0
 
 
 Installation
@@ -114,7 +115,11 @@ You can install *Retrocookie* via pip_ from PyPI_:
 Usage
 -----
 
-* TODO
+Use Retrocookie like this:
+
+.. code:: console
+
+   $ retrocookie -r <branch>
 
 
 Contributing
