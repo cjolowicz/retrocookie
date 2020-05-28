@@ -90,22 +90,3 @@ def test_find_template_directory_fails(tmp_path: Path) -> None:
     repository = git.Repository.init(tmp_path)
     with pytest.raises(Exception):
         core.find_template_directory(repository)
-
-
-def test_temporary_remote_overwrites_existing(tmp_path: Path) -> None:
-    """It replaces an existing remote."""
-    repository = git.Repository.init(tmp_path)
-    repository.add_remote("upstream", "stale")
-
-    with core.temporary_remote(repository, "upstream", "location"):
-        assert "location" == repository.get_remote_url("upstream")
-
-
-def test_temporary_remote_skips_non_existing(tmp_path: Path) -> None:
-    """It replaces an existing remote."""
-    repository = git.Repository.init(tmp_path)
-
-    with core.temporary_remote(repository, "upstream", "location"):
-        repository.remove_remote("upstream")
-
-    assert not repository.exists_remote("upstream")
