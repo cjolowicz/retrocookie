@@ -3,7 +3,6 @@ from pathlib import Path
 from typing import Any
 from typing import Container
 from typing import Dict
-from typing import Iterable
 from typing import List
 from typing import Tuple
 
@@ -22,12 +21,17 @@ class RepositoryFilter:
         self,
         repository: git.Repository,
         path: Path,
-        replacements: Iterable[Tuple[str, str]],
+        context: Dict[str, str],
+        whitelist: Container[str],
+        blacklist: Container[str],
     ) -> None:
         """Initialize."""
         self.repository = repository
         self.path = str(path).encode()
-        self.replacements = [(old.encode(), new.encode()) for old, new in replacements]
+        self.replacements = [
+            (old.encode(), new.encode())
+            for old, new in get_replacements(context, whitelist, blacklist)
+        ]
 
     def filename_callback(self, filename: bytes) -> bytes:
         """Rewrite filenames."""

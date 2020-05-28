@@ -7,7 +7,6 @@ from typing import Dict
 from typing import Optional
 
 from . import git
-from .filter import get_replacements
 from .filter import RepositoryFilter
 from .utils import temporary_remote
 from .utils import temporary_repository
@@ -46,9 +45,12 @@ def rewrite_commits(
 ) -> None:
     """Rewrite the repository using template variables."""
     context = load_context(repository)
-    replacements = get_replacements(context, whitelist, blacklist)
     RepositoryFilter(
-        repository=repository, path=template_directory, replacements=replacements,
+        repository=repository,
+        path=template_directory,
+        context=context,
+        whitelist=whitelist,
+        blacklist=blacklist,
     ).run()
 
 
