@@ -14,6 +14,24 @@ from . import git
 from . import utils
 
 
+def get_replacements(
+    context: Dict[str, str], whitelist: Container[str], blacklist: Container[str],
+) -> List[Tuple[str, str]]:
+    """Return replacements to be applied to commits from the template instance."""
+
+    def ref(key: str) -> str:
+        return f"{{{{ cookiecutter.{key} }}}}"
+
+    escape = [(token, token.join(('{{ "', '" }}'))) for token in ("{{", "}}")]
+    replacements = [
+        (value, ref(key))
+        for key, value in context.items()
+        if key not in blacklist and not (whitelist and key not in whitelist)
+    ]
+
+    return escape + replacements
+
+
 class RepositoryFilter:
     """Perform path and blob replacements on a repository."""
 
@@ -58,21 +76,3 @@ class RepositoryFilter:
         with utils.chdir(self.repository.path):
             repofilter = self._create_filter()
             repofilter.run()
-
-
-def get_replacements(
-    context: Dict[str, str], whitelist: Container[str], blacklist: Container[str],
-) -> List[Tuple[str, str]]:
-    """Return replacements to be applied to commits from the template instance."""
-
-    def ref(key: str) -> str:
-        return f"{{{{ cookiecutter.{key} }}}}"
-
-    escape = [(token, token.join(('{{ "', '" }}'))) for token in ("{{", "}}")]
-    replacements = [
-        (value, ref(key))
-        for key, value in context.items()
-        if key not in blacklist and not (whitelist and key not in whitelist)
-    ]
-
-    return escape + replacements
