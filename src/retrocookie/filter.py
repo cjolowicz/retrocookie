@@ -72,11 +72,3 @@ def get_replacements(
     ]
 
     return escape + replacements
-
-
-def filter_repository(
-    repository: git.Repository, path: Path, replacements: Iterable[Tuple[str, str]],
-) -> None:
-    """Perform path and blob replacements on a repository."""
-    repofilter = RepositoryFilter(repository, path, replacements)
-    repofilter.run()
