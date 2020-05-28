@@ -1,8 +1,10 @@
 """Interface for git-filter-repo."""
 from pathlib import Path
 from typing import Any
+from typing import Container
 from typing import Dict
 from typing import Iterable
+from typing import List
 from typing import Tuple
 
 from git_filter_repo import Blob
@@ -52,6 +54,24 @@ class RepositoryFilter:
         with utils.chdir(self.repository.path):
             repofilter = self._create_filter()
             repofilter.run()
+
+
+def get_replacements(
+    context: Dict[str, str], whitelist: Container[str], blacklist: Container[str],
+) -> List[Tuple[str, str]]:
+    """Return replacements to be applied to commits from the template instance."""
+
+    def ref(key: str) -> str:
+        return f"{{{{ cookiecutter.{key} }}}}"
+
+    escape = [(token, token.join(('{{ "', '" }}'))) for token in ("{{", "}}")]
+    replacements = [
+        (value, ref(key))
+        for key, value in context.items()
+        if key not in blacklist and not (whitelist and key not in whitelist)
+    ]
+
+    return escape + replacements
 
 
 def filter_repository(

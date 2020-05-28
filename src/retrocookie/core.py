@@ -7,12 +7,11 @@ from typing import cast
 from typing import Container
 from typing import Dict
 from typing import Iterator
-from typing import List
 from typing import Optional
-from typing import Tuple
 
 from . import git
 from .filter import filter_repository
+from .filter import get_replacements
 
 
 def guess_instance_url(repository: git.Repository) -> str:
@@ -38,24 +37,6 @@ def load_context(repository: git.Repository) -> Dict[str, str]:
     path = repository.path / ".cookiecutter.json"
     with path.open() as io:
         return cast(Dict[str, str], json.load(io))
-
-
-def get_replacements(
-    context: Dict[str, str], whitelist: Container[str], blacklist: Container[str],
-) -> List[Tuple[str, str]]:
-    """Return replacements to be applied to commits from the template instance."""
-
-    def ref(key: str) -> str:
-        return f"{{{{ cookiecutter.{key} }}}}"
-
-    escape = [(token, token.join(('{{ "', '" }}'))) for token in ("{{", "}}")]
-    replacements = [
-        (value, ref(key))
-        for key, value in context.items()
-        if key not in blacklist and not (whitelist and key not in whitelist)
-    ]
-
-    return escape + replacements
 
 
 def rewrite_commits(
