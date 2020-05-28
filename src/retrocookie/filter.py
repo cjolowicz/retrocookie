@@ -19,14 +19,14 @@ from . import utils
 
 def get_replacements(
     context: Dict[str, str], whitelist: Container[str], blacklist: Container[str],
-) -> List[Tuple[str, str]]:
+) -> List[Tuple[bytes, bytes]]:
     """Return replacements to be applied to commits from the template instance."""
 
     def ref(key: str) -> str:
         return f"{{{{ cookiecutter.{key} }}}}"
 
     return [
-        (value, ref(key))
+        (value.encode(), ref(key).encode())
         for key, value in context.items()
         if key not in blacklist and not (whitelist and key not in whitelist)
     ]
@@ -95,10 +95,7 @@ class RepositoryFilter:
         """Initialize."""
         self.repository = repository
         self.path = str(path).encode()
-        self.replacements = [
-            (old.encode(), new.encode())
-            for old, new in get_replacements(context, whitelist, blacklist)
-        ]
+        self.replacements = get_replacements(context, whitelist, blacklist)
 
     def filename_callback(self, filename: bytes) -> bytes:
         """Rewrite filenames."""
