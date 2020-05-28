@@ -12,6 +12,7 @@ from typing import Optional
 from . import git
 from .filter import filter_repository
 from .filter import get_replacements
+from .utils import temporary_remote
 
 
 def guess_instance_url(repository: git.Repository) -> str:
@@ -72,23 +73,6 @@ def temporary_repository(url: str) -> Iterator[git.Repository]:
     with tempfile.TemporaryDirectory() as tmpdir:
         directory = Path(tmpdir) / "instance"
         yield git.Repository.clone(url, directory)
-
-
-@contextlib.contextmanager
-def temporary_remote(
-    repository: git.Repository, remote: str, url: str
-) -> Iterator[None]:
-    """Add remote on entry, remove it on exit."""
-    if repository.exists_remote(remote):
-        repository.remove_remote(remote)
-
-    repository.add_remote(remote, url)
-
-    try:
-        yield
-    finally:
-        if repository.exists_remote(remote):
-            repository.remove_remote(remote)
 
 
 def retrocookie(
