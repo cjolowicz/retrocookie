@@ -1,6 +1,7 @@
 """Utilities."""
 import contextlib
 import os
+import tempfile
 from pathlib import Path
 from typing import Iterator
 
@@ -17,6 +18,14 @@ def chdir(path: Path) -> Iterator[None]:
         yield
     finally:
         os.chdir(cwd)
+
+
+@contextlib.contextmanager
+def temporary_repository(url: str) -> Iterator[git.Repository]:
+    """Clone URL to temporary directory."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        directory = Path(tmpdir) / "instance"
+        yield git.Repository.clone(url, directory)
 
 
 @contextlib.contextmanager

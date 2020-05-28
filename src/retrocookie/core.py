@@ -1,18 +1,16 @@
 """Core module."""
-import contextlib
 import json
-import tempfile
 from pathlib import Path
 from typing import cast
 from typing import Container
 from typing import Dict
-from typing import Iterator
 from typing import Optional
 
 from . import git
 from .filter import filter_repository
 from .filter import get_replacements
 from .utils import temporary_remote
+from .utils import temporary_repository
 
 
 def guess_instance_url(repository: git.Repository) -> str:
@@ -65,14 +63,6 @@ def apply_commits(
     repository.fetch_remote(remote, base, ref)
     repository.create_branch(branch, f"{remote}/{ref}")
     repository.rebase(upstream=f"{remote}/{base}", branch=branch, onto=current)
-
-
-@contextlib.contextmanager
-def temporary_repository(url: str) -> Iterator[git.Repository]:
-    """Clone URL to temporary directory."""
-    with tempfile.TemporaryDirectory() as tmpdir:
-        directory = Path(tmpdir) / "instance"
-        yield git.Repository.clone(url, directory)
 
 
 def retrocookie(
