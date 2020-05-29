@@ -77,7 +77,7 @@ def to_bytes(args: Tuple[str, ...]) -> Tuple[bytes, ...]:
 def escape_jinja(text: bytes) -> bytes:
     """Escape Jinja tokens."""
     quotes = to_bytes(('{{ "', '" }}'))
-    tokens = to_bytes(("{{", "}}"))
+    tokens = to_bytes(("{{", "}}", "{%", "%}", "{#", "#}"))
     return quote_tokens(text, quotes, tokens)
 
 
