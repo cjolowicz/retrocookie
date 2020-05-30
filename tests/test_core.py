@@ -5,7 +5,6 @@ import pytest
 
 from .helpers import append
 from .helpers import branch
-from .helpers import commit
 from .helpers import in_template
 from .helpers import read
 from retrocookie import core
@@ -24,7 +23,6 @@ def test_append(
 
     with branch(instance, "topic"):
         append(instance, path, text)
-        commit(instance, path)
 
     retrocookie("topic", path=cookiecutter.path, url=str(instance.path))
 
@@ -43,7 +41,6 @@ def test_append_with_local(
 
     with branch(instance, "topic"):
         append(instance, path, text)
-        commit(instance, path)
 
     retrocookie("topic", path=cookiecutter.path, url=str(instance.path), branch="other")
 
@@ -69,7 +66,6 @@ def test_append_with_guess(
 
     with branch(instance, "topic"):
         append(instance, path, text)
-        commit(instance, path)
 
     retrocookie("topic", path=cookiecutter.path)
 

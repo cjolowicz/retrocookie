@@ -28,6 +28,7 @@ def write(repository: git.Repository, path: Path, text: str) -> None:
     """Write file in repository."""
     path = repository.path / path
     path.write_text(text)
+    commit(repository, path)
 
 
 def append(repository: git.Repository, path: Path, text: str) -> None:

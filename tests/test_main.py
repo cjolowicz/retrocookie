@@ -8,7 +8,6 @@ from click.testing import CliRunner
 
 from .helpers import append
 from .helpers import branch
-from .helpers import commit
 from retrocookie import __main__
 from retrocookie import git
 from retrocookie import utils
@@ -69,7 +68,6 @@ def test_functional(
 
     with branch(instance, "topic"):
         append(instance, path, text)
-        commit(instance, path)
 
     with utils.chdir(cookiecutter.path):
         result = runner.invoke(__main__.main, ["--ref=topic", str(instance.path)])
