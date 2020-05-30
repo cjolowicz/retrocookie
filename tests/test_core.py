@@ -17,7 +17,7 @@ def test_verbatim(
     cookiecutter_repository: git.Repository,
     cookiecutter_instance_repository: git.Repository,
 ) -> None:
-    """It succeeds."""
+    """It inserts text verbatim."""
     cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
     change = Append(Path("README.md"), "Lorem Ipsum\n")
 
@@ -34,7 +34,7 @@ def test_branch(
     cookiecutter_repository: git.Repository,
     cookiecutter_instance_repository: git.Repository,
 ) -> None:
-    """It succeeds."""
+    """It creates the specified branch."""
     cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
     change = Append(Path("README.md"), "Lorem Ipsum\n")
 
@@ -52,7 +52,7 @@ def test_guess_succeeds(
     cookiecutter_instance_repository: git.Repository,
     tmp_path: Path,
 ) -> None:
-    """It succeeds."""
+    """It guesses the repository URL of the template instance."""
     cookiecutter = git.Repository.clone(
         url=str(cookiecutter_repository.path), path=tmp_path / "clone"
     )
