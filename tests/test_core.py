@@ -3,7 +3,8 @@ from pathlib import Path
 
 import pytest
 
-from .helpers import append
+from .helpers import Append
+from .helpers import apply
 from .helpers import branch
 from .helpers import in_template
 from .helpers import read
@@ -18,16 +19,15 @@ def test_append(
 ) -> None:
     """It succeeds."""
     cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
-    path = Path("README.md")
-    text = "Lorem Ipsum\n"
+    change = Append(Path("README.md"), "Lorem Ipsum\n")
 
     with branch(instance, "topic"):
-        append(instance, path, text)
+        apply(instance, change)
 
     retrocookie("topic", path=cookiecutter.path, url=str(instance.path))
 
     with branch(cookiecutter, "topic"):
-        assert text in read(cookiecutter, in_template(path))
+        assert change.text in read(cookiecutter, in_template(change.path))
 
 
 def test_append_with_local(
@@ -36,16 +36,15 @@ def test_append_with_local(
 ) -> None:
     """It succeeds."""
     cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
-    path = Path("README.md")
-    text = "Lorem Ipsum\n"
+    change = Append(Path("README.md"), "Lorem Ipsum\n")
 
     with branch(instance, "topic"):
-        append(instance, path, text)
+        apply(instance, change)
 
     retrocookie("topic", path=cookiecutter.path, url=str(instance.path), branch="other")
 
     with branch(cookiecutter, "other"):
-        assert text in read(cookiecutter, in_template(path))
+        assert change.text in read(cookiecutter, in_template(change.path))
 
 
 def test_append_with_guess(
@@ -61,16 +60,15 @@ def test_append_with_guess(
         url=str(cookiecutter_instance_repository.path),
         path=Path(f"{cookiecutter_repository.path}-instance"),
     )
-    path = Path("README.md")
-    text = "Lorem Ipsum\n"
+    change = Append(Path("README.md"), "Lorem Ipsum\n")
 
     with branch(instance, "topic"):
-        append(instance, path, text)
+        apply(instance, change)
 
     retrocookie("topic", path=cookiecutter.path)
 
     with branch(cookiecutter, "topic"):
-        assert text in read(cookiecutter, in_template(path))
+        assert change.text in read(cookiecutter, in_template(change.path))
 
 
 def test_guess_instance_url_fails(tmp_path: Path) -> None:
