@@ -46,7 +46,14 @@ def mock_retrocookie(monkeypatch: MonkeyPatch) -> None:
 
 
 @pytest.mark.parametrize(
-    "args", [["--help"], ["--ref=topic"], ["--ref=topic", "--local=other"]],
+    "args",
+    [
+        ["--help"],
+        ["--ref=topic"],
+        ["--ref=topic", "--local=other"],
+        ["--ref=topic", "--whitelist=project_name", "--whitelist=package_name"],
+        ["--ref=topic", "--blacklist=github_user"],
+    ],
 )
 def test_accepted_invocations(
     runner: CliRunner, args: Iterable[str], mock_retrocookie: None
