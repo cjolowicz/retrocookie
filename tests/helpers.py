@@ -1,5 +1,6 @@
 """Utilities for testing."""
 import contextlib
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterator
 
@@ -35,6 +36,19 @@ def append(repository: git.Repository, path: Path, text: str) -> None:
     """Append to file in repository."""
     text = read(repository, path) + text
     write(repository, path, text)
+
+
+@dataclass
+class Append:
+    """Append text to the file located at path."""
+
+    path: Path
+    text: str
+
+
+def apply(repository: git.Repository, change: Append) -> None:
+    """Apply the change to the repository."""
+    append(repository, change.path, change.text)
 
 
 @contextlib.contextmanager
