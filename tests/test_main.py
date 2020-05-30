@@ -60,7 +60,7 @@ def test_functional(
     cookiecutter_repository: git.Repository,
     cookiecutter_instance_repository: git.Repository,
 ) -> None:
-    """It exits with a status code of zero."""
+    """It succeeds when importing a topic branch with a README update."""
     cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
     path = Path("README.md")
     text = "Lorem Ipsum\n"
