@@ -6,7 +6,8 @@ import pytest
 from _pytest.monkeypatch import MonkeyPatch
 from click.testing import CliRunner
 
-from .helpers import append
+from .helpers import Append
+from .helpers import apply
 from .helpers import branch
 from retrocookie import __main__
 from retrocookie import git
@@ -63,11 +64,10 @@ def test_functional(
 ) -> None:
     """It succeeds when importing a topic branch with a README update."""
     cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
-    path = Path("README.md")
-    text = "Lorem Ipsum\n"
+    change = Append(Path("README.md"), "Lorem Ipsum\n")
 
     with branch(instance, "topic"):
-        append(instance, path, text)
+        apply(instance, change)
 
     with utils.chdir(cookiecutter.path):
         result = runner.invoke(__main__.main, ["--ref=topic", str(instance.path)])
