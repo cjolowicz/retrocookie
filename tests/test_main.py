@@ -20,12 +20,6 @@ def runner() -> CliRunner:
     return CliRunner()
 
 
-def test_help(runner: CliRunner) -> None:
-    """It exits with a status code of zero."""
-    result = runner.invoke(__main__.main, ["--help"])
-    assert result.exit_code == 0
-
-
 def test_main(
     runner: CliRunner,
     cookiecutter_repository: git.Repository,
@@ -52,7 +46,7 @@ def mock_retrocookie(monkeypatch: MonkeyPatch) -> None:
 
 
 @pytest.mark.parametrize(
-    "args", [["--ref=topic"], ["--ref=topic", "--local=other"]],
+    "args", [["--help"], ["--ref=topic"], ["--ref=topic", "--local=other"]],
 )
 def test_accepted_invocations(
     runner: CliRunner, args: Iterable[str], mock_retrocookie: None
