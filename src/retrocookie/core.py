@@ -1,18 +1,15 @@
 """Core module."""
-import contextlib
 import json
-import tempfile
 from pathlib import Path
 from typing import cast
 from typing import Container
 from typing import Dict
-from typing import Iterator
-from typing import List
 from typing import Optional
-from typing import Tuple
 
 from . import git
-from .filter import filter_repository
+from .filter import RepositoryFilter
+from .utils import temporary_remote
+from .utils import temporary_repository
 
 
 def guess_instance_url(repository: git.Repository) -> str:
@@ -40,24 +37,6 @@ def load_context(repository: git.Repository) -> Dict[str, str]:
         return cast(Dict[str, str], json.load(io))
 
 
-def get_replacements(
-    context: Dict[str, str], whitelist: Container[str], blacklist: Container[str],
-) -> List[Tuple[str, str]]:
-    """Return replacements to be applied to commits from the template instance."""
-
-    def ref(key: str) -> str:
-        return f"{{{{ cookiecutter.{key} }}}}"
-
-    escape = [(token, token.join(('{{ "', '" }}'))) for token in ("{{", "}}")]
-    replacements = [
-        (value, ref(key))
-        for key, value in context.items()
-        if key not in blacklist and not (whitelist and key not in whitelist)
-    ]
-
-    return escape + replacements
-
-
 def rewrite_commits(
     repository: git.Repository,
     template_directory: Path,
@@ -66,10 +45,13 @@ def rewrite_commits(
 ) -> None:
     """Rewrite the repository using template variables."""
     context = load_context(repository)
-    replacements = get_replacements(context, whitelist, blacklist)
-    filter_repository(
-        repository=repository, path=template_directory, replacements=replacements,
-    )
+    RepositoryFilter(
+        repository=repository,
+        path=template_directory,
+        context=context,
+        whitelist=whitelist,
+        blacklist=blacklist,
+    ).run()
 
 
 def apply_commits(
@@ -83,31 +65,6 @@ def apply_commits(
     repository.fetch_remote(remote, base, ref)
     repository.create_branch(branch, f"{remote}/{ref}")
     repository.rebase(upstream=f"{remote}/{base}", branch=branch, onto=current)
-
-
-@contextlib.contextmanager
-def temporary_repository(url: str) -> Iterator[git.Repository]:
-    """Clone URL to temporary directory."""
-    with tempfile.TemporaryDirectory() as tmpdir:
-        directory = Path(tmpdir) / "instance"
-        yield git.Repository.clone(url, directory)
-
-
-@contextlib.contextmanager
-def temporary_remote(
-    repository: git.Repository, remote: str, url: str
-) -> Iterator[None]:
-    """Add remote on entry, remove it on exit."""
-    if repository.exists_remote(remote):
-        repository.remove_remote(remote)
-
-    repository.add_remote(remote, url)
-
-    try:
-        yield
-    finally:
-        if repository.exists_remote(remote):
-            repository.remove_remote(remote)
 
 
 def retrocookie(
