@@ -1,11 +1,72 @@
 """Command-line interface."""
+from pathlib import Path
+from typing import Container
+from typing import Optional
+
 import click
+
+from .core import retrocookie
 
 
 @click.command()
+@click.option(
+    "--url",
+    metavar="URL",
+    help=(
+        "Repository URL of template instance" "  [default: <originurl>-instance.git]"
+    ),
+)
+@click.option(
+    "--ref", "-r", metavar="REF", required=True, help="Remote reference to fetch",
+)
+@click.option(
+    "--base",
+    metavar="REF",
+    default="master",
+    help="Remote reference to rebase from",
+    show_default=True,
+)
+@click.option(
+    "--local", metavar="REF", help="Local branch name  [default: same as --ref]",
+)
+@click.option(
+    "--whitelist",
+    "-w",
+    metavar="VAR",
+    multiple=True,
+    help="Only rewrite these Cookiecutter variables",
+)
+@click.option(
+    "--blacklist",
+    "-b",
+    metavar="VAR",
+    multiple=True,
+    help="Do not rewrite these Cookiecutter variables",
+)
+@click.option(
+    "--directory", "-C", metavar="DIR", help="Repository directory",
+)
 @click.version_option()
-def main() -> None:
-    """Retrocookie."""
+def main(
+    url: Optional[str],
+    ref: str,
+    base: str,
+    local: Optional[str],
+    whitelist: Container[str],
+    blacklist: Container[str],
+    directory: Optional[str],
+) -> None:
+    """Retrocookie imports commits into Cookiecutter templates."""
+    path = Path(directory) if directory else None
+    retrocookie(
+        ref,
+        base=base,
+        branch=local,
+        url=url,
+        whitelist=whitelist,
+        blacklist=blacklist,
+        path=path,
+    )
 
 
 if __name__ == "__main__":
