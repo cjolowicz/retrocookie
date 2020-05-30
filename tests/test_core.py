@@ -13,7 +13,7 @@ from retrocookie import git
 from retrocookie import retrocookie
 
 
-def test_append(
+def test_verbatim(
     cookiecutter_repository: git.Repository,
     cookiecutter_instance_repository: git.Repository,
 ) -> None:
@@ -30,7 +30,7 @@ def test_append(
         assert change.text in read(cookiecutter, in_template(change.path))
 
 
-def test_append_with_local(
+def test_branch(
     cookiecutter_repository: git.Repository,
     cookiecutter_instance_repository: git.Repository,
 ) -> None:
@@ -47,7 +47,7 @@ def test_append_with_local(
         assert change.text in read(cookiecutter, in_template(change.path))
 
 
-def test_append_with_guess(
+def test_guess_succeeds(
     cookiecutter_repository: git.Repository,
     cookiecutter_instance_repository: git.Repository,
     tmp_path: Path,
@@ -71,7 +71,7 @@ def test_append_with_guess(
         assert change.text in read(cookiecutter, in_template(change.path))
 
 
-def test_guess_instance_url_fails(tmp_path: Path) -> None:
+def test_guess_fails(tmp_path: Path) -> None:
     """It raises an exception when there is no remote URL."""
     repository = git.Repository.init(tmp_path)
     with pytest.raises(Exception):
@@ -91,7 +91,7 @@ def test_guess_instance_url_fails(tmp_path: Path) -> None:
         ),
     ],
 )
-def test_guess_instance_url_succeeds(tmp_path: Path, url: str, expected: str) -> None:
+def test_guess_expected(tmp_path: Path, url: str, expected: str) -> None:
     """It returns an instance URL based on the cookiecutter's remote URL."""
     repository = git.Repository.init(tmp_path)
     repository.add_remote("origin", url)
