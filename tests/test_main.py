@@ -44,7 +44,5 @@ def test_main(
         commit(instance, path)
 
     with utils.chdir(cookiecutter.path):
-        result = runner.invoke(
-            __main__.main, [*options, str(instance.path)], catch_exceptions=False,
-        )
+        result = runner.invoke(__main__.main, [*options, str(instance.path)])
         assert result.exit_code == 0
