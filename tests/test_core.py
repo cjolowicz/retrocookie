@@ -41,9 +41,14 @@ def test_branch(
     with branch(instance, "topic"):
         apply(instance, change)
 
-    retrocookie("topic", path=cookiecutter.path, url=str(instance.path), branch="other")
+    retrocookie(
+        "topic",
+        path=cookiecutter.path,
+        url=str(instance.path),
+        branch="just-another-branch",
+    )
 
-    with branch(cookiecutter, "other"):
+    with branch(cookiecutter, "just-another-branch"):
         assert change.text in read(cookiecutter, in_template(change.path))
 
 
