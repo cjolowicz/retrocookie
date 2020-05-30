@@ -36,7 +36,7 @@ def mock_retrocookie(monkeypatch: MonkeyPatch) -> None:
         ["--ref=topic", "--blacklist=github_user"],
     ],
 )
-def test_accepted_invocations(
+def test_usage_success(
     runner: CliRunner, args: Iterable[str], mock_retrocookie: None
 ) -> None:
     """It succeeds when invoked with the given arguments."""
@@ -47,7 +47,7 @@ def test_accepted_invocations(
 @pytest.mark.parametrize(
     "args", [[], ["--ref=topic", "first", "second"]],
 )
-def test_rejected_invocations(
+def test_usage_error(
     runner: CliRunner, args: Iterable[str], mock_retrocookie: None
 ) -> None:
     """It fails when invoked with the given arguments."""
@@ -55,7 +55,7 @@ def test_rejected_invocations(
     assert result.exit_code == 2
 
 
-def test_main(
+def test_functional(
     runner: CliRunner,
     cookiecutter_repository: git.Repository,
     cookiecutter_instance_repository: git.Repository,
