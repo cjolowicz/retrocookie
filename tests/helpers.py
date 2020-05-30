@@ -16,6 +16,14 @@ def read(repository: git.Repository, path: Path) -> str:
     return path.read_text()
 
 
+def commit(repository: git.Repository, path: Path) -> None:
+    """Create a commit with the path."""
+    repository.add(path)
+    repository.commit(
+        author=AUTHOR, author_email=AUTHOR_EMAIL, message=f"Update {path}"
+    )
+
+
 def write(repository: git.Repository, path: Path, text: str) -> None:
     """Write file in repository."""
     path = repository.path / path
@@ -42,14 +50,6 @@ def branch(repository: git.Repository, branch: str) -> Iterator[None]:
         yield
     finally:
         repository.switch_branch(original)
-
-
-def commit(repository: git.Repository, path: Path) -> None:
-    """Create a commit with the path."""
-    repository.add(path)
-    repository.commit(
-        author=AUTHOR, author_email=AUTHOR_EMAIL, message=f"Update {path}"
-    )
 
 
 def in_template(path: Path) -> Path:
