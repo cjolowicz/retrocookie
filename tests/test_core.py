@@ -32,6 +32,25 @@ def test_append(
         assert text in read(cookiecutter, in_template(path))
 
 
+def test_append_with_local(
+    cookiecutter_repository: git.Repository,
+    cookiecutter_instance_repository: git.Repository,
+) -> None:
+    """It succeeds."""
+    cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
+    path = Path("README.md")
+    text = "Lorem Ipsum\n"
+
+    with branch(instance, "topic"):
+        append(instance, path, text)
+        commit(instance, path)
+
+    retrocookie("topic", path=cookiecutter.path, url=str(instance.path), branch="other")
+
+    with branch(cookiecutter, "other"):
+        assert text in read(cookiecutter, in_template(path))
+
+
 def test_append_with_guess(
     cookiecutter_repository: git.Repository,
     cookiecutter_instance_repository: git.Repository,
