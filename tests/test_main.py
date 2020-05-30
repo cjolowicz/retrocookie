@@ -26,7 +26,7 @@ def test_help(runner: CliRunner) -> None:
 
 
 @pytest.mark.parametrize(
-    "options", [[], ["--local=other"]],
+    "options", [["--ref=topic"], ["--ref=topic", "--local=other"]],
 )
 def test_main(
     runner: CliRunner,
@@ -45,8 +45,6 @@ def test_main(
 
     with utils.chdir(cookiecutter.path):
         result = runner.invoke(
-            __main__.main,
-            ["--ref=topic", *options, str(instance.path)],
-            catch_exceptions=False,
+            __main__.main, [*options, str(instance.path)], catch_exceptions=False,
         )
         assert result.exit_code == 0
