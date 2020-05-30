@@ -49,6 +49,25 @@ def test_variable(
         )
 
 
+def test_escape(
+    cookiecutter_repository: git.Repository,
+    cookiecutter_instance_repository: git.Repository,
+) -> None:
+    """It escapes tokens with special meaning in Jinja."""
+    cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
+    change = Append(Path("README.md"), "runs-on: ${{ matrix.os }}\n")
+
+    with branch(instance, "topic"):
+        apply(instance, change)
+
+    retrocookie("topic", path=cookiecutter.path, url=str(instance.path))
+
+    with branch(cookiecutter, "topic"):
+        assert 'runs-on: ${{ "{{" }} matrix.os {{ "}}" }}\n' in read(
+            cookiecutter, in_template(change.path)
+        )
+
+
 def test_branch(
     cookiecutter_repository: git.Repository,
     cookiecutter_instance_repository: git.Repository,
