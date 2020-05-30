@@ -13,13 +13,29 @@ from retrocookie import git
 from retrocookie import retrocookie
 
 
+@pytest.mark.parametrize(
+    "text, expected",
+    [
+        ("Lorem Ipsum\n", "Lorem Ipsum\n"),
+        (
+            "This project is called example.\n",
+            "This project is called {{ cookiecutter.project_slug }}.\n",
+        ),
+        (
+            "python-version: ${{ matrix.python-version }}",
+            'python-version: ${{ "{{" }} matrix.python-version {{ "}}" }}',
+        ),
+    ],
+)
 def test_verbatim(
     cookiecutter_repository: git.Repository,
     cookiecutter_instance_repository: git.Repository,
+    text: str,
+    expected: str,
 ) -> None:
     """It inserts text verbatim."""
     cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
-    change = Append(Path("README.md"), "Lorem Ipsum\n")
+    change = Append(Path("README.md"), text)
 
     with branch(instance, "topic"):
         apply(instance, change)
@@ -27,45 +43,7 @@ def test_verbatim(
     retrocookie("topic", path=cookiecutter.path, url=str(instance.path))
 
     with branch(cookiecutter, "topic"):
-        assert change.text in read(cookiecutter, in_template(change.path))
-
-
-def test_variable(
-    cookiecutter_repository: git.Repository,
-    cookiecutter_instance_repository: git.Repository,
-) -> None:
-    """It replaces a variable occurrences by templating tags for the variables."""
-    cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
-    change = Append(Path("README.md"), "This project is called example.\n")
-
-    with branch(instance, "topic"):
-        apply(instance, change)
-
-    retrocookie("topic", path=cookiecutter.path, url=str(instance.path))
-
-    with branch(cookiecutter, "topic"):
-        assert "This project is called {{ cookiecutter.project_slug }}.\n" in read(
-            cookiecutter, in_template(change.path)
-        )
-
-
-def test_escape(
-    cookiecutter_repository: git.Repository,
-    cookiecutter_instance_repository: git.Repository,
-) -> None:
-    """It escapes tokens with special meaning in Jinja."""
-    cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
-    change = Append(Path("README.md"), "runs-on: ${{ matrix.os }}\n")
-
-    with branch(instance, "topic"):
-        apply(instance, change)
-
-    retrocookie("topic", path=cookiecutter.path, url=str(instance.path))
-
-    with branch(cookiecutter, "topic"):
-        assert 'runs-on: ${{ "{{" }} matrix.os {{ "}}" }}\n' in read(
-            cookiecutter, in_template(change.path)
-        )
+        assert expected in read(cookiecutter, in_template(change.path))
 
 
 def test_branch(
