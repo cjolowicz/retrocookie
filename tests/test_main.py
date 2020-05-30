@@ -20,25 +20,6 @@ def runner() -> CliRunner:
     return CliRunner()
 
 
-def test_main(
-    runner: CliRunner,
-    cookiecutter_repository: git.Repository,
-    cookiecutter_instance_repository: git.Repository,
-) -> None:
-    """It exits with a status code of zero."""
-    cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
-    path = Path("README.md")
-    text = "Lorem Ipsum\n"
-
-    with branch(instance, "topic"):
-        append(instance, path, text)
-        commit(instance, path)
-
-    with utils.chdir(cookiecutter.path):
-        result = runner.invoke(__main__.main, ["--ref=topic", str(instance.path)])
-        assert result.exit_code == 0
-
-
 @pytest.fixture
 def mock_retrocookie(monkeypatch: MonkeyPatch) -> None:
     """Replace retrocookie function by noop."""
@@ -72,3 +53,22 @@ def test_rejected_invocations(
     """It fails when invoked with the given arguments."""
     result = runner.invoke(__main__.main, args)
     assert result.exit_code == 2
+
+
+def test_main(
+    runner: CliRunner,
+    cookiecutter_repository: git.Repository,
+    cookiecutter_instance_repository: git.Repository,
+) -> None:
+    """It exits with a status code of zero."""
+    cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
+    path = Path("README.md")
+    text = "Lorem Ipsum\n"
+
+    with branch(instance, "topic"):
+        append(instance, path, text)
+        commit(instance, path)
+
+    with utils.chdir(cookiecutter.path):
+        result = runner.invoke(__main__.main, ["--ref=topic", str(instance.path)])
+        assert result.exit_code == 0
