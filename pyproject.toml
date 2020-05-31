@@ -13,7 +13,7 @@ documentation = "https://retrocookie.readthedocs.io"
 Changelog = "https://github.com/cjolowicz/retrocookie/releases"
 
 [tool.poetry.dependencies]
-python = "^3.6.1"
+python = "^3.7"
 click = "^7.0"
 git-filter-repo = "^2.26.0"
 pygit2 = "^1.2.1"
