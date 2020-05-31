@@ -95,8 +95,40 @@ def retrocookie(
     create_branch: Optional[str] = None,
     whitelist: Container[str] = (),
     blacklist: Container[str] = (),
-) -> None:
-    """Import commits from instance repository into template repository."""
+) -> None:  # noqa: DAR101
+    """Import commits from instance repository into template repository.
+
+    This function imports a commits from an instance of the Cookiecutter
+    template, rewriting occurrences of template variables back into the
+    original templating tags, and prepending the template directory to
+    filenames. Any tokens with special meaning in Jinja are escaped.
+
+    Args:
+        instance_path: The source repository, an instance of the Cookiecutter
+            template with a ``.cookiecutter.json`` file.
+
+        commits: The commits to be imported from the source repository.
+
+        path: The target repository, a Cookiecutter template. This defaults to
+            the current working directory.
+
+        branch: The name of a branch to be imported from the source repository.
+            This is equivalent to passing ``["master..branch"]`` in the
+            ``commits`` parameter.
+
+        upstream: The upstream for ``branch``, by default the master branch.
+
+        create_branch: The name of the branch to be created in the target
+            repository. By default, commits are imported onto the current
+            branch.
+
+        whitelist: The Cookiecutter variables which should be rewritten. If
+            this is not specified, all variables from cookiecutter.json are
+            rewritten.
+
+        blacklist: Any Cookiecutter variables which should not be rewritten.
+
+    """
     repository = git.Repository(path)
     template_directory = find_template_directory(repository)
     remote = "retrocookie"
