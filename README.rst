@@ -98,7 +98,7 @@ Features
 Requirements
 ------------
 
-* Python 3.6+
+* Python 3.7+
 * git >= 2.22.0
 
 
