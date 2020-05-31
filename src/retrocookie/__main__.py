@@ -10,13 +10,6 @@ from .core import retrocookie
 
 @click.command()
 @click.option(
-    "--url",
-    metavar="URL",
-    help=(
-        "Repository URL of template instance" "  [default: <originurl>-instance.git]"
-    ),
-)
-@click.option(
     "--ref", "-r", metavar="REF", required=True, help="Remote reference to fetch",
 )
 @click.option(
@@ -46,23 +39,30 @@ from .core import retrocookie
 @click.option(
     "--directory", "-C", metavar="DIR", help="Repository directory",
 )
+@click.argument("repository", required=False)
 @click.version_option()
 def main(
-    url: Optional[str],
     ref: str,
     base: str,
     local: Optional[str],
     whitelist: Container[str],
     blacklist: Container[str],
     directory: Optional[str],
+    repository: Optional[str],
 ) -> None:
-    """Retrocookie imports commits into Cookiecutter templates."""
+    """Retrocookie imports commits into Cookiecutter templates.
+
+    The source repository is passed as a non-optional argument. This can
+    be the repository URL or filesystem path of an instance of the
+    Cookiecutter template. If omitted, the repository URL is constructed
+    from origin, by appending `-instance` to the repository name.
+    """
     path = Path(directory) if directory else None
     retrocookie(
         ref,
         base=base,
         branch=local,
-        url=url,
+        url=repository,
         whitelist=whitelist,
         blacklist=blacklist,
         path=path,

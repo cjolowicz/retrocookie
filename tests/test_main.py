@@ -46,7 +46,7 @@ def test_main(
     with utils.chdir(cookiecutter.path):
         result = runner.invoke(
             __main__.main,
-            ["--ref=topic", f"--url={instance.path}", *options],
+            ["--ref=topic", *options, str(instance.path)],
             catch_exceptions=False,
         )
         assert result.exit_code == 0
