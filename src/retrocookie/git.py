@@ -9,6 +9,13 @@ from typing import Optional
 import pygit2
 
 
+def git(
+    *args: str, check: bool = True, **kwargs: Any
+) -> subprocess.CompletedProcess[str]:
+    """Invoke git."""
+    return subprocess.run(["git", *args], check=check, **kwargs)  # noqa: S603,S607
+
+
 class Repository:
     """Git repository."""
 
