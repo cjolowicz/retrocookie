@@ -95,10 +95,6 @@ class Repository:
         ref = self.repo.lookup_reference(refname)
         return cast(str, ref.target.hex)
 
-    def rebase(self, upstream: str, branch: str, onto: str) -> None:
-        """Rebase."""
-        self.git("rebase", upstream, branch, f"--onto={onto}")
-
     def _ensure_relative(self, path: Path) -> Path:
         """Interpret the path relative to the repository root."""
         return path.relative_to(self.path) if path.is_absolute() else path
