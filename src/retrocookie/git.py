@@ -1,4 +1,6 @@
 """Git interface."""
+from __future__ import annotations
+
 import subprocess  # noqa: S404
 from pathlib import Path
 from typing import Any
@@ -19,22 +21,20 @@ class Repository:
 
     def git(
         self, *args: str, check: bool = True, **kwargs: Any
-    ) -> "subprocess.CompletedProcess[str]":
+    ) -> subprocess.CompletedProcess[str]:
         """Invoke git."""
-        # FIXME: Use `from __future__ import annotations` instead of quoting.
-        # This requires Python 3.7+.
         return subprocess.run(  # noqa: S603,S607
             ["git", *args], check=check, cwd=self.path, **kwargs
         )
 
     @classmethod
-    def init(cls, path: Path) -> "Repository":
+    def init(cls, path: Path) -> Repository:
         """Create a repository."""
         repo = pygit2.init_repository(path)
         return cls(path, repo=repo)
 
     @classmethod
-    def clone(cls, url: str, path: Path) -> "Repository":
+    def clone(cls, url: str, path: Path) -> Repository:
         """Clone the repository."""
         # pygit2 wheels for Windows and macOS lack SSH support.
         # https://github.com/libgit2/pygit2/issues/994
