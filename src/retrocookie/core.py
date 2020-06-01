@@ -12,15 +12,6 @@ from .utils import temporary_remote
 from .utils import temporary_repository
 
 
-def guess_instance_url(repository: git.Repository) -> str:
-    """Guess the URL of the template instance."""
-    url = repository.get_remote_url("origin")
-    if url.endswith(".git"):
-        url = url[: -len(".git")]
-        return f"{url}-instance.git"
-    return f"{url}-instance"
-
-
 def find_template_directory(repository: git.Repository) -> Path:
     """Locate the subdirectory with the project template."""
     tokens = "{{", "cookiecutter", "}}"
@@ -68,11 +59,11 @@ def apply_commits(
 
 
 def retrocookie(
+    url: str,
     ref: str,
     *,
     base: str = "master",
     branch: Optional[str] = None,
-    url: Optional[str] = None,
     whitelist: Container[str] = (),
     blacklist: Container[str] = (),
     path: Optional[Path] = None,
@@ -81,9 +72,6 @@ def retrocookie(
     repository = git.Repository(path)
     template_directory = find_template_directory(repository)
     remote = "retrocookie"
-
-    if url is None:
-        url = guess_instance_url(repository)
 
     with temporary_repository(url) as instance:
         rewrite_commits(instance, template_directory, whitelist, blacklist)

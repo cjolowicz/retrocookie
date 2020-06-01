@@ -119,7 +119,7 @@ Use Retrocookie like this:
 
 .. code:: console
 
-   $ retrocookie -r <branch>
+   $ retrocookie <repo> -r <branch>
 
 
 Contributing
