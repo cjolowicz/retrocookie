@@ -96,25 +96,8 @@ class Repository:
             self.repo.index.add_all()
         self.repo.index.write()
 
-    def commit(
-        self,
-        *,
-        author: str,
-        author_email: str,
-        message: str,
-        committer: Optional[str] = None,
-        committer_email: Optional[str] = None,
-    ) -> None:
+    def commit(self, message: str) -> None:
         """Create a commit."""
-        if committer is None:
-            committer = author
-
-        if committer_email is None:
-            committer_email = author_email
-
-        author_signature = pygit2.Signature(author, author_email)
-        committer_signature = pygit2.Signature(committer, committer_email)
-
         try:
             head = self.repo.head
             refname = head.name
@@ -124,7 +107,6 @@ class Repository:
             parents = []
 
         tree = self.repo.index.write_tree()
+        author = committer = self.repo.default_signature
 
-        self.repo.create_commit(
-            refname, author_signature, committer_signature, message, tree, parents
-        )
+        self.repo.create_commit(refname, author, committer, message, tree, parents)

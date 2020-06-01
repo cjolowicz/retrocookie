@@ -7,10 +7,6 @@ from typing import Iterator
 from retrocookie import git
 
 
-AUTHOR = "user"
-AUTHOR_EMAIL = "user@example.com"
-
-
 def read(repository: git.Repository, path: Path) -> str:
     """Read file in repository."""
     path = repository.path / path
@@ -20,9 +16,7 @@ def read(repository: git.Repository, path: Path) -> str:
 def commit(repository: git.Repository, path: Path) -> None:
     """Create a commit with the path."""
     repository.add(path)
-    repository.commit(
-        author=AUTHOR, author_email=AUTHOR_EMAIL, message=f"Update {path}"
-    )
+    repository.commit(f"Update {path}")
 
 
 def write(repository: git.Repository, path: Path, text: str) -> None:

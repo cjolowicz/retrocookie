@@ -10,10 +10,6 @@ from cookiecutter.main import cookiecutter
 from retrocookie import git
 
 
-AUTHOR = "user"
-AUTHOR_EMAIL = "user@example.com"
-
-
 @pytest.fixture
 def context() -> Dict[str, str]:
     """Cookiecutter context dictionary."""
@@ -84,9 +80,7 @@ def make_repository(path: Path) -> git.Repository:
     """Turn a directory into a git repository."""
     repository = git.Repository.init(path)
     repository.add()
-    repository.commit(
-        author=AUTHOR, author_email=AUTHOR_EMAIL, message="Initial commit"
-    )
+    repository.commit("Initial commit")
     return repository
 
 
