@@ -23,9 +23,9 @@ def find_template_directory(repository: git.Repository) -> Path:
 
 def load_context(repository: git.Repository) -> Dict[str, str]:
     """Load the context from the .cookiecutter.json file."""
-    path = repository.path / ".cookiecutter.json"
-    with path.open() as io:
-        return cast(Dict[str, str], json.load(io))
+    path = Path(".cookiecutter.json")
+    text = repository.read_text(path)
+    return cast(Dict[str, str], json.loads(text))
 
 
 def rewrite_commits(
