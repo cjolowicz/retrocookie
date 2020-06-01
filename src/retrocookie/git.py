@@ -26,13 +26,9 @@ class Repository:
         self.path = path or Path.cwd() if repo is None else Path(repo.path).parent
         self.repo = repo or pygit2.Repository(self.path)
 
-    def git(
-        self, *args: str, check: bool = True, **kwargs: Any
-    ) -> subprocess.CompletedProcess[str]:
+    def git(self, *args: str, **kwargs: Any) -> subprocess.CompletedProcess[str]:
         """Invoke git."""
-        return subprocess.run(  # noqa: S603,S607
-            ["git", *args], check=check, cwd=self.path, **kwargs
-        )
+        return git(*args, cwd=self.path, **kwargs)
 
     @classmethod
     def init(cls, path: Path) -> Repository:
@@ -45,9 +41,7 @@ class Repository:
         """Clone the repository."""
         # pygit2 wheels for Windows and macOS lack SSH support.
         # https://github.com/libgit2/pygit2/issues/994
-        subprocess.run(  # noqa: S603,S607
-            ["git", "clone", url, str(path)], check=True,
-        )
+        git("clone", url, str(path))
         return cls(path)
 
     def exists_remote(self, remote: str) -> bool:
