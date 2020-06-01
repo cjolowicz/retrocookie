@@ -4,6 +4,7 @@ from __future__ import annotations
 import subprocess  # noqa: S404
 from pathlib import Path
 from typing import Any
+from typing import cast
 from typing import Optional
 
 import pygit2
@@ -89,6 +90,13 @@ class Repository:
     def _ensure_relative(self, path: Path) -> Path:
         """Interpret the path relative to the repository root."""
         return path.relative_to(self.path) if path.is_absolute() else path
+
+    def read_text(self, path: Path, *, ref: str = "HEAD") -> str:
+        """Return the contents of the blob at the given path."""
+        commit = self.repo.references[ref].peel()
+        path = self._ensure_relative(path)
+        blob = commit.tree / str(path)
+        return cast(str, blob.data.decode())
 
     def add(self, *paths: Path) -> None:
         """Add paths to the index."""
