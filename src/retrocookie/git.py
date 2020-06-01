@@ -64,12 +64,9 @@ class Repository:
         """Fetch ref from the remote."""
         self.repo.remotes[remote].fetch(refspecs=list(refs))  # FIXME: --no-tags?
 
-    def create_branch(self, branch: str, ref: Optional[str] = None) -> None:
+    def create_branch(self, branch: str, ref: str = "HEAD") -> None:
         """Create a branch."""
-        if ref is None:
-            commit = self.repo[self.repo.head.target]
-        else:
-            commit = self.repo.branches[ref].peel()
+        commit = self.repo.revparse_single(ref)
         self.repo.branches.create(branch, commit)
 
     def get_current_branch(self) -> str:
