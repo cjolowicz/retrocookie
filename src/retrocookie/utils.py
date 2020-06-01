@@ -25,7 +25,7 @@ def temporary_repository(url: str) -> Iterator[git.Repository]:
     """Clone URL to temporary directory."""
     with tempfile.TemporaryDirectory() as tmpdir:
         directory = Path(tmpdir) / "instance"
-        yield git.Repository.clone(url, directory)
+        yield git.Repository.clone(url, directory, mirror=True)
 
 
 @contextlib.contextmanager
