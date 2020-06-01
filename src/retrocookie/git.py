@@ -37,11 +37,12 @@ class Repository:
         return cls(path, repo=repo)
 
     @classmethod
-    def clone(cls, url: str, path: Path) -> Repository:
+    def clone(cls, url: str, path: Path, *, mirror: bool = False) -> Repository:
         """Clone the repository."""
         # pygit2 wheels for Windows and macOS lack SSH support.
         # https://github.com/libgit2/pygit2/issues/994
-        git("clone", url, str(path))
+        options = ["--mirror"] if mirror else []
+        git("clone", *options, url, str(path))
         return cls(path)
 
     def exists_remote(self, remote: str) -> bool:
