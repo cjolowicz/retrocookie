@@ -39,7 +39,7 @@ from .core import retrocookie
 @click.option(
     "--directory", "-C", metavar="DIR", help="Repository directory",
 )
-@click.argument("repository", required=False)
+@click.argument("repository")
 @click.version_option()
 def main(
     ref: str,
@@ -48,21 +48,20 @@ def main(
     whitelist: Container[str],
     blacklist: Container[str],
     directory: Optional[str],
-    repository: Optional[str],
+    repository: str,
 ) -> None:
     """Retrocookie imports commits into Cookiecutter templates.
 
-    The source repository is passed as a non-optional argument. This can
+    The source repository is passed as a positional argument. This can
     be the repository URL or filesystem path of an instance of the
-    Cookiecutter template. If omitted, the repository URL is constructed
-    from origin, by appending `-instance` to the repository name.
+    Cookiecutter template.
     """
     path = Path(directory) if directory else None
     retrocookie(
+        repository,
         ref,
         base=base,
         branch=local,
-        url=repository,
         whitelist=whitelist,
         blacklist=blacklist,
         path=path,
