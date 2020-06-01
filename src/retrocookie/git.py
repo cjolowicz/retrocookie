@@ -5,6 +5,7 @@ import subprocess  # noqa: S404
 from pathlib import Path
 from typing import Any
 from typing import cast
+from typing import Iterator
 from typing import List
 from typing import Optional
 
@@ -92,6 +93,20 @@ class Repository:
         result = process.stdout.split()
         result.reverse()
         return result
+
+    def list_replacements(self, *commits: str) -> List[str]:
+        """List the replace refs for the given commits."""
+
+        def _generate() -> Iterator[str]:
+            process = self.git(  # noqa: S603,S607
+                "replace", "--list", "--format=medium", text=True, capture_output=True,
+            )
+            for line in process.stdout.splitlines():
+                old, new = line.split(" -> ")
+                if old in commits:
+                    yield new
+
+        return list(_generate())
 
     def rebase(self, upstream: str, branch: str, onto: str) -> None:
         """Rebase."""
