@@ -52,11 +52,13 @@ def apply(repository: git.Repository, change: Append) -> None:
 
 
 @contextlib.contextmanager
-def branch(repository: git.Repository, branch: str) -> Iterator[None]:
-    """Switch to branch, creating it if needed."""
+def branch(
+    repository: git.Repository, branch: str, *, create: bool = False
+) -> Iterator[None]:
+    """Switch to branch."""
     original = repository.get_current_branch()
 
-    if not repository.exists_branch(branch):
+    if create and not repository.exists_branch(branch):
         repository.create_branch(branch)
 
     repository.switch_branch(branch)

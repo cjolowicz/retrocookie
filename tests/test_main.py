@@ -66,7 +66,7 @@ def test_functional(
     cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
     change = Append(Path("README.md"), "Lorem Ipsum\n")
 
-    with branch(instance, "topic"):
+    with branch(instance, "topic", create=True):
         apply(instance, change)
 
     with utils.chdir(cookiecutter.path):
