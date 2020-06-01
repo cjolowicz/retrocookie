@@ -37,7 +37,7 @@ def test_verbatim(
     cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
     change = Append(Path("README.md"), text)
 
-    with branch(instance, "topic"):
+    with branch(instance, "topic", create=True):
         apply(instance, change)
 
     retrocookie(str(instance.path), "topic", path=cookiecutter.path)
@@ -54,7 +54,7 @@ def test_branch(
     cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
     change = Append(Path("README.md"), "Lorem Ipsum\n")
 
-    with branch(instance, "topic"):
+    with branch(instance, "topic", create=True):
         apply(instance, change)
 
     retrocookie(
