@@ -86,6 +86,10 @@ class Repository:
         """Rebase."""
         self.git("rebase", upstream, branch, f"--onto={onto}")
 
+    def _ensure_relative(self, path: Path) -> Path:
+        """Interpret the path relative to the repository root."""
+        return path.relative_to(self.path) if path.is_absolute() else path
+
     def add(self, *paths: Path) -> None:
         """Add paths to the index."""
         for path in paths:
