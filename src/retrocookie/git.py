@@ -5,6 +5,7 @@ import subprocess  # noqa: S404
 from pathlib import Path
 from typing import Any
 from typing import cast
+from typing import List
 from typing import Optional
 
 import pygit2
@@ -82,6 +83,15 @@ class Repository:
     def switch_branch(self, branch: str) -> None:
         """Switch the current branch."""
         self.repo.checkout(self.repo.branches[branch])
+
+    def parse_revisions(self, *revisions: str) -> List[str]:
+        """Parse revisions using the format specified in gitrevisions(7)."""
+        process = self.git(
+            "rev-list", "--no-walk", *revisions, text=True, capture_output=True
+        )
+        result = process.stdout.split()
+        result.reverse()
+        return result
 
     def rebase(self, upstream: str, branch: str, onto: str) -> None:
         """Rebase."""
