@@ -219,7 +219,7 @@ description = "Quickly rewrite git repository history"
 name = "git-filter-repo"
 optional = false
 python-versions = ">=3.5"
-version = "2.26.0"
+version = "2.27.0"
 
 [[package]]
 category = "dev"
@@ -984,8 +984,8 @@ filelock = [
     {file = "filelock-3.0.12.tar.gz", hash = "sha256:18d82244ee114f543149c66a6e0c14e9c4f8a1044b5cdaadd0f82159d6a6ff59"},
 ]
 git-filter-repo = [
-    {file = "git-filter-repo-2.26.0.tar.gz", hash = "sha256:c17c012fb9730e5e6f4bc886067d88cabce55f7f24fc0262f8159dadf2f0fee1"},
-    {file = "git_filter_repo-2.26.0-py2.py3-none-any.whl", hash = "sha256:e2d57941b6eb74c8807e2ec6bb71ec436647ac6ce1b9ccfcd161866e0b1b33e3"},
+    {file = "git-filter-repo-2.27.0.tar.gz", hash = "sha256:66f19dedc10a5d44e09437b2beebc277dd5224e549d0d2f33bb3767410b29ed3"},
+    {file = "git_filter_repo-2.27.0-py2.py3-none-any.whl", hash = "sha256:0ad8736e5b3428392f4fb4074d7da74e92fe956fcac65c5eebe39682010c9ec9"},
 ]
 identify = [
     {file = "identify-1.4.18-py2.py3-none-any.whl", hash = "sha256:9f53e80371f2ac7c969eefda8efaabd4f77c6300f5f8fc4b634744a0db8fe5cc"},
