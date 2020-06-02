@@ -89,7 +89,9 @@ class Repository:
         process = self.git(
             "rev-list", "--no-walk", *revisions, text=True, capture_output=True
         )
-        return process.stdout.split()
+        result = process.stdout.split()
+        result.reverse()
+        return result
 
     def rebase(self, upstream: str, branch: str, onto: str) -> None:
         """Rebase."""
