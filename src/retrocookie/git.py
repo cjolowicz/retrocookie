@@ -93,9 +93,8 @@ class Repository:
     def add(self, *paths: Path) -> None:
         """Add paths to the index."""
         for path in paths:
-            self.repo.index.add(
-                path.relative_to(self.path) if path.is_absolute() else path
-            )
+            path = self._ensure_relative(path)
+            self.repo.index.add(path)
         else:
             self.repo.index.add_all()
         self.repo.index.write()
