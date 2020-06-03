@@ -20,6 +20,11 @@ from .core import retrocookie
     show_default=True,
 )
 @click.option(
+    "--create/--no-create",
+    help="Create a local branch with the same name as --branch",
+    show_default=True,
+)
+@click.option(
     "--create-branch",
     metavar="BRANCH",
     help="Create a local branch for the imported commits",
@@ -46,6 +51,7 @@ from .core import retrocookie
 def main(
     branch: str,
     upstream: str,
+    create: bool,
     create_branch: Optional[str],
     whitelist: Container[str],
     blacklist: Container[str],
@@ -58,6 +64,14 @@ def main(
     be the repository URL or filesystem path of an instance of the
     Cookiecutter template.
     """
+    if create:
+        if create_branch:
+            raise click.UsageError(
+                "--create and --create-branch are mutually exclusive"
+            )
+
+        create_branch = branch
+
     path = Path(directory) if directory else None
     retrocookie(
         repository,
