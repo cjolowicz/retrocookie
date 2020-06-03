@@ -62,7 +62,7 @@ def main(
     retrocookie(
         repository,
         branch,
-        base=base,
+        upstream=base,
         create_branch=create_branch,
         whitelist=whitelist,
         blacklist=blacklist,

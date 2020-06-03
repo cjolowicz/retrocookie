@@ -64,7 +64,7 @@ def retrocookie(
     url: str,
     branch: str,
     *,
-    base: str = "master",
+    upstream: str = "master",
     create_branch: Optional[str] = None,
     whitelist: Container[str] = (),
     blacklist: Container[str] = (),
@@ -77,7 +77,7 @@ def retrocookie(
 
     with temporary_repository(url) as instance:
         commits = rewrite_commits(
-            instance, template_directory, whitelist, blacklist, f"{base}..{branch}"
+            instance, template_directory, whitelist, blacklist, f"{upstream}..{branch}"
         )
 
         with temporary_remote(repository, remote, str(instance.path)):
