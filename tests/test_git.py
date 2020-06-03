@@ -81,12 +81,10 @@ def test_parse_revisions(repository: git.Repository) -> None:
     assert revisions == expected
 
 
-def test_list_replacements(repository: git.Repository) -> None:
+def test_lookup_replacement(repository: git.Repository) -> None:
     """It returns the replacement ref for a replaced ref."""
     first, second = commit(repository), commit(repository)
 
     repository.git("replace", second, first)
 
-    replacements = repository.list_replacements(second)
-
-    assert replacements == [first]
+    assert first == repository.lookup_replacement(second)
