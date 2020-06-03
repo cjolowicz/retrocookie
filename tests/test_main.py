@@ -33,6 +33,7 @@ def mock_retrocookie(monkeypatch: MonkeyPatch) -> None:
         ["/home/user/src/repo", "--branch=topic"],
         ["--branch=topic", "/home/user/src/repo"],
         ["--branch=topic", "https://example.com/owner/repo.git"],
+        ["--branch=topic", "--create", "repo"],
         ["--branch=topic", "--create-branch=other", "repo"],
         [
             "--branch=topic",
