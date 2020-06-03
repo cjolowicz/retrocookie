@@ -22,7 +22,7 @@ from .core import retrocookie
 @click.option(
     "--create-branch",
     metavar="BRANCH",
-    help="Local branch to create  [default: same as --branch]",
+    help="Create a local branch for the imported commits",
 )
 @click.option(
     "--whitelist",
