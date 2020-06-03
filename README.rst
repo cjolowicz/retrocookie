@@ -54,21 +54,15 @@ and import them onto a feature branch in your Cookiecutter repository,
 rewriting them on the fly to insert templating tags
 and escape Jinja-special constructs.
 
-Invoke retrocookie with the name of a branch via the ``--ref`` option,
+Invoke retrocookie with the repository location for the generated project,
+and the name of a branch via the ``--branch`` option,
 and it will fetch the commits on that branch from the project,
-rewrite them, and cherry-pick them onto an equally-named branch in the Cookiecutter.
-
-If the repository of the generated project has a URL or path
-like the Cookiecutter, with ``-instance`` appended,
-you're already good to go.
-Otherwise, pass the location of the generated project via the ``--url`` option.
+rewrite them, and cherry-pick them into the Cookiecutter.
 
 Under the hood,
 Retrocookie clones the generated project to a temporary directory
 and rewrites the clone using git-filter-repo_.
-It then fetches the rewritten branch into the template,
-and uses `git rebase`_ to copy the commits onto a new branch,
-off your current branch.
+It then fetches and cherry-picks the rewritten commits into the template.
 
 Maybe you're thinking,
 how can this possibly work?
@@ -79,14 +73,6 @@ But while the general problem of reconstructing the template code is unsolvable,
 in practise it is often enough to perform simple replacements of template variables.
 One reason this works so well is that
 the rewrite only needs to be correct for the handful of commits you're importing.
-
-When it doesn't work,
-you will usually get merge conflicts,
-with the entire git machinery at your fingertips.
-Use ``git rebase --abort`` to bail out into a clean state,
-or resolve the conflicts and run ``git rebase --continue``.
-Even if there are no merge conflicts,
-always inspect the generated commits to make sure you got what you wanted.
 
 
 Features
