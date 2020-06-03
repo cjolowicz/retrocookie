@@ -61,7 +61,7 @@ def test_branch(
         str(instance.path),
         "topic",
         path=cookiecutter.path,
-        branch="just-another-branch",
+        create_branch="just-another-branch",
     )
 
     with branch(cookiecutter, "just-another-branch"):
