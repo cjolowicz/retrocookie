@@ -20,7 +20,9 @@ from .core import retrocookie
     show_default=True,
 )
 @click.option(
-    "--local", metavar="REF", help="Local branch name  [default: same as --ref]",
+    "--create-branch",
+    metavar="BRANCH",
+    help="Local branch to create  [default: same as --ref]",
 )
 @click.option(
     "--whitelist",
@@ -44,7 +46,7 @@ from .core import retrocookie
 def main(
     ref: str,
     base: str,
-    local: Optional[str],
+    create_branch: Optional[str],
     whitelist: Container[str],
     blacklist: Container[str],
     directory: Optional[str],
@@ -61,7 +63,7 @@ def main(
         repository,
         ref,
         base=base,
-        create_branch=local,
+        create_branch=create_branch,
         whitelist=whitelist,
         blacklist=blacklist,
         path=path,
