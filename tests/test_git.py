@@ -1,7 +1,6 @@
 """Tests for git interface."""
 from pathlib import Path
 from typing import cast
-from typing import List
 
 import pytest
 
@@ -71,24 +70,12 @@ def commit(repository: git.Repository) -> str:
 
 
 def test_parse_revisions(repository: git.Repository) -> None:
-    """It."""
-    hashes: List[str] = []
-
-    def commit() -> None:
-        path = repository.path / str(len(hashes))
-        path.touch()
-
-        repository.add()
-        repository.commit(f"Add {path.name}")
-
-        hashes.append(repository.repo.head.target.hex)
-
-    commit()
+    """It returns the hashes on topic for the range expression ``..topic``."""
+    commit(repository)
 
     with branch(repository, "topic", create=True):
-        commit()
-        commit()
+        expected = [commit(repository), commit(repository)]
 
     revisions = repository.parse_revisions("..topic")
 
-    assert revisions == hashes[1:]
+    assert revisions == expected
