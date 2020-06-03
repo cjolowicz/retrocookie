@@ -1,6 +1,6 @@
 """Tests for git interface."""
 from pathlib import Path
-from typing import List
+from typing import cast
 
 import pytest
 
@@ -63,25 +63,28 @@ def test_cherrypick(repository: git.Repository) -> None:
     assert message in repository.read_text(readme)
 
 
+def commit(repository: git.Repository) -> str:
+    """Create an empty commit and return the hash."""
+    repository.commit("")
+    return cast(str, repository.repo.head.target.hex)
+
+
 def test_parse_revisions(repository: git.Repository) -> None:
-    """It."""
-    hashes: List[str] = []
-
-    def commit() -> None:
-        path = repository.path / str(len(hashes))
-        path.touch()
-
-        repository.add()
-        repository.commit(f"Add {path.name}")
-
-        hashes.append(repository.repo.head.target.hex)
-
-    commit()
+    """It returns the hashes on topic for the range expression ``..topic``."""
+    commit(repository)
 
     with branch(repository, "topic", create=True):
-        commit()
-        commit()
+        expected = [commit(repository), commit(repository)]
 
     revisions = repository.parse_revisions("..topic")
 
-    assert revisions == hashes[1:]
+    assert revisions == expected
+
+
+def test_lookup_replacement(repository: git.Repository) -> None:
+    """It returns the replacement ref for a replaced ref."""
+    first, second = commit(repository), commit(repository)
+
+    repository.git("replace", second, first)
+
+    assert first == repository.lookup_replacement(second)

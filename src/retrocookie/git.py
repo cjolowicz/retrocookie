@@ -93,6 +93,12 @@ class Repository:
         result.reverse()
         return result
 
+    def lookup_replacement(self, commit: str) -> str:
+        """Lookup the replace ref for the given commit."""
+        refname = f"refs/replace/{commit}"
+        ref = self.repo.lookup_reference(refname)
+        return cast(str, ref.target.hex)
+
     def rebase(self, upstream: str, branch: str, onto: str) -> None:
         """Rebase."""
         self.git("rebase", upstream, branch, f"--onto={onto}")
