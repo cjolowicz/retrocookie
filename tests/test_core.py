@@ -70,6 +70,25 @@ def test_branch(
         assert change.text in read(cookiecutter, in_template(change.path))
 
 
+def test_commits(
+    cookiecutter_repository: git.Repository,
+    cookiecutter_instance_repository: git.Repository,
+) -> None:
+    """It cherry-picks the specified commits."""
+    cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
+    change = Append(Path("README.md"), "Lorem Ipsum\n")
+    apply(instance, change)
+
+    retrocookie(
+        str(instance.path),
+        "master",  # no-op, remove when --branch is no longer required
+        commits=["HEAD"],
+        path=cookiecutter.path,
+    )
+
+    assert change.text in read(cookiecutter, in_template(change.path))
+
+
 def test_find_template_directory_fails(tmp_path: Path) -> None:
     """It raises an exception when there is no template directory."""
     repository = git.Repository.init(tmp_path)
