@@ -33,6 +33,7 @@ def mock_retrocookie(monkeypatch: MonkeyPatch) -> None:
         ["/home/user/src/repo", "--branch=topic"],
         ["--branch=topic", "/home/user/src/repo"],
         ["--branch=topic", "https://example.com/owner/repo.git"],
+        ["--branch=topic", "--create", "repo"],
         ["--branch=topic", "--create-branch=other", "repo"],
         [
             "--branch=topic",
@@ -52,7 +53,13 @@ def test_usage_success(
 
 
 @pytest.mark.parametrize(
-    "args", [[], ["--branch=topic"], ["--branch=topic", "first", "second"]],
+    "args",
+    [
+        [],
+        ["--branch=topic"],
+        ["--branch=topic", "first", "second"],
+        ["--branch=topic", "--create", "--create-branch=another", "repo"],
+    ],
 )
 def test_usage_error(
     runner: CliRunner, args: Iterable[str], mock_retrocookie: None
