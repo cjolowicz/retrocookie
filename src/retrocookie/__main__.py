@@ -61,7 +61,7 @@ def main(
         repository,
         ref,
         base=base,
-        branch=local,
+        create_branch=local,
         whitelist=whitelist,
         blacklist=blacklist,
         path=path,

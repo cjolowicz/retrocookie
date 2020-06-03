@@ -65,7 +65,7 @@ def retrocookie(
     ref: str,
     *,
     base: str = "master",
-    branch: Optional[str] = None,
+    create_branch: Optional[str] = None,
     whitelist: Container[str] = (),
     blacklist: Container[str] = (),
     path: Optional[Path] = None,
@@ -81,4 +81,4 @@ def retrocookie(
         )
 
         with temporary_remote(repository, remote, str(instance.path)):
-            apply_commits(repository, remote, commits, branch or ref)
+            apply_commits(repository, remote, commits, create_branch or ref)
