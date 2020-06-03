@@ -63,10 +63,6 @@ class Repository:
         """Return the URL of the remote."""
         return self.repo.remotes[remote].url  # type: ignore[no-any-return]
 
-    def fetch_remote(self, remote: str, *refs: str) -> None:
-        """Fetch ref from the remote."""
-        self.repo.remotes[remote].fetch(refspecs=list(refs))  # FIXME: --no-tags?
-
     def create_branch(self, branch: str, ref: str = "HEAD") -> None:
         """Create a branch."""
         commit = self.repo.revparse_single(ref)
@@ -98,10 +94,6 @@ class Repository:
         refname = f"refs/replace/{commit}"
         ref = self.repo.lookup_reference(refname)
         return cast(str, ref.target.hex)
-
-    def rebase(self, upstream: str, branch: str, onto: str) -> None:
-        """Rebase."""
-        self.git("rebase", upstream, branch, f"--onto={onto}")
 
     def _ensure_relative(self, path: Path) -> Path:
         """Interpret the path relative to the repository root."""

@@ -4,6 +4,8 @@ from pathlib import Path
 from typing import cast
 from typing import Container
 from typing import Dict
+from typing import Iterable
+from typing import List
 from typing import Optional
 
 from . import git
@@ -23,9 +25,9 @@ def find_template_directory(repository: git.Repository) -> Path:
 
 def load_context(repository: git.Repository) -> Dict[str, str]:
     """Load the context from the .cookiecutter.json file."""
-    path = repository.path / ".cookiecutter.json"
-    with path.open() as io:
-        return cast(Dict[str, str], json.load(io))
+    path = Path(".cookiecutter.json")
+    text = repository.read_text(path)
+    return cast(Dict[str, str], json.loads(text))
 
 
 def rewrite_commits(
@@ -33,8 +35,10 @@ def rewrite_commits(
     template_directory: Path,
     whitelist: Container[str],
     blacklist: Container[str],
-) -> None:
+    revision: str,
+) -> List[str]:
     """Rewrite the repository using template variables."""
+    commits = repository.parse_revisions(revision)
     context = load_context(repository)
     RepositoryFilter(
         repository=repository,
@@ -43,19 +47,17 @@ def rewrite_commits(
         whitelist=whitelist,
         blacklist=blacklist,
     ).run()
+    return [repository.lookup_replacement(commit) for commit in commits]
 
 
 def apply_commits(
-    repository: git.Repository, remote: str, base: str, ref: str, branch: Optional[str],
+    repository: git.Repository, remote: str, commits: Iterable[str], branch: str,
 ) -> None:
-    """Create <branch> with commits from <remote>/<base>..<remote>/<ref>."""
-    if branch is None:
-        branch = ref
-
-    current = repository.get_current_branch()
-    repository.fetch_remote(remote, base, ref)
-    repository.create_branch(branch, f"{remote}/{ref}")
-    repository.rebase(upstream=f"{remote}/{base}", branch=branch, onto=current)
+    """Create <branch> with the specified commits from <remote>."""
+    repository.git("fetch", "--no-tags", "--depth=2", remote, *commits)
+    repository.create_branch(branch)
+    for commit in commits:
+        repository.cherrypick(commit, branch=branch)
 
 
 def retrocookie(
@@ -74,7 +76,9 @@ def retrocookie(
     remote = "retrocookie"
 
     with temporary_repository(url) as instance:
-        rewrite_commits(instance, template_directory, whitelist, blacklist)
+        commits = rewrite_commits(
+            instance, template_directory, whitelist, blacklist, f"{base}..{ref}"
+        )
 
         with temporary_remote(repository, remote, str(instance.path)):
-            apply_commits(repository, remote, base, ref, branch)
+            apply_commits(repository, remote, commits, branch or ref)
