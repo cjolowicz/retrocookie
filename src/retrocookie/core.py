@@ -51,13 +51,13 @@ def rewrite_commits(
 
 
 def apply_commits(
-    repository: git.Repository, remote: str, commits: Iterable[str], branch: str,
+    repository: git.Repository, remote: str, commits: Iterable[str], create_branch: str,
 ) -> None:
     """Create <branch> with the specified commits from <remote>."""
     repository.git("fetch", "--no-tags", "--depth=2", remote, *commits)
-    repository.create_branch(branch)
+    repository.create_branch(create_branch)
     for commit in commits:
-        repository.cherrypick(commit, branch=branch)
+        repository.cherrypick(commit, branch=create_branch)
 
 
 def retrocookie(
@@ -65,7 +65,7 @@ def retrocookie(
     ref: str,
     *,
     base: str = "master",
-    branch: Optional[str] = None,
+    create_branch: Optional[str] = None,
     whitelist: Container[str] = (),
     blacklist: Container[str] = (),
     path: Optional[Path] = None,
@@ -81,4 +81,4 @@ def retrocookie(
         )
 
         with temporary_remote(repository, remote, str(instance.path)):
-            apply_commits(repository, remote, commits, branch or ref)
+            apply_commits(repository, remote, commits, create_branch or ref)
