@@ -10,7 +10,7 @@ from .core import retrocookie
 
 @click.command()
 @click.option(
-    "--ref", "-r", metavar="REF", required=True, help="Remote reference to fetch",
+    "--branch", metavar="BRANCH", required=True, help="Remote branch to cherry-pick",
 )
 @click.option(
     "--base",
@@ -22,7 +22,7 @@ from .core import retrocookie
 @click.option(
     "--create-branch",
     metavar="BRANCH",
-    help="Local branch to create  [default: same as --ref]",
+    help="Local branch to create  [default: same as --branch]",
 )
 @click.option(
     "--whitelist",
@@ -44,7 +44,7 @@ from .core import retrocookie
 @click.argument("repository")
 @click.version_option()
 def main(
-    ref: str,
+    branch: str,
     base: str,
     create_branch: Optional[str],
     whitelist: Container[str],
@@ -61,7 +61,7 @@ def main(
     path = Path(directory) if directory else None
     retrocookie(
         repository,
-        ref,
+        branch,
         base=base,
         create_branch=create_branch,
         whitelist=whitelist,
