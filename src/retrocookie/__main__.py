@@ -13,10 +13,10 @@ from .core import retrocookie
     "--branch", metavar="BRANCH", required=True, help="Remote branch to cherry-pick",
 )
 @click.option(
-    "--base",
+    "--upstream",
     metavar="REF",
     default="master",
-    help="Remote reference to rebase from",
+    help="Remote upstream branch",
     show_default=True,
 )
 @click.option(
@@ -45,7 +45,7 @@ from .core import retrocookie
 @click.version_option()
 def main(
     branch: str,
-    base: str,
+    upstream: str,
     create_branch: Optional[str],
     whitelist: Container[str],
     blacklist: Container[str],
@@ -62,7 +62,7 @@ def main(
     retrocookie(
         repository,
         branch,
-        upstream=base,
+        upstream=upstream,
         create_branch=create_branch,
         whitelist=whitelist,
         blacklist=blacklist,
