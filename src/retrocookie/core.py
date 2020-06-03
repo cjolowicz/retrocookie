@@ -62,7 +62,7 @@ def apply_commits(
 
 def retrocookie(
     url: str,
-    ref: str,
+    branch: str,
     *,
     base: str = "master",
     create_branch: Optional[str] = None,
@@ -77,8 +77,8 @@ def retrocookie(
 
     with temporary_repository(url) as instance:
         commits = rewrite_commits(
-            instance, template_directory, whitelist, blacklist, f"{base}..{ref}"
+            instance, template_directory, whitelist, blacklist, f"{base}..{branch}"
         )
 
         with temporary_remote(repository, remote, str(instance.path)):
-            apply_commits(repository, remote, commits, create_branch or ref)
+            apply_commits(repository, remote, commits, create_branch or branch)
