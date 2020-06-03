@@ -93,15 +93,11 @@ class Repository:
         result.reverse()
         return result
 
-    def list_replacements(self, *commits: str) -> List[str]:
-        """List the replace refs for the given commits."""
-
-        def _lookup(commit: str) -> str:
-            refname = f"refs/replace/{commit}"
-            ref = self.repo.lookup_reference(refname)
-            return cast(str, ref.target.hex)
-
-        return [_lookup(commit) for commit in commits]
+    def lookup_replacement(self, commit: str) -> str:
+        """Lookup the replace ref for the given commit."""
+        refname = f"refs/replace/{commit}"
+        ref = self.repo.lookup_reference(refname)
+        return cast(str, ref.target.hex)
 
     def rebase(self, upstream: str, branch: str, onto: str) -> None:
         """Rebase."""
