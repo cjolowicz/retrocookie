@@ -31,10 +31,10 @@ def load_context(repository: git.Repository) -> Dict[str, str]:
 
 
 def get_commits(
-    repository: git.Repository, branch: str, upstream: str
+    repository: git.Repository, commits: Iterable[str], branch: str, upstream: str
 ) -> Iterable[str]:
     """Return hashes of the commits to be picked."""
-    return repository.parse_revisions(f"{upstream}..{branch}")
+    return repository.parse_revisions(f"{upstream}..{branch}", *commits)
 
 
 def rewrite_commits(
@@ -76,6 +76,7 @@ def retrocookie(
     url: str,
     branch: str,
     *,
+    commits: Iterable[str] = (),
     upstream: str = "master",
     create_branch: Optional[str] = None,
     whitelist: Container[str] = (),
@@ -88,7 +89,7 @@ def retrocookie(
     remote = "retrocookie"
 
     with temporary_repository(url) as instance:
-        commits = get_commits(instance, branch, upstream)
+        commits = get_commits(instance, commits, branch, upstream)
         commits = rewrite_commits(
             instance, template_directory, whitelist, blacklist, commits
         )
