@@ -40,7 +40,9 @@ def test_verbatim(
     with branch(instance, "topic", create=True):
         apply(instance, change)
 
-    retrocookie(str(instance.path), "topic", path=cookiecutter.path)
+    retrocookie(
+        str(instance.path), "topic", path=cookiecutter.path, create_branch="topic"
+    )
 
     with branch(cookiecutter, "topic"):
         assert expected in read(cookiecutter, in_template(change.path))
