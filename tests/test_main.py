@@ -52,7 +52,13 @@ def test_usage_success(
 
 
 @pytest.mark.parametrize(
-    "args", [[], ["--branch=topic"], ["--branch=topic", "first", "second"]],
+    "args",
+    [
+        [],
+        ["--branch=topic"],
+        ["--branch=topic", "first", "second"],
+        ["--branch=topic", "--create", "--create-branch=another", "repo"],
+    ],
 )
 def test_usage_error(
     runner: CliRunner, args: Iterable[str], mock_retrocookie: None
