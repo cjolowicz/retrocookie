@@ -30,12 +30,17 @@ def mock_retrocookie(monkeypatch: MonkeyPatch) -> None:
     "args",
     [
         ["--help"],
-        ["/home/user/src/repo", "--ref=topic"],
-        ["--ref=topic", "/home/user/src/repo"],
-        ["--ref=topic", "https://example.com/owner/repo.git"],
-        ["--ref=topic", "--create-branch=other", "repo"],
-        ["--ref=topic", "--whitelist=project_name", "--whitelist=package_name", "repo"],
-        ["--ref=topic", "--blacklist=github_user", "repo"],
+        ["/home/user/src/repo", "--branch=topic"],
+        ["--branch=topic", "/home/user/src/repo"],
+        ["--branch=topic", "https://example.com/owner/repo.git"],
+        ["--branch=topic", "--create-branch=other", "repo"],
+        [
+            "--branch=topic",
+            "--whitelist=project_name",
+            "--whitelist=package_name",
+            "repo",
+        ],
+        ["--branch=topic", "--blacklist=github_user", "repo"],
     ],
 )
 def test_usage_success(
@@ -47,7 +52,7 @@ def test_usage_success(
 
 
 @pytest.mark.parametrize(
-    "args", [[], ["--ref=topic"], ["--ref=topic", "first", "second"]],
+    "args", [[], ["--branch=topic"], ["--branch=topic", "first", "second"]],
 )
 def test_usage_error(
     runner: CliRunner, args: Iterable[str], mock_retrocookie: None
@@ -70,5 +75,5 @@ def test_functional(
         apply(instance, change)
 
     with utils.chdir(cookiecutter.path):
-        result = runner.invoke(__main__.main, ["--ref=topic", str(instance.path)])
+        result = runner.invoke(__main__.main, ["--branch=topic", str(instance.path)])
         assert result.exit_code == 0
