@@ -1,10 +1,10 @@
 """Tests for git interface."""
 from pathlib import Path
-from typing import cast
 
 import pytest
 
 from .helpers import branch
+from .helpers import commit
 from retrocookie import git
 
 
@@ -61,12 +61,6 @@ def test_cherrypick(repository: git.Repository) -> None:
 
     assert ignore_text == repository.read_text(ignore)
     assert message in repository.read_text(readme)
-
-
-def commit(repository: git.Repository) -> str:
-    """Create an empty commit and return the hash."""
-    repository.commit("")
-    return cast(str, repository.repo.head.target.hex)
 
 
 def test_parse_revisions(repository: git.Repository) -> None:
