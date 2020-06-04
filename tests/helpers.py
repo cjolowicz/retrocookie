@@ -19,7 +19,7 @@ def commit(repository: git.Repository, message: str = "") -> str:
     return cast(str, repository.repo.head.target.hex)
 
 
-def write(repository: git.Repository, path: Path, text: str) -> None:
+def write(repository: git.Repository, path: Path, text: str) -> str:
     """Write file in repository."""
     path = repository.path / path
     path.write_text(text)
