@@ -34,7 +34,12 @@ def get_commits(
     repository: git.Repository, commits: Iterable[str], branch: str, upstream: str
 ) -> Iterable[str]:
     """Return hashes of the commits to be picked."""
-    return repository.parse_revisions(f"{upstream}..{branch}", *commits)
+    revisions = [f"{upstream}..{branch}", *commits]
+    return [
+        commit
+        for revision in revisions
+        for commit in repository.parse_revisions(revision)
+    ]
 
 
 def rewrite_commits(
