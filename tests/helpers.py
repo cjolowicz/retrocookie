@@ -2,6 +2,7 @@
 import contextlib
 from dataclasses import dataclass
 from pathlib import Path
+from typing import cast
 from typing import Iterator
 
 from retrocookie import git
@@ -12,17 +13,18 @@ def read(repository: git.Repository, path: Path) -> str:
     return repository.read_text(path)
 
 
-def commit(repository: git.Repository, path: Path) -> None:
-    """Create a commit with the path."""
-    repository.add(path)
-    repository.commit(f"Update {path.name}")
+def commit(repository: git.Repository, message: str = "") -> str:
+    """Create a commit and return the hash."""
+    repository.commit(message)
+    return cast(str, repository.repo.head.target.hex)
 
 
-def write(repository: git.Repository, path: Path, text: str) -> None:
+def write(repository: git.Repository, path: Path, text: str) -> str:
     """Write file in repository."""
     path = repository.path / path
     path.write_text(text)
-    commit(repository, path)
+    repository.add(path)
+    return commit(repository, f"Update {path.name}")
 
 
 def append(repository: git.Repository, path: Path, text: str) -> None:

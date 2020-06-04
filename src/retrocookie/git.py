@@ -11,6 +11,7 @@ from typing import List
 from typing import Optional
 
 import pygit2
+from pygit2.index import ConflictCollection
 
 
 def git(
@@ -18,6 +19,14 @@ def git(
 ) -> subprocess.CompletedProcess[str]:
     """Invoke git."""
     return subprocess.run(["git", *args], check=check, **kwargs)  # noqa: S603,S607
+
+
+class Conflict(Exception):
+    """Exception raised if the index has conflicts."""
+
+    def __init__(self, conflicts: ConflictCollection):
+        """Initialize."""
+        super().__init__(conflicts)
 
 
 class Repository:
@@ -132,14 +141,20 @@ class Repository:
 
         self.repo.create_commit(refname, author, committer, message, tree, parents)
 
-    def cherrypick(self, ref: str, *, branch: Optional[str] = None) -> None:
-        """Cherry-pick the commit <ref> onto <branch>."""
+    def cherrypick(self, ref: str) -> None:
+        """Cherry-pick the commit <ref>."""
         commit = self.repo.revparse_single(ref)
-        head = self.repo.branches[branch] if branch is not None else self.repo.head
-        index = self.repo.merge_trees(commit.parents[0].tree, head, commit)
-        tree = index.write_tree(self.repo)
+        head = self.repo.head
+
+        self.repo.cherrypick(commit.id)
+        if self.repo.index.conflicts is not None:
+            raise Conflict(self.repo.index.conflicts)
+
+        tree = self.repo.index.write_tree()
         committer = self.repo.default_signature
 
         self.repo.create_commit(
             head.name, commit.author, committer, commit.message, tree, [head.target],
         )
+
+        self.repo.state_cleanup()

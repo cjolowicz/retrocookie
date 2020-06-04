@@ -1,10 +1,11 @@
 """Tests for git interface."""
 from pathlib import Path
-from typing import cast
 
 import pytest
 
 from .helpers import branch
+from .helpers import commit
+from .helpers import write
 from retrocookie import git
 
 
@@ -63,10 +64,47 @@ def test_cherrypick(repository: git.Repository) -> None:
     assert message in repository.read_text(readme)
 
 
-def commit(repository: git.Repository) -> str:
-    """Create an empty commit and return the hash."""
-    repository.commit("")
-    return cast(str, repository.repo.head.target.hex)
+def test_cherrypick_index(repository: git.Repository) -> None:
+    """It updates the index from the cherry-pick."""
+    readme, install = map(Path, ("README", "INSTALL"))
+
+    write(repository, readme, "")
+
+    with branch(repository, "install", create=True):
+        write(repository, install, "")
+
+    repository.cherrypick("install")
+
+    assert "INSTALL" in {e.path for e in repository.repo.index}
+
+
+def test_cherrypick_worktree(repository: git.Repository) -> None:
+    """It updates the worktree from the cherry-pick."""
+    readme, install = map(Path, ("README", "INSTALL"))
+
+    write(repository, readme, "")
+
+    with branch(repository, "install", create=True):
+        write(repository, install, "")
+
+    repository.cherrypick("install")
+
+    assert (repository.path / install).exists()
+
+
+def test_cherrypick_conflict(repository: git.Repository) -> None:
+    """It raises an exception if the cherry-pick results in conflicts."""
+    path = Path("README")
+
+    write(repository, path, "")
+
+    with branch(repository, "topic", create=True):
+        write(repository, path, "a")
+
+    write(repository, path, "b")
+
+    with pytest.raises(git.Conflict):
+        repository.cherrypick("topic")
 
 
 def test_parse_revisions(repository: git.Repository) -> None:
