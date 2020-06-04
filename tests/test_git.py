@@ -78,6 +78,21 @@ def test_cherrypick_index(repository: git.Repository) -> None:
     assert "INSTALL" in {e.path for e in repository.repo.index}
 
 
+def test_cherrypick_conflict(repository: git.Repository) -> None:
+    """It raises an exception if the cherry-pick results in conflicts."""
+    path = Path("README")
+
+    write(repository, path, "")
+
+    with branch(repository, "topic", create=True):
+        write(repository, path, "a")
+
+    write(repository, path, "b")
+
+    with pytest.raises(git.Conflict):
+        repository.cherrypick("topic")
+
+
 def test_parse_revisions(repository: git.Repository) -> None:
     """It returns the hashes on topic for the range expression ``..topic``."""
     commit(repository)
