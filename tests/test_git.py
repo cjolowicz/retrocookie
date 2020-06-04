@@ -78,6 +78,20 @@ def test_cherrypick_index(repository: git.Repository) -> None:
     assert "INSTALL" in {e.path for e in repository.repo.index}
 
 
+def test_cherrypick_worktree(repository: git.Repository) -> None:
+    """It updates the worktree from the cherry-pick."""
+    readme, install = map(Path, ("README", "INSTALL"))
+
+    write(repository, readme, "")
+
+    with branch(repository, "install", create=True):
+        write(repository, install, "")
+
+    repository.cherrypick("install")
+
+    assert (repository.path / install).exists()
+
+
 def test_cherrypick_conflict(repository: git.Repository) -> None:
     """It raises an exception if the cherry-pick results in conflicts."""
     path = Path("README")
