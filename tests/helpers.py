@@ -9,14 +9,13 @@ from retrocookie import git
 
 def read(repository: git.Repository, path: Path) -> str:
     """Read file in repository."""
-    path = repository.path / path
-    return path.read_text()
+    return repository.read_text(path)
 
 
 def commit(repository: git.Repository, path: Path) -> None:
     """Create a commit with the path."""
     repository.add(path)
-    repository.commit(f"Update {path}")
+    repository.commit(f"Update {path.name}")
 
 
 def write(repository: git.Repository, path: Path, text: str) -> None:

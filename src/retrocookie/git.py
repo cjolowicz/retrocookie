@@ -1,6 +1,8 @@
 """Git interface."""
 from __future__ import annotations
 
+import functools
+import operator
 import subprocess  # noqa: S404
 from pathlib import Path
 from typing import Any
@@ -103,7 +105,7 @@ class Repository:
         """Return the contents of the blob at the given path."""
         commit = self.repo.references[ref].peel()
         path = self._ensure_relative(path)
-        blob = commit.tree / str(path)
+        blob = functools.reduce(operator.truediv, path.parts, commit.tree)
         return cast(str, blob.data.decode())
 
     def add(self, *paths: Path) -> None:

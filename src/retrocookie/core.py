@@ -30,15 +30,26 @@ def load_context(repository: git.Repository) -> Dict[str, str]:
     return cast(Dict[str, str], json.loads(text))
 
 
+def get_commits(
+    repository: git.Repository, commits: Iterable[str], branch: str, upstream: str
+) -> Iterable[str]:
+    """Return hashes of the commits to be picked."""
+    revisions = [f"{upstream}..{branch}", *commits]
+    return [
+        commit
+        for revision in revisions
+        for commit in repository.parse_revisions(revision)
+    ]
+
+
 def rewrite_commits(
     repository: git.Repository,
     template_directory: Path,
     whitelist: Container[str],
     blacklist: Container[str],
-    revision: str,
+    commits: Iterable[str],
 ) -> List[str]:
     """Rewrite the repository using template variables."""
-    commits = repository.parse_revisions(revision)
     context = load_context(repository)
     RepositoryFilter(
         repository=repository,
@@ -70,6 +81,7 @@ def retrocookie(
     url: str,
     branch: str,
     *,
+    commits: Iterable[str] = (),
     upstream: str = "master",
     create_branch: Optional[str] = None,
     whitelist: Container[str] = (),
@@ -82,8 +94,9 @@ def retrocookie(
     remote = "retrocookie"
 
     with temporary_repository(url) as instance:
+        commits = get_commits(instance, commits, branch, upstream)
         commits = rewrite_commits(
-            instance, template_directory, whitelist, blacklist, f"{upstream}..{branch}"
+            instance, template_directory, whitelist, blacklist, commits
         )
 
         with temporary_remote(repository, remote, str(instance.path)):

@@ -1,6 +1,7 @@
 """Command-line interface."""
 from pathlib import Path
 from typing import Container
+from typing import Iterable
 from typing import Optional
 
 import click
@@ -47,6 +48,7 @@ from .core import retrocookie
     "--directory", "-C", metavar="DIR", help="Repository directory",
 )
 @click.argument("repository")
+@click.argument("commits", nargs=-1)
 @click.version_option()
 def main(
     branch: str,
@@ -57,6 +59,7 @@ def main(
     blacklist: Container[str],
     directory: Optional[str],
     repository: str,
+    commits: Iterable[str],
 ) -> None:
     """Retrocookie imports commits into Cookiecutter templates.
 
@@ -76,6 +79,7 @@ def main(
     retrocookie(
         repository,
         branch,
+        commits=commits,
         upstream=upstream,
         create_branch=create_branch,
         whitelist=whitelist,
