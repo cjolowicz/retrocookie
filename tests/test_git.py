@@ -5,6 +5,7 @@ import pytest
 
 from .helpers import branch
 from .helpers import commit
+from .helpers import write
 from retrocookie import git
 
 
@@ -61,6 +62,20 @@ def test_cherrypick(repository: git.Repository) -> None:
 
     assert ignore_text == repository.read_text(ignore)
     assert message in repository.read_text(readme)
+
+
+def test_cherrypick_index(repository: git.Repository) -> None:
+    """It updates the index from the cherry-pick."""
+    readme, install = map(Path, ("README", "INSTALL"))
+
+    write(repository, readme, "")
+
+    with branch(repository, "install", create=True):
+        write(repository, install, "")
+
+    repository.cherrypick("install")
+
+    assert "INSTALL" in {e.path for e in repository.repo.index}
 
 
 def test_parse_revisions(repository: git.Repository) -> None:
