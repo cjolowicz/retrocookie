@@ -16,7 +16,7 @@ def read(repository: git.Repository, path: Path) -> str:
 def commit(repository: git.Repository, path: Path) -> None:
     """Create a commit with the path."""
     repository.add(path)
-    repository.commit(f"Update {path}")
+    repository.commit(f"Update {path.name}")
 
 
 def write(repository: git.Repository, path: Path, text: str) -> None:
