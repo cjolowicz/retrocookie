@@ -132,10 +132,10 @@ class Repository:
 
         self.repo.create_commit(refname, author, committer, message, tree, parents)
 
-    def cherrypick(self, ref: str, *, branch: Optional[str] = None) -> None:
-        """Cherry-pick the commit <ref> onto <branch>."""
+    def cherrypick(self, ref: str) -> None:
+        """Cherry-pick the commit <ref>."""
         commit = self.repo.revparse_single(ref)
-        head = self.repo.branches[branch] if branch is not None else self.repo.head
+        head = self.repo.head
         index = self.repo.merge_trees(commit.parents[0].tree, head, commit)
         tree = index.write_tree(self.repo)
         committer = self.repo.default_signature
