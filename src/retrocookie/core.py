@@ -68,7 +68,7 @@ def rewrite_commits(
     context = load_context(repository, commits[-1])
     RepositoryFilter(
         repository=repository,
-        path=template_directory,
+        template_directory=template_directory,
         context=context,
         whitelist=whitelist,
         blacklist=blacklist,
