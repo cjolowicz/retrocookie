@@ -71,12 +71,6 @@ But in practice, simple replacements of template variables work well
 when you're only importing a handful of commits at a time.
 
 
-Features
---------
-
-* Import commits from a Cookiecutter instance into the template
-
-
 Requirements
 ------------
 
@@ -104,10 +98,10 @@ The basic form:
    $ retrocookie <repository> [<commits>...]
    $ retrocookie <repository> -b <branch> [--create]
 
-The ``<repository>`` is a URL or a filesystem path to the source repository.
+The ``<repository>`` is a filesystem path to the source repository.
 For ``<commit>``, see gitrevisions(7).
 
-Import ``HEAD``:
+Import ``HEAD`` from ``<repository>``:
 
 .. code::
 
