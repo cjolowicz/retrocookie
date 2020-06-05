@@ -134,7 +134,9 @@ def retrocookie(
     template_directory = find_template_directory(repository)
     commits = get_commits(instance, commits, branch, upstream)
 
-    with temporary_repository(instance.path) as scratch:
+    with temporary_repository() as scratch:
+        scratch.git("fetch", "--no-tags", "--depth=2", str(instance.path), *commits)
+        scratch.git("branch", "master", commits[-1])
         commits = rewrite_commits(
             scratch, template_directory, whitelist, blacklist, commits
         )
