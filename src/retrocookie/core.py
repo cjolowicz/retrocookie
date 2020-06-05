@@ -87,9 +87,9 @@ def apply_commits(
 
 def retrocookie(
     url: str,
-    branch: str,
     *,
     commits: Iterable[str] = (),
+    branch: Optional[str] = None,
     upstream: str = "master",
     create_branch: Optional[str] = None,
     whitelist: Container[str] = (),
