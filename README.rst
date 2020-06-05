@@ -64,10 +64,8 @@ using pygit2_.
 
 Maybe you're thinking,
 how can this possibly work?
-Rewriting a generated project as a project template is
-like replacing the output of a program by its code.
-True, the general problem of reconstructing the template code is unsolvable.
-But in practice, simple replacements of template variables work well
+One cannot reconstruct a Jinja template from its rendered output.
+However, simple replacements of template variables work well in practice
 when you're only importing a handful of commits at a time.
 
 
@@ -99,7 +97,9 @@ The basic form:
    $ retrocookie <repository> -b <branch> [--create]
 
 The ``<repository>`` is a filesystem path to the source repository.
-For ``<commit>``, see gitrevisions(7).
+For ``<commits>``, see `gitrevisions(7)`__.
+
+__ https://git-scm.com/docs/gitrevisions
 
 Import ``HEAD`` from ``<repository>``:
 
@@ -123,13 +123,13 @@ Import commits from branch ``topic``:
 
 .. code::
 
-   $ retrocookie <repository> master..topic
+   $ retrocookie <repository> --branch=topic
 
 Equivalently:
 
 .. code::
 
-   $ retrocookie <repository> --branch=topic
+   $ retrocookie <repository> master..topic
 
 Import commits from ``topic`` into a branch with the same name:
 
