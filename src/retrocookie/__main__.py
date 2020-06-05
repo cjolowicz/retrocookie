@@ -45,7 +45,10 @@ from .core import retrocookie
     help="Do not rewrite these Cookiecutter variables",
 )
 @click.option(
-    "--directory", "-C", metavar="DIR", help="Repository directory",
+    "--directory",
+    "-C",
+    metavar="DIR",
+    help="Path to the repository  [default: working directory]",
 )
 @click.argument("repository")
 @click.argument("commits", nargs=-1)
