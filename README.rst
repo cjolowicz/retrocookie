@@ -125,13 +125,13 @@ Import commits from branch ``topic``:
 
 .. code::
 
-   $ retrocookie <repository> master..topic
+   $ retrocookie <repository> --branch=topic
 
 Equivalently:
 
 .. code::
 
-   $ retrocookie <repository> --branch=topic
+   $ retrocookie <repository> master..topic
 
 Import commits from ``topic`` into a branch with the same name:
 
