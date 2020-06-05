@@ -11,7 +11,7 @@ from .core import retrocookie
 
 @click.command()
 @click.option(
-    "--branch", metavar="BRANCH", help="Remote branch to cherry-pick",
+    "--branch", "-b", metavar="BRANCH", help="Remote branch to cherry-pick",
 )
 @click.option(
     "--upstream",
@@ -21,9 +21,10 @@ from .core import retrocookie
     show_default=True,
 )
 @click.option(
-    "--create/--no-create",
+    "--create",
+    "-c",
+    is_flag=True,
     help="Create a local branch with the same name as --branch",
-    show_default=True,
 )
 @click.option(
     "--create-branch",
@@ -32,14 +33,12 @@ from .core import retrocookie
 )
 @click.option(
     "--whitelist",
-    "-w",
     metavar="VAR",
     multiple=True,
     help="Only rewrite these Cookiecutter variables",
 )
 @click.option(
     "--blacklist",
-    "-b",
     metavar="VAR",
     multiple=True,
     help="Do not rewrite these Cookiecutter variables",
