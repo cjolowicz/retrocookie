@@ -48,6 +48,14 @@ def get_commits(
     return list(_generate())
 
 
+def fetch_commits(
+    repository: git.Repository, source: git.Repository, commits: List[str],
+) -> None:
+    """Fetch commits into an empty repository."""
+    repository.git("fetch", "--no-tags", "--depth=2", str(source.path), *commits)
+    repository.git("branch", "master", commits[-1])
+
+
 def rewrite_commits(
     repository: git.Repository,
     template_directory: Path,
@@ -135,8 +143,7 @@ def retrocookie(
     commits = get_commits(instance, commits, branch, upstream)
 
     with temporary_repository() as scratch:
-        scratch.git("fetch", "--no-tags", "--depth=2", str(instance.path), *commits)
-        scratch.git("branch", "master", commits[-1])
+        fetch_commits(scratch, instance, commits)
         commits = rewrite_commits(
             scratch, template_directory, whitelist, blacklist, commits
         )
