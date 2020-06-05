@@ -5,6 +5,7 @@ import pytest
 
 from .helpers import branch
 from .helpers import commit
+from .helpers import touch
 from .helpers import write
 from retrocookie import git
 from retrocookie.utils import chdir
@@ -69,10 +70,10 @@ def test_cherrypick_index(repository: git.Repository) -> None:
     """It updates the index from the cherry-pick."""
     readme, install = map(Path, ("README", "INSTALL"))
 
-    write(repository, readme, "")
+    touch(repository, readme)
 
     with branch(repository, "install", create=True):
-        write(repository, install, "")
+        touch(repository, install)
 
     repository.cherrypick("install")
 
@@ -83,10 +84,10 @@ def test_cherrypick_worktree(repository: git.Repository) -> None:
     """It updates the worktree from the cherry-pick."""
     readme, install = map(Path, ("README", "INSTALL"))
 
-    write(repository, readme, "")
+    touch(repository, readme)
 
     with branch(repository, "install", create=True):
-        write(repository, install, "")
+        touch(repository, install)
 
     repository.cherrypick("install")
 
@@ -97,7 +98,7 @@ def test_cherrypick_conflict(repository: git.Repository) -> None:
     """It raises an exception if the cherry-pick results in conflicts."""
     path = Path("README")
 
-    write(repository, path, "")
+    touch(repository, path)
 
     with branch(repository, "topic", create=True):
         write(repository, path, "a")
@@ -136,7 +137,7 @@ def test_fetch_relative_path(repository: git.Repository) -> None:
 
     with chdir(repository.path):
         source = git.Repository.init(source_path)
-        commit = write(source, path, "")
+        commit = touch(source, path)
 
         repository.fetch_commits(source, commit)
 

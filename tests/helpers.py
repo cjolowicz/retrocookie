@@ -1,16 +1,10 @@
 """Utilities for testing."""
 import contextlib
-from dataclasses import dataclass
 from pathlib import Path
 from typing import cast
 from typing import Iterator
 
 from retrocookie import git
-
-
-def read(repository: git.Repository, path: Path) -> str:
-    """Read file in repository."""
-    return repository.read_text(path)
 
 
 def commit(repository: git.Repository, message: str = "") -> str:
@@ -27,23 +21,18 @@ def write(repository: git.Repository, path: Path, text: str) -> str:
     return commit(repository, f"Update {path.name}")
 
 
+def touch(repository: git.Repository, path: Path) -> str:
+    """Create an empty file in a repository."""
+    path = repository.path / path
+    path.touch()
+    repository.add(path)
+    return commit(repository, f"Touch {path.name}")
+
+
 def append(repository: git.Repository, path: Path, text: str) -> None:
     """Append to file in repository."""
-    text = read(repository, path) + text
+    text = repository.read_text(path) + text
     write(repository, path, text)
-
-
-@dataclass
-class Append:
-    """Append text to the file located at path."""
-
-    path: Path
-    text: str
-
-
-def apply(repository: git.Repository, change: Append) -> None:
-    """Apply the change to the repository."""
-    append(repository, change.path, change.text)
 
 
 @contextlib.contextmanager
