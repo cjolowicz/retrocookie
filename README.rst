@@ -64,10 +64,8 @@ using pygit2_.
 
 Maybe you're thinking,
 how can this possibly work?
-Rewriting a generated project as a project template is
-like replacing the output of a program by its code.
-True, the general problem of reconstructing the template code is unsolvable.
-But in practice, simple replacements of template variables work well
+One cannot reconstruct a Jinja template from its rendered output.
+However, simple replacements of template variables work well in practice
 when you're only importing a handful of commits at a time.
 
 
