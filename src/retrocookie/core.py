@@ -89,12 +89,12 @@ def retrocookie(
     instance_path: Path,
     commits: Iterable[str] = (),
     *,
+    path: Optional[Path] = None,
     branch: Optional[str] = None,
     upstream: str = "master",
     create_branch: Optional[str] = None,
     whitelist: Container[str] = (),
     blacklist: Container[str] = (),
-    path: Optional[Path] = None,
 ) -> None:
     """Import commits from instance repository into template repository."""
     repository = git.Repository(path)
