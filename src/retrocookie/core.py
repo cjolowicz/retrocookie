@@ -134,11 +134,11 @@ def retrocookie(
     template_directory = find_template_directory(repository)
     commits = get_commits(instance_, commits, branch, upstream)
 
-    with temporary_repository(instance_path) as instance:
+    with temporary_repository(instance_path) as scratch:
         commits = rewrite_commits(
-            instance, template_directory, whitelist, blacklist, commits
+            scratch, template_directory, whitelist, blacklist, commits
         )
 
         remote = "retrocookie"
-        with temporary_remote(repository, remote, str(instance.path)):
+        with temporary_remote(repository, remote, str(scratch.path)):
             apply_commits(repository, remote, commits, create_branch)
