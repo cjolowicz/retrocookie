@@ -52,8 +52,8 @@ def fetch_commits(
     repository: git.Repository, source: git.Repository, commits: List[str],
 ) -> None:
     """Fetch commits into an empty repository."""
-    repository.git("fetch", "--no-tags", "--depth=2", str(source.path), *commits)
-    repository.git("branch", "master", commits[-1])
+    repository.fetch_commits(source, *commits)
+    repository.create_branch("master", commits[-1])
 
 
 def rewrite_commits(
@@ -83,7 +83,7 @@ def apply_commits(
     create_branch: Optional[str],
 ) -> None:
     """Create <branch> with the specified commits from <remote>."""
-    repository.git("fetch", "--no-tags", "--depth=2", str(source.path), *commits)
+    repository.fetch_commits(source, *commits)
 
     if create_branch:
         repository.create_branch(create_branch)
