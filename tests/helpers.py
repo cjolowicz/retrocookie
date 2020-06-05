@@ -8,11 +8,6 @@ from typing import Iterator
 from retrocookie import git
 
 
-def read(repository: git.Repository, path: Path) -> str:
-    """Read file in repository."""
-    return repository.read_text(path)
-
-
 def commit(repository: git.Repository, message: str = "") -> str:
     """Create a commit and return the hash."""
     repository.commit(message)
@@ -37,7 +32,7 @@ def touch(repository: git.Repository, path: Path) -> str:
 
 def append(repository: git.Repository, path: Path, text: str) -> None:
     """Append to file in repository."""
-    text = read(repository, path) + text
+    text = repository.read_text(path) + text
     write(repository, path, text)
 
 

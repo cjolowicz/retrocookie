@@ -7,7 +7,6 @@ from .helpers import Append
 from .helpers import apply
 from .helpers import branch
 from .helpers import in_template
-from .helpers import read
 from retrocookie import core
 from retrocookie import git
 from retrocookie import retrocookie
@@ -45,7 +44,7 @@ def test_verbatim(
     )
 
     with branch(cookiecutter, "topic"):
-        assert expected in read(cookiecutter, in_template(change.path))
+        assert expected in cookiecutter.read_text(in_template(change.path))
 
 
 def test_branch(
@@ -67,7 +66,7 @@ def test_branch(
     )
 
     with branch(cookiecutter, "just-another-branch"):
-        assert change.text in read(cookiecutter, in_template(change.path))
+        assert change.text in cookiecutter.read_text(in_template(change.path))
 
 
 def test_commits(
@@ -81,7 +80,7 @@ def test_commits(
 
     retrocookie(instance.path, ["HEAD"], path=cookiecutter.path)
 
-    assert change.text in read(cookiecutter, in_template(change.path))
+    assert change.text in cookiecutter.read_text(in_template(change.path))
 
 
 def test_find_template_directory_fails(tmp_path: Path) -> None:
