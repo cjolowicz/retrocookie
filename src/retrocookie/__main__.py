@@ -32,14 +32,12 @@ from .core import retrocookie
 )
 @click.option(
     "--whitelist",
-    "-w",
     metavar="VAR",
     multiple=True,
     help="Only rewrite these Cookiecutter variables",
 )
 @click.option(
     "--blacklist",
-    "-b",
     metavar="VAR",
     multiple=True,
     help="Do not rewrite these Cookiecutter variables",
