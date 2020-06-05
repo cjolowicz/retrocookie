@@ -12,7 +12,7 @@ from retrocookie import git
 @pytest.fixture
 def repository(tmp_path: Path) -> git.Repository:
     """Initialize repository in a temporary directory."""
-    return git.Repository.init(tmp_path)
+    return git.Repository.init(tmp_path / "repository")
 
 
 def test_commit(repository: git.Repository) -> None:
