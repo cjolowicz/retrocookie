@@ -99,7 +99,9 @@ The basic form:
    $ retrocookie <repository> -b <branch> [--create]
 
 The ``<repository>`` is a filesystem path to the source repository.
-For ``<commit>``, see gitrevisions(7).
+For ``<commits>``, see `gitrevisions(7)`__.
+
+__ https://git-scm.com/docs/gitrevisions
 
 Import ``HEAD`` from ``<repository>``:
 
