@@ -32,7 +32,7 @@ def mock_retrocookie(monkeypatch: MonkeyPatch) -> None:
         ["--help"],
         ["/home/user/src/repo", "--branch=topic"],
         ["--branch=topic", "/home/user/src/repo"],
-        ["--branch=topic", "/home/user/src/repo", "HEAD"],
+        ["--branch=topic", "/home/user/src/repo", "18240dd"],
         ["--branch=topic", "https://example.com/owner/repo.git"],
         ["--branch=topic", "--create", "repo"],
         ["--branch=topic", "--create-branch=other", "repo"],
@@ -43,8 +43,9 @@ def mock_retrocookie(monkeypatch: MonkeyPatch) -> None:
             "repo",
         ],
         ["--branch=topic", "--blacklist=github_user", "repo"],
-        ["/home/user/src/repo", "HEAD"],
-        ["/home/user/src/repo", "HEAD", "--create-branch=topic"],
+        ["/home/user/src/repo"],
+        ["/home/user/src/repo", "18240dd"],
+        ["/home/user/src/repo", "--create-branch=topic"],
     ],
 )
 def test_usage_success(
@@ -59,8 +60,7 @@ def test_usage_success(
     "args",
     [
         [],
-        ["repo"],
-        ["--create", "repo", "HEAD"],
+        ["--create", "repo"],
         ["--branch=topic"],
         ["--branch=topic", "--create", "--create-branch=another", "repo"],
     ],
