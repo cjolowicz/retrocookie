@@ -106,7 +106,7 @@ def retrocookie(
 ) -> None:  # noqa: DAR101 https://github.com/terrencepreilly/darglint/issues/56
     """Import commits from instance repository into template repository.
 
-    This function imports a commits from an instance of the Cookiecutter
+    This function imports commits from an instance of the Cookiecutter
     template, rewriting occurrences of template variables back into the
     original templating tags, and prepending the template directory to
     filenames. Any tokens with special meaning in Jinja are escaped.
