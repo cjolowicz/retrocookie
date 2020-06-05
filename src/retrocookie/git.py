@@ -96,7 +96,7 @@ class Repository:
 
     def read_text(self, path: Path, *, ref: str = "HEAD") -> str:
         """Return the contents of the blob at the given path."""
-        commit = self.repo.references[ref].peel()
+        commit = self.repo.revparse_single(ref)
         path = self._ensure_relative(path)
         blob = functools.reduce(operator.truediv, path.parts, commit.tree)
         return cast(str, blob.data.decode())
