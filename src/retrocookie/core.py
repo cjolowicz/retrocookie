@@ -5,6 +5,7 @@ from typing import cast
 from typing import Container
 from typing import Dict
 from typing import Iterable
+from typing import Iterator
 from typing import List
 from typing import Optional
 
@@ -31,15 +32,21 @@ def load_context(repository: git.Repository) -> Dict[str, str]:
 
 
 def get_commits(
-    repository: git.Repository, commits: Iterable[str], branch: str, upstream: str
+    repository: git.Repository,
+    commits: Iterable[str],
+    branch: Optional[str],
+    upstream: str,
 ) -> Iterable[str]:
     """Return hashes of the commits to be picked."""
-    revisions = [f"{upstream}..{branch}", *commits]
-    return [
-        commit
-        for revision in revisions
-        for commit in repository.parse_revisions(revision)
-    ]
+
+    def _generate() -> Iterator[str]:
+        if branch is not None:
+            yield from repository.parse_revisions(f"{upstream}..{branch}")
+
+        if commits:
+            yield from repository.parse_revisions(*commits)
+
+    return list(_generate())
 
 
 def rewrite_commits(
@@ -80,9 +87,9 @@ def apply_commits(
 
 def retrocookie(
     url: str,
-    branch: str,
     *,
     commits: Iterable[str] = (),
+    branch: Optional[str] = None,
     upstream: str = "master",
     create_branch: Optional[str] = None,
     whitelist: Container[str] = (),
