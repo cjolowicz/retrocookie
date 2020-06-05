@@ -68,7 +68,8 @@ class Repository:
 
     def fetch_commits(self, source: Repository, *commits: str) -> None:
         """Fetch the given commits and their immediate parents."""
-        self.git("fetch", "--no-tags", "--depth=2", str(source.path), *commits)
+        path = source.path.resolve()
+        self.git("fetch", "--no-tags", "--depth=2", str(path), *commits)
 
     def parse_revisions(self, *revisions: str) -> List[str]:
         """Parse revisions using the format specified in gitrevisions(7)."""
