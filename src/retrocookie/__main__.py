@@ -11,7 +11,7 @@ from .core import retrocookie
 
 @click.command()
 @click.option(
-    "--branch", metavar="BRANCH", required=True, help="Remote branch to cherry-pick",
+    "--branch", metavar="BRANCH", help="Remote branch to cherry-pick",
 )
 @click.option(
     "--upstream",
@@ -51,7 +51,7 @@ from .core import retrocookie
 @click.argument("commits", nargs=-1)
 @click.version_option()
 def main(
-    branch: str,
+    branch: Optional[str],
     upstream: str,
     create: bool,
     create_branch: Optional[str],
@@ -73,13 +73,19 @@ def main(
                 "--create and --create-branch are mutually exclusive"
             )
 
+        if branch is None:
+            raise click.UsageError("--create requires --branch")
+
         create_branch = branch
+
+    if not commits and branch is None:
+        raise click.UsageError("either commits or --branch must be specified")
 
     path = Path(directory) if directory else None
     retrocookie(
         repository,
-        branch,
         commits=commits,
+        branch=branch,
         upstream=upstream,
         create_branch=create_branch,
         whitelist=whitelist,
