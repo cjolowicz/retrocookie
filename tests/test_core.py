@@ -69,11 +69,11 @@ def test_branch(
         assert text in cookiecutter.read_text(in_template(path))
 
 
-def test_commits(
+def test_single_commit(
     cookiecutter_repository: git.Repository,
     cookiecutter_instance_repository: git.Repository,
 ) -> None:
-    """It cherry-picks the specified commits."""
+    """It cherry-picks the specified commit."""
     cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
     path = Path("README.md")
     text = "Lorem Ipsum\n"
