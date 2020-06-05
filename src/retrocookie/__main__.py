@@ -44,7 +44,10 @@ from .core import retrocookie
     help="Do not rewrite these Cookiecutter variables",
 )
 @click.option(
-    "--directory", "-C", metavar="DIR", help="Repository directory",
+    "--directory",
+    "-C",
+    metavar="DIR",
+    help="Path to the repository  [default: working directory]",
 )
 @click.argument("repository")
 @click.argument("commits", nargs=-1)
@@ -65,6 +68,33 @@ def main(
     The source repository is passed as a positional argument. This can
     be the repository URL or filesystem path of an instance of the
     Cookiecutter template.
+
+    Additional positional arguments are the commits to be imported.
+    See gitrevisions(7) for a list of ways to spell commits and commit
+    ranges. These arguments are interpreted in the same way as
+    git-cherry-pick(1) does. If no commits are specified, the HEAD
+    commit is imported.
+
+    Specifying --branch is equivalent to passing master..<branch>
+    as a positional argument. Use --upstream to specify a different
+    upstream branch. Use --create to create the same branch in the
+    target repository.
+
+    By default, commits are cherry-picked onto the current branch.
+    Use --create-branch to specify a different branch, which must
+    not exist yet. As a shorthand, --create is equivalent to passing
+    --create-branch with the same argument as --branch.
+
+    Commits are rewritten in the following way:
+
+    \b
+      - Files are moved to the template directory
+      - Tokens with special meaning in Jinja are escaped
+      - Values from .cookiecutter.json are replaced by templating tags
+        with the corresponding variable name
+
+    Use the --whitelist and --blacklist options to include or exclude
+    specific variables from .cookiecutter.json.
     """
     if create:
         if create_branch:
