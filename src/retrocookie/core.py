@@ -23,10 +23,10 @@ def find_template_directory(repository: git.Repository) -> Path:
     raise Exception("cannot find template directory")
 
 
-def load_context(repository: git.Repository) -> Dict[str, str]:
+def load_context(repository: git.Repository, ref: str) -> Dict[str, str]:
     """Load the context from the .cookiecutter.json file."""
     path = Path(".cookiecutter.json")
-    text = repository.read_text(path)
+    text = repository.read_text(path, ref=ref)
     return cast(Dict[str, str], json.loads(text))
 
 
@@ -56,7 +56,8 @@ def rewrite_commits(
     commits: Iterable[str],
 ) -> List[str]:
     """Rewrite the repository using template variables."""
-    context = load_context(repository)
+    commits = list(commits)
+    context = load_context(repository, commits[-1])
     RepositoryFilter(
         repository=repository,
         path=template_directory,
