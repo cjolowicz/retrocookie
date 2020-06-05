@@ -97,6 +97,16 @@ class Repository:
         blob = functools.reduce(operator.truediv, path.parts, commit.tree)
         return cast(str, blob.data.decode())
 
+    def exists(self, path: Path, *, ref: str = "HEAD") -> bool:
+        """Return True if a blob exists at the given path."""
+        commit = self.repo.revparse_single(ref)
+        path = self._ensure_relative(path)
+        try:
+            functools.reduce(operator.truediv, path.parts, commit.tree)
+            return True
+        except KeyError:
+            return False
+
     def add(self, *paths: Path) -> None:
         """Add paths to the index."""
         for path in paths:
