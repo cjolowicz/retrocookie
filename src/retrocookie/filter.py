@@ -111,7 +111,7 @@ class RepositoryFilter:
 
     def _create_filter(self) -> RepoFilter:
         """Create the filter."""
-        args = FilteringOptions.parse_args([], error_on_empty=False)
+        args = FilteringOptions.default_options()
         return RepoFilter(
             args,
             filename_callback=self.filename_callback,
