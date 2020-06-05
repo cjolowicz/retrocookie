@@ -103,6 +103,25 @@ def test_multiple_commits_sequential(
         assert cookiecutter.exists(path)
 
 
+def test_multiple_commits_parallel(
+    cookiecutter_repository: git.Repository,
+    cookiecutter_instance_repository: git.Repository,
+) -> None:
+    """It cherry-picks the specified commits."""
+    cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
+    names = "first", "second"
+
+    for name in names:
+        with branch(instance, name, create=True):
+            touch(instance, Path(name))
+
+    retrocookie(instance.path, names, path=cookiecutter.path)
+
+    for name in names:
+        path = in_template(Path(name))
+        assert cookiecutter.exists(path)
+
+
 def test_find_template_directory_fails(tmp_path: Path) -> None:
     """It raises an exception when there is no template directory."""
     repository = git.Repository.init(tmp_path)
