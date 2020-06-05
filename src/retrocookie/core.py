@@ -131,7 +131,6 @@ def retrocookie(
     """
     repository = git.Repository(path)
     template_directory = find_template_directory(repository)
-    remote = "retrocookie"
 
     with temporary_repository(instance_path) as instance:
         commits = get_commits(instance, commits, branch, upstream)
@@ -139,5 +138,6 @@ def retrocookie(
             instance, template_directory, whitelist, blacklist, commits
         )
 
+        remote = "retrocookie"
         with temporary_remote(repository, remote, str(instance.path)):
             apply_commits(repository, remote, commits, create_branch)
