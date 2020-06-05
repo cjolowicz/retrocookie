@@ -22,6 +22,7 @@ from .core import retrocookie
 )
 @click.option(
     "--create/--no-create",
+    "-c",
     help="Create a local branch with the same name as --branch",
     show_default=True,
 )
