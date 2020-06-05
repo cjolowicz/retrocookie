@@ -43,6 +43,8 @@ def mock_retrocookie(monkeypatch: MonkeyPatch) -> None:
             "repo",
         ],
         ["--branch=topic", "--blacklist=github_user", "repo"],
+        ["/home/user/src/repo", "HEAD"],
+        ["/home/user/src/repo", "HEAD", "--create-branch=topic"],
     ],
 )
 def test_usage_success(
@@ -57,6 +59,8 @@ def test_usage_success(
     "args",
     [
         [],
+        ["repo"],
+        ["--create", "repo", "HEAD"],
         ["--branch=topic"],
         ["--branch=topic", "--create", "--create-branch=another", "repo"],
     ],
