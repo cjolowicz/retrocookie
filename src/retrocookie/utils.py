@@ -21,11 +21,11 @@ def chdir(path: Path) -> Iterator[None]:
 
 
 @contextlib.contextmanager
-def temporary_repository(url: str) -> Iterator[git.Repository]:
-    """Clone URL to temporary directory."""
+def temporary_repository(path: Path) -> Iterator[git.Repository]:
+    """Clone repository to temporary directory."""
     with tempfile.TemporaryDirectory() as tmpdir:
         directory = Path(tmpdir) / "instance"
-        yield git.Repository.clone(url, directory, mirror=True)
+        yield git.Repository.clone(str(path), directory, mirror=True)
 
 
 @contextlib.contextmanager
