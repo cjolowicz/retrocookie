@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Any
 from typing import Container
 from typing import Dict
+from typing import Iterable
 from typing import Iterator
 from typing import List
 from typing import overload
@@ -87,6 +88,7 @@ class RepositoryFilter:
     def __init__(
         self,
         repository: git.Repository,
+        commits: Iterable[str],
         template_directory: Path,
         context: Dict[str, str],
         whitelist: Container[str],
@@ -94,6 +96,7 @@ class RepositoryFilter:
     ) -> None:
         """Initialize."""
         self.repository = repository
+        self.commits = commits
         self.template_directory = str(template_directory).encode()
         self.replacements = get_replacements(context, whitelist, blacklist)
 
@@ -111,7 +114,9 @@ class RepositoryFilter:
 
     def _create_filter(self) -> RepoFilter:
         """Create the filter."""
-        args = FilteringOptions.parse_args(["--force"])
+        args = FilteringOptions.parse_args(
+            ["--force", "--replace-refs=update-and-add", "--refs", *self.commits]
+        )
         return RepoFilter(
             args,
             filename_callback=self.filename_callback,

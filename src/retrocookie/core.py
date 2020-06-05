@@ -65,9 +65,13 @@ def rewrite_commits(
 ) -> List[str]:
     """Rewrite the repository using template variables."""
     commits = list(commits)
+    with_parents = repository.parse_revisions(
+        *[f"{commit}^" for commit in commits], *commits
+    )
     context = load_context(repository, commits[-1])
     RepositoryFilter(
         repository=repository,
+        commits=with_parents,
         template_directory=template_directory,
         context=context,
         whitelist=whitelist,
