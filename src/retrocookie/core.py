@@ -87,25 +87,58 @@ def apply_commits(
 
 def retrocookie(
     instance_path: Path,
-    *,
     commits: Iterable[str] = (),
+    *,
+    path: Optional[Path] = None,
     branch: Optional[str] = None,
     upstream: str = "master",
     create_branch: Optional[str] = None,
     whitelist: Container[str] = (),
     blacklist: Container[str] = (),
-    path: Optional[Path] = None,
-) -> None:
-    """Import commits from instance repository into template repository."""
-    repository = git.Repository(path)
-    template_directory = find_template_directory(repository)
-    remote = "retrocookie"
+) -> None:  # noqa: DAR101 https://github.com/terrencepreilly/darglint/issues/56
+    """Import commits from instance repository into template repository.
 
-    with temporary_repository(instance_path) as instance:
-        commits = get_commits(instance, commits, branch, upstream)
+    This function imports a commits from an instance of the Cookiecutter
+    template, rewriting occurrences of template variables back into the
+    original templating tags, and prepending the template directory to
+    filenames. Any tokens with special meaning in Jinja are escaped.
+
+    Args:
+        instance_path: The source repository, an instance of the Cookiecutter
+            template with a ``.cookiecutter.json`` file.
+
+        commits: The commits to be imported from the source repository.
+
+        path: The target repository, a Cookiecutter template. This defaults to
+            the current working directory.
+
+        branch: The name of a branch to be imported from the source repository.
+            This is equivalent to passing ``["master..branch"]`` in the
+            ``commits`` parameter.
+
+        upstream: The upstream for ``branch``, by default the master branch.
+
+        create_branch: The name of the branch to be created in the target
+            repository. By default, commits are imported onto the current
+            branch.
+
+        whitelist: The Cookiecutter variables which should be rewritten. If
+            this is not specified, all variables from cookiecutter.json are
+            rewritten.
+
+        blacklist: Any Cookiecutter variables which should not be rewritten.
+
+    """
+    repository = git.Repository(path)
+    instance = git.Repository(instance_path)
+    template_directory = find_template_directory(repository)
+    commits = get_commits(instance, commits, branch, upstream)
+
+    with temporary_repository(instance.path) as scratch:
         commits = rewrite_commits(
-            instance, template_directory, whitelist, blacklist, commits
+            scratch, template_directory, whitelist, blacklist, commits
         )
 
-        with temporary_remote(repository, remote, str(instance.path)):
+        remote = "retrocookie"
+        with temporary_remote(repository, remote, str(scratch.path)):
             apply_commits(repository, remote, commits, create_branch)

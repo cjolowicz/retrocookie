@@ -79,7 +79,7 @@ def test_commits(
     change = Append(Path("README.md"), "Lorem Ipsum\n")
     apply(instance, change)
 
-    retrocookie(instance.path, commits=["HEAD"], path=cookiecutter.path)
+    retrocookie(instance.path, ["HEAD"], path=cookiecutter.path)
 
     assert change.text in read(cookiecutter, in_template(change.path))
 
