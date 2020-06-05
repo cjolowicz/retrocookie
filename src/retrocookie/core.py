@@ -95,7 +95,7 @@ def retrocookie(
     create_branch: Optional[str] = None,
     whitelist: Container[str] = (),
     blacklist: Container[str] = (),
-) -> None:  # noqa: DAR101
+) -> None:  # noqa: DAR101 https://github.com/terrencepreilly/darglint/issues/56
     """Import commits from instance repository into template repository.
 
     This function imports a commits from an instance of the Cookiecutter
