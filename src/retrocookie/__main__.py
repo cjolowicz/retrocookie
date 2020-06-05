@@ -11,7 +11,7 @@ from .core import retrocookie
 
 @click.command()
 @click.option(
-    "--branch", metavar="BRANCH", help="Remote branch to cherry-pick",
+    "--branch", "-b", metavar="BRANCH", help="Remote branch to cherry-pick",
 )
 @click.option(
     "--upstream",
