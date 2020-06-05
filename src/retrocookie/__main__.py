@@ -113,7 +113,7 @@ def main(
     path = Path(directory) if directory else None
     retrocookie(
         Path(repository),
-        commits=commits,
+        commits,
         branch=branch,
         upstream=upstream,
         create_branch=create_branch,
