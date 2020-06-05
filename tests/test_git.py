@@ -7,6 +7,7 @@ from .helpers import branch
 from .helpers import commit
 from .helpers import write
 from retrocookie import git
+from retrocookie.utils import chdir
 
 
 @pytest.fixture
@@ -126,3 +127,17 @@ def test_lookup_replacement(repository: git.Repository) -> None:
     repository.git("replace", second, first)
 
     assert first == repository.lookup_replacement(second)
+
+
+def test_fetch_relative_path(repository: git.Repository) -> None:
+    """It fetches from a relative path."""
+    source_path = Path("..") / "another"
+    path = Path("README")
+
+    with chdir(repository.path):
+        source = git.Repository.init(source_path)
+        commit = write(source, path, "")
+
+        repository.fetch_commits(source, commit)
+
+    assert repository.read_text(path, ref=commit) == ""
