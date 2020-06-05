@@ -79,7 +79,7 @@ def main(
         create_branch = branch
 
     if not commits and branch is None:
-        raise click.UsageError("either commits or --branch must be specified")
+        commits = ["HEAD"]
 
     path = Path(directory) if directory else None
     retrocookie(
