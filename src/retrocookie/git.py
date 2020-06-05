@@ -58,22 +58,6 @@ class Repository:
         git("clone", *options, url, str(path))
         return cls(path)
 
-    def exists_remote(self, remote: str) -> bool:
-        """Return True if the remote exists."""
-        return remote in {r.name for r in self.repo.remotes}
-
-    def add_remote(self, remote: str, url: str) -> None:
-        """Add the remote with the given URL."""
-        self.repo.remotes.create(remote, url)
-
-    def remove_remote(self, remote: str) -> None:
-        """Remove the remote."""
-        self.repo.remotes.delete(remote)
-
-    def get_remote_url(self, remote: str) -> str:
-        """Return the URL of the remote."""
-        return self.repo.remotes[remote].url  # type: ignore[no-any-return]
-
     def create_branch(self, branch: str, ref: str = "HEAD") -> None:
         """Create a branch."""
         commit = self.repo.revparse_single(ref)

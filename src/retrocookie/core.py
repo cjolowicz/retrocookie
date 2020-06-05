@@ -11,7 +11,6 @@ from typing import Optional
 
 from . import git
 from .filter import RepositoryFilter
-from .utils import temporary_remote
 from .utils import temporary_repository
 
 
@@ -70,12 +69,12 @@ def rewrite_commits(
 
 def apply_commits(
     repository: git.Repository,
-    remote: str,
+    source: git.Repository,
     commits: Iterable[str],
     create_branch: Optional[str],
 ) -> None:
     """Create <branch> with the specified commits from <remote>."""
-    repository.git("fetch", "--no-tags", "--depth=2", remote, *commits)
+    repository.git("fetch", "--no-tags", "--depth=2", str(source.path), *commits)
 
     if create_branch:
         repository.create_branch(create_branch)
@@ -139,6 +138,4 @@ def retrocookie(
             scratch, template_directory, whitelist, blacklist, commits
         )
 
-        remote = "retrocookie"
-        with temporary_remote(repository, remote, str(scratch.path)):
-            apply_commits(repository, remote, commits, create_branch)
+        apply_commits(repository, scratch, commits, create_branch)
