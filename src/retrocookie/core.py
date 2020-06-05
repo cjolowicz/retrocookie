@@ -35,7 +35,7 @@ def get_commits(
     commits: Iterable[str],
     branch: Optional[str],
     upstream: str,
-) -> Iterable[str]:
+) -> List[str]:
     """Return hashes of the commits to be picked."""
 
     def _generate() -> Iterator[str]:
