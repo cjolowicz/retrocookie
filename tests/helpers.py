@@ -27,6 +27,14 @@ def write(repository: git.Repository, path: Path, text: str) -> str:
     return commit(repository, f"Update {path.name}")
 
 
+def touch(repository: git.Repository, path: Path) -> str:
+    """Create an empty file in a repository."""
+    path = repository.path / path
+    path.touch()
+    repository.add(path)
+    return commit(repository, f"Touch {path.name}")
+
+
 def append(repository: git.Repository, path: Path, text: str) -> None:
     """Append to file in repository."""
     text = read(repository, path) + text
