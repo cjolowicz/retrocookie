@@ -45,34 +45,30 @@ Reasons for this include the following:
 Any changes you make in the generated project
 need to be backported into the template,
 carefully replacing expanded variables from ``cookiecutter.json`` by templating tags,
-and escaping any use of ``{{`` and ``}}``.
+and escaping any use of ``{{`` and ``}}``
+or other tokens with special meaning in Jinja.
 
 Retrocookie helps you in this situation.
 
 It is designed to fetch commits from the repository of a generated project,
-and import them onto a feature branch in your Cookiecutter repository,
-rewriting them on the fly to insert templating tags
-and escape Jinja-special constructs.
-
-Invoke retrocookie with the repository location for the generated project,
-and the name of a branch via the ``--branch`` option,
-and it will fetch the commits on that branch from the project,
-rewrite them, and cherry-pick them into the Cookiecutter.
+and import them into your Cookiecutter repository,
+rewriting them on the fly to insert templating tags,
+escape Jinja-special constructs,
+and place files in the template directory.
 
 Under the hood,
 Retrocookie clones the generated project to a temporary directory
 and rewrites the clone using git-filter-repo_.
-It then fetches and cherry-picks the rewritten commits into the template.
+It then fetches and cherry-picks the rewritten commits into the template
+using pygit2_.
 
 Maybe you're thinking,
 how can this possibly work?
 Rewriting a generated project as a project template is
 like replacing the output of a program by its code.
-And you're right.
-But while the general problem of reconstructing the template code is unsolvable,
-in practise it is often enough to perform simple replacements of template variables.
-One reason this works so well is that
-the rewrite only needs to be correct for the handful of commits you're importing.
+True, the general problem of reconstructing the template code is unsolvable.
+But in practice, simple replacements of template variables work well
+when you're only importing a handful of commits at a time.
 
 
 Features
@@ -101,11 +97,75 @@ You can install *Retrocookie* via pip_ from PyPI_:
 Usage
 -----
 
-Use Retrocookie like this:
+The basic form:
 
-.. code:: console
+.. code::
 
-   $ retrocookie <repo> --branch <branch>
+   $ retrocookie <repository> [<commits>...]
+   $ retrocookie <repository> -b <branch> [--create]
+
+The ``<repository>`` is a URL or a filesystem path to the source repository.
+For ``<commit>``, see gitrevisions(7).
+
+Import ``HEAD``:
+
+.. code::
+
+   $ retrocookie <repository>
+
+Import the last two commits:
+
+.. code::
+
+   $ retrocookie <repository> HEAD~2..
+
+Import by commit hash:
+
+.. code::
+
+   $ retrocookie <repository> 53268f7 6a3368a c0b4c6c
+
+Import commits from branch ``topic``:
+
+.. code::
+
+   $ retrocookie <repository> master..topic
+
+Equivalently:
+
+.. code::
+
+   $ retrocookie <repository> --branch=topic
+
+Import commits from ``topic`` into a branch with the same name:
+
+.. code::
+
+   $ retrocookie <repository> --branch=topic --create
+
+Equivalently, using short options:
+
+.. code::
+
+   $ retrocookie <repository> -cb topic
+
+Import commits from branch ``topic``, which was branched off ``1.0``:
+
+.. code::
+
+   $ retrocookie <repository> --branch=topic --upstream=1.0
+
+Equivalently:
+
+.. code::
+
+   $ retrocookie <repository> 1.0..topic
+
+Import ``HEAD`` into a new branch ``topic``:
+
+.. code::
+
+   $ retrocookie <repository> --create-branch=topic
 
 
 Contributing
@@ -144,5 +204,6 @@ This project was generated from `@cjolowicz`_'s `Hypermodern Python Cookiecutter
 .. _git-filter-repo: https://github.com/newren/git-filter-repo
 .. _git rebase: https://git-scm.com/docs/git-rebase
 .. _pip: https://pip.pypa.io/
+.. _pygit2: https://github.com/libgit2/pygit2
 .. github-only
 .. _Contributor Guide: CONTRIBUTING.rst
