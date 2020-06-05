@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "retrocookie"
-version = "0.1.0"
+version = "0.2.0"
 description = "Retrocookie"
 authors = ["Claudio Jolowicz <mail@claudiojolowicz.com>"]
 license = "MIT"
