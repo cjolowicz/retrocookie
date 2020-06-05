@@ -130,10 +130,11 @@ def retrocookie(
 
     """
     repository = git.Repository(path)
+    instance_ = git.Repository(instance_path)
     template_directory = find_template_directory(repository)
+    commits = get_commits(instance_, commits, branch, upstream)
 
     with temporary_repository(instance_path) as instance:
-        commits = get_commits(instance, commits, branch, upstream)
         commits = rewrite_commits(
             instance, template_directory, whitelist, blacklist, commits
         )
