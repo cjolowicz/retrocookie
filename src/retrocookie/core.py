@@ -53,7 +53,7 @@ def fetch_commits(
 ) -> None:
     """Fetch commits into an empty repository."""
     repository.git("fetch", "--no-tags", "--depth=2", str(source.path), *commits)
-    repository.git("branch", "master", commits[-1])
+    repository.create_branch("master", commits[-1])
 
 
 def rewrite_commits(
