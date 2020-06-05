@@ -3,8 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from .helpers import Append
-from .helpers import apply
+from .helpers import append
 from .helpers import branch
 from .helpers import in_template
 from retrocookie import core
@@ -34,17 +33,17 @@ def test_verbatim(
 ) -> None:
     """It inserts text verbatim."""
     cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
-    change = Append(Path("README.md"), text)
+    path = Path("README.md")
 
     with branch(instance, "topic", create=True):
-        apply(instance, change)
+        append(instance, path, text)
 
     retrocookie(
         instance.path, path=cookiecutter.path, branch="topic", create_branch="topic",
     )
 
     with branch(cookiecutter, "topic"):
-        assert expected in cookiecutter.read_text(in_template(change.path))
+        assert expected in cookiecutter.read_text(in_template(path))
 
 
 def test_branch(
@@ -53,10 +52,11 @@ def test_branch(
 ) -> None:
     """It creates the specified branch."""
     cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
-    change = Append(Path("README.md"), "Lorem Ipsum\n")
+    path = Path("README.md")
+    text = "Lorem Ipsum\n"
 
     with branch(instance, "topic", create=True):
-        apply(instance, change)
+        append(instance, path, text)
 
     retrocookie(
         instance.path,
@@ -66,7 +66,7 @@ def test_branch(
     )
 
     with branch(cookiecutter, "just-another-branch"):
-        assert change.text in cookiecutter.read_text(in_template(change.path))
+        assert text in cookiecutter.read_text(in_template(path))
 
 
 def test_commits(
@@ -75,12 +75,13 @@ def test_commits(
 ) -> None:
     """It cherry-picks the specified commits."""
     cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
-    change = Append(Path("README.md"), "Lorem Ipsum\n")
-    apply(instance, change)
+    path = Path("README.md")
+    text = "Lorem Ipsum\n"
 
+    append(instance, path, text)
     retrocookie(instance.path, ["HEAD"], path=cookiecutter.path)
 
-    assert change.text in cookiecutter.read_text(in_template(change.path))
+    assert text in cookiecutter.read_text(in_template(path))
 
 
 def test_find_template_directory_fails(tmp_path: Path) -> None:
