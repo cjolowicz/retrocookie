@@ -41,10 +41,7 @@ def test_verbatim(
         apply(instance, change)
 
     retrocookie(
-        str(instance.path),
-        branch="topic",
-        path=cookiecutter.path,
-        create_branch="topic",
+        instance.path, path=cookiecutter.path, branch="topic", create_branch="topic",
     )
 
     with branch(cookiecutter, "topic"):
@@ -63,9 +60,9 @@ def test_branch(
         apply(instance, change)
 
     retrocookie(
-        str(instance.path),
-        branch="topic",
+        instance.path,
         path=cookiecutter.path,
+        branch="topic",
         create_branch="just-another-branch",
     )
 
@@ -82,9 +79,7 @@ def test_commits(
     change = Append(Path("README.md"), "Lorem Ipsum\n")
     apply(instance, change)
 
-    retrocookie(
-        str(instance.path), commits=["HEAD"], path=cookiecutter.path,
-    )
+    retrocookie(instance.path, commits=["HEAD"], path=cookiecutter.path)
 
     assert change.text in read(cookiecutter, in_template(change.path))
 

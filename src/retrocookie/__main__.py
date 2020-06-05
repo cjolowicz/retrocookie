@@ -65,9 +65,9 @@ def main(
 ) -> None:
     """Retrocookie imports commits into Cookiecutter templates.
 
-    The source repository is passed as a positional argument. This can
-    be the repository URL or filesystem path of an instance of the
-    Cookiecutter template.
+    The path to the source repository is passed as a positional argument.
+    This should be an instance of the Cookiecutter template with a
+    .cookiecutter.json file.
 
     Additional positional arguments are the commits to be imported.
     See gitrevisions(7) for a list of ways to spell commits and commit
@@ -112,7 +112,7 @@ def main(
 
     path = Path(directory) if directory else None
     retrocookie(
-        repository,
+        Path(repository),
         commits=commits,
         branch=branch,
         upstream=upstream,

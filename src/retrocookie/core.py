@@ -86,7 +86,7 @@ def apply_commits(
 
 
 def retrocookie(
-    url: str,
+    instance_path: Path,
     *,
     commits: Iterable[str] = (),
     branch: Optional[str] = None,
@@ -101,7 +101,7 @@ def retrocookie(
     template_directory = find_template_directory(repository)
     remote = "retrocookie"
 
-    with temporary_repository(url) as instance:
+    with temporary_repository(instance_path) as instance:
         commits = get_commits(instance, commits, branch, upstream)
         commits = rewrite_commits(
             instance, template_directory, whitelist, blacklist, commits
