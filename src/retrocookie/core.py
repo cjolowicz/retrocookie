@@ -23,10 +23,10 @@ def find_template_directory(repository: git.Repository) -> Path:
     raise Exception("cannot find template directory")
 
 
-def load_context(repository: git.Repository) -> Dict[str, str]:
+def load_context(repository: git.Repository, ref: str) -> Dict[str, str]:
     """Load the context from the .cookiecutter.json file."""
     path = Path(".cookiecutter.json")
-    text = repository.read_text(path)
+    text = repository.read_text(path, ref=ref)
     return cast(Dict[str, str], json.loads(text))
 
 
@@ -35,7 +35,7 @@ def get_commits(
     commits: Iterable[str],
     branch: Optional[str],
     upstream: str,
-) -> Iterable[str]:
+) -> List[str]:
     """Return hashes of the commits to be picked."""
 
     def _generate() -> Iterator[str]:
@@ -48,6 +48,14 @@ def get_commits(
     return list(_generate())
 
 
+def fetch_commits(
+    repository: git.Repository, source: git.Repository, commits: List[str],
+) -> None:
+    """Fetch commits into an empty repository."""
+    repository.git("fetch", "--no-tags", "--depth=2", str(source.path), *commits)
+    repository.git("branch", "master", commits[-1])
+
+
 def rewrite_commits(
     repository: git.Repository,
     template_directory: Path,
@@ -56,7 +64,8 @@ def rewrite_commits(
     commits: Iterable[str],
 ) -> List[str]:
     """Rewrite the repository using template variables."""
-    context = load_context(repository)
+    commits = list(commits)
+    context = load_context(repository, commits[-1])
     RepositoryFilter(
         repository=repository,
         path=template_directory,
@@ -133,7 +142,8 @@ def retrocookie(
     template_directory = find_template_directory(repository)
     commits = get_commits(instance, commits, branch, upstream)
 
-    with temporary_repository(instance.path) as scratch:
+    with temporary_repository() as scratch:
+        fetch_commits(scratch, instance, commits)
         commits = rewrite_commits(
             scratch, template_directory, whitelist, blacklist, commits
         )

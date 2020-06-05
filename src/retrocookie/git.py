@@ -49,15 +49,6 @@ class Repository:
         repo = pygit2.init_repository(path)
         return cls(path, repo=repo)
 
-    @classmethod
-    def clone(cls, url: str, path: Path, *, mirror: bool = False) -> Repository:
-        """Clone the repository."""
-        # pygit2 wheels for Windows and macOS lack SSH support.
-        # https://github.com/libgit2/pygit2/issues/994
-        options = ["--mirror"] if mirror else []
-        git("clone", *options, url, str(path))
-        return cls(path)
-
     def create_branch(self, branch: str, ref: str = "HEAD") -> None:
         """Create a branch."""
         commit = self.repo.revparse_single(ref)
@@ -96,7 +87,7 @@ class Repository:
 
     def read_text(self, path: Path, *, ref: str = "HEAD") -> str:
         """Return the contents of the blob at the given path."""
-        commit = self.repo.references[ref].peel()
+        commit = self.repo.revparse_single(ref)
         path = self._ensure_relative(path)
         blob = functools.reduce(operator.truediv, path.parts, commit.tree)
         return cast(str, blob.data.decode())
