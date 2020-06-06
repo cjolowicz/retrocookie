@@ -11,6 +11,7 @@ from retrocookie.filter import escape_jinja
         ("{{}}", '{{ "{{" }}{{ "}}" }}'),
         ("${{ matrix.os }}", '${{ "{{" }} matrix.os {{ "}}" }}'),
         ("lorem {# ipsum #} dolor", 'lorem {{ "{#" }} ipsum {{ "#}" }} dolor'),
+        ("{{ a }} {{ b }}", '{{ "{{" }} a {{ "}}" }} {{ "{{" }} b {{ "}}" }}'),
     ],
 )
 def test_escape_jinja(text: str, expected: str) -> None:
