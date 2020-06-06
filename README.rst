@@ -33,7 +33,7 @@ Retrocookie
    :alt: Dependabot
 
 
-Retrocookie imports commits from a Cookiecutter_ instance into the template.
+Retrocookie updates Cookiecutter_ templates with changes from their instances.
 
 When developing Cookiecutter templates,
 you often need to work in a generated project rather than the template itself.
