@@ -1,13 +1,23 @@
 [tool.poetry]
 name = "retrocookie"
 version = "0.2.0"
-description = "Retrocookie"
+description = "Update Cookiecutter templates with changes from their instances"
 authors = ["Claudio Jolowicz <mail@claudiojolowicz.com>"]
 license = "MIT"
 readme = "README.rst"
 homepage = "https://github.com/cjolowicz/retrocookie"
 repository = "https://github.com/cjolowicz/retrocookie"
 documentation = "https://retrocookie.readthedocs.io"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+]
 
 [tool.poetry.urls]
 Changelog = "https://github.com/cjolowicz/retrocookie/releases"
