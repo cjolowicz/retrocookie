@@ -26,13 +26,13 @@ from retrocookie import retrocookie
         ),
     ],
 )
-def test_verbatim(
+def test_rewrite(
     cookiecutter_repository: git.Repository,
     cookiecutter_instance_repository: git.Repository,
     text: str,
     expected: str,
 ) -> None:
-    """It inserts text verbatim."""
+    """It rewrites the file contents as expected."""
     cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
     path = Path("README.md")
 
