@@ -5,11 +5,15 @@ import pytest
 
 from .helpers import append
 from .helpers import branch
-from .helpers import in_template
 from .helpers import touch
 from retrocookie import core
 from retrocookie import git
 from retrocookie import retrocookie
+
+
+def in_template(path: Path) -> Path:
+    """Prepend the template directory to the path."""
+    return "{{ cookiecutter.project_slug }}" / path
 
 
 class Example:
