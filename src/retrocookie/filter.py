@@ -17,7 +17,6 @@ from git_filter_repo import FilteringOptions
 from git_filter_repo import RepoFilter
 
 from . import git
-from . import utils
 
 
 def get_replacements(
@@ -98,6 +97,7 @@ class RepositoryFilter:
     def __init__(
         self,
         repository: git.Repository,
+        source: git.Repository,
         commits: Iterable[str],
         template_directory: Path,
         context: Dict[str, str],
@@ -106,6 +106,7 @@ class RepositoryFilter:
     ) -> None:
         """Initialize."""
         self.repository = repository
+        self.source = source
         self.commits = commits
         self.template_directory = str(template_directory).encode()
         self.replacements = get_replacements(context, whitelist, blacklist)
@@ -125,7 +126,13 @@ class RepositoryFilter:
     def _create_filter(self) -> RepoFilter:
         """Create the filter."""
         args = FilteringOptions.parse_args(
-            ["--force", "--replace-refs=update-and-add", "--refs", *self.commits]
+            [
+                f"--source={self.source.path}",
+                f"--target={self.repository.path}",
+                "--replace-refs=update-and-add",
+                "--refs",
+                *self.commits,
+            ]
         )
         return RepoFilter(
             args,
@@ -135,6 +142,5 @@ class RepositoryFilter:
 
     def run(self) -> None:
         """Run the filter."""
-        with utils.chdir(self.repository.path):
-            repofilter = self._create_filter()
-            repofilter.run()
+        repofilter = self._create_filter()
+        repofilter.run()

@@ -48,16 +48,9 @@ def get_commits(
     return list(_generate())
 
 
-def fetch_commits(
-    repository: git.Repository, source: git.Repository, commits: List[str],
-) -> None:
-    """Fetch commits into an empty repository."""
-    repository.fetch_commits(source, *commits)
-    repository.create_branch("master", commits[-1])
-
-
 def rewrite_commits(
     repository: git.Repository,
+    source: git.Repository,
     template_directory: Path,
     whitelist: Container[str],
     blacklist: Container[str],
@@ -65,12 +58,13 @@ def rewrite_commits(
 ) -> List[str]:
     """Rewrite the repository using template variables."""
     commits = list(commits)
-    with_parents = repository.parse_revisions(
+    with_parents = source.parse_revisions(
         *[f"{commit}^" for commit in commits], *commits
     )
-    context = load_context(repository, commits[-1])
+    context = load_context(source, commits[-1])
     RepositoryFilter(
         repository=repository,
+        source=source,
         commits=with_parents,
         template_directory=template_directory,
         context=context,
@@ -147,9 +141,8 @@ def retrocookie(
     commits = get_commits(instance, commits, branch, upstream)
 
     with temporary_repository() as scratch:
-        fetch_commits(scratch, instance, commits)
         commits = rewrite_commits(
-            scratch, template_directory, whitelist, blacklist, commits
+            scratch, instance, template_directory, whitelist, blacklist, commits
         )
 
         apply_commits(repository, scratch, commits, create_branch)
