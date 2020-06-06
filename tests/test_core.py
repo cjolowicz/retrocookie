@@ -12,6 +12,13 @@ from retrocookie import git
 from retrocookie import retrocookie
 
 
+class Example:
+    """Example data for the test cases."""
+
+    path = Path("README.md")
+    text = "Lorem Ipsum\n"
+
+
 @pytest.mark.parametrize(
     "text, expected",
     [
@@ -34,17 +41,16 @@ def test_rewrite(
 ) -> None:
     """It rewrites the file contents as expected."""
     cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
-    path = Path("README.md")
 
     with branch(instance, "topic", create=True):
-        append(instance, path, text)
+        append(instance, Example.path, text)
 
     retrocookie(
         instance.path, path=cookiecutter.path, branch="topic", create_branch="topic",
     )
 
     with branch(cookiecutter, "topic"):
-        assert expected in cookiecutter.read_text(in_template(path))
+        assert expected in cookiecutter.read_text(in_template(Example.path))
 
 
 def test_branch(
@@ -53,11 +59,9 @@ def test_branch(
 ) -> None:
     """It creates the specified branch."""
     cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
-    path = Path("README.md")
-    text = "Lorem Ipsum\n"
 
     with branch(instance, "topic", create=True):
-        append(instance, path, text)
+        append(instance, Example.path, Example.text)
 
     retrocookie(
         instance.path,
@@ -67,7 +71,7 @@ def test_branch(
     )
 
     with branch(cookiecutter, "just-another-branch"):
-        assert text in cookiecutter.read_text(in_template(path))
+        assert Example.text in cookiecutter.read_text(in_template(Example.path))
 
 
 def test_single_commit(
@@ -76,13 +80,11 @@ def test_single_commit(
 ) -> None:
     """It cherry-picks the specified commit."""
     cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
-    path = Path("README.md")
-    text = "Lorem Ipsum\n"
 
-    append(instance, path, text)
+    append(instance, Example.path, Example.text)
     retrocookie(instance.path, ["HEAD"], path=cookiecutter.path)
 
-    assert text in cookiecutter.read_text(in_template(path))
+    assert Example.text in cookiecutter.read_text(in_template(Example.path))
 
 
 def test_multiple_commits_sequential(
