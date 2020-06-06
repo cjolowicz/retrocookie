@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Any
 from typing import Container
 from typing import Dict
+from typing import Iterable
 from typing import Iterator
 from typing import List
 from typing import overload
@@ -87,21 +88,23 @@ class RepositoryFilter:
     def __init__(
         self,
         repository: git.Repository,
-        path: Path,
+        commits: Iterable[str],
+        template_directory: Path,
         context: Dict[str, str],
         whitelist: Container[str],
         blacklist: Container[str],
     ) -> None:
         """Initialize."""
         self.repository = repository
-        self.path = str(path).encode()
+        self.commits = commits
+        self.template_directory = str(template_directory).encode()
         self.replacements = get_replacements(context, whitelist, blacklist)
 
     def filename_callback(self, filename: bytes) -> bytes:
         """Rewrite filenames."""
         for old, new in self.replacements:
             filename = filename.replace(old, new)
-        return b"/".join((self.path, filename))
+        return b"/".join((self.template_directory, filename))
 
     def blob_callback(self, blob: Blob, metadata: Dict[str, Any]) -> None:
         """Rewrite blobs."""
@@ -111,7 +114,9 @@ class RepositoryFilter:
 
     def _create_filter(self) -> RepoFilter:
         """Create the filter."""
-        args = FilteringOptions.parse_args(["--force"])
+        args = FilteringOptions.parse_args(
+            ["--force", "--replace-refs=update-and-add", "--refs", *self.commits]
+        )
         return RepoFilter(
             args,
             filename_callback=self.filename_callback,

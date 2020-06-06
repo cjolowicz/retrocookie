@@ -33,6 +33,22 @@ def test_read_text(repository: git.Repository) -> None:
     assert path.read_text() == repository.read_text(path)
 
 
+def test_exists_true(repository: git.Repository) -> None:
+    """It returns True if the file exists."""
+    path = Path("README.md")
+    touch(repository, path)
+
+    assert repository.exists(path)
+
+
+def test_exists_false(repository: git.Repository) -> None:
+    """It returns False if the file does not exist."""
+    path = Path("README.md")
+    commit(repository)  # ensure HEAD exists
+
+    assert not repository.exists(path)
+
+
 def test_cherrypick(repository: git.Repository) -> None:
     """It applies a commit from another branch."""
     # Add README on master.
