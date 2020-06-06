@@ -57,9 +57,10 @@ escape Jinja-special constructs,
 and place files in the template directory.
 
 Under the hood,
-Retrocookie clones the generated project to a temporary directory
-and rewrites the clone using git-filter-repo_.
-It then fetches and cherry-picks the rewritten commits into the template
+Retrocookie rewrites the selected commits using git-filter-repo_,
+saving them to a temporary repository.
+It then fetches and cherry-picks the rewritten commits
+from the temporary repository into the Cookiecutter template,
 using pygit2_.
 
 Maybe you're thinking,
