@@ -12,7 +12,7 @@ from nox.sessions import Session
 
 package = "retrocookie"
 python_versions = ["3.8", "3.7"]
-nox.options.sessions = "pre-commit", "safety", "mypy", "tests"
+nox.options.sessions = "pre-commit", "safety", "mypy", "tests", "typeguard"
 locations = "src", "tests", "noxfile.py", "docs/conf.py"
 
 
