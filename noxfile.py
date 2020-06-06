@@ -12,7 +12,7 @@ from nox.sessions import Session
 
 package = "retrocookie"
 python_versions = ["3.8", "3.7"]
-nox.options.sessions = "pre-commit", "safety", "mypy", "tests"
+nox.options.sessions = "pre-commit", "safety", "mypy", "tests", "typeguard"
 locations = "src", "tests", "noxfile.py", "docs/conf.py"
 
 
@@ -162,7 +162,7 @@ def coverage(session: Session) -> None:
 def typeguard(session: Session) -> None:
     """Runtime type checking using Typeguard."""
     install_package(session)
-    install(session, "pytest", "typeguard")
+    install(session, "cookiecutter", "pytest", "typeguard")
     session.run("pytest", f"--typeguard-packages={package}", *session.posargs)
 
 

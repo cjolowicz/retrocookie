@@ -20,6 +20,7 @@ jobs:
           - { python-version: 3.7, os: ubuntu-latest, session: "tests" }
           - { python-version: 3.8, os: windows-latest, session: "tests" }
           - { python-version: 3.8, os: macos-latest, session: "tests" }
+          - { python-version: 3.8, os: ubuntu-latest, session: "typeguard" }
           - { python-version: 3.8, os: ubuntu-latest, session: "docs" }
 
     env:
@@ -74,7 +75,7 @@ jobs:
             ${{ steps.pre-commit-cache.outputs.result }}-
 
       - name: Configure git
-        if: matrix.session == 'tests'
+        if: matrix.session == 'tests' || matrix.session == 'typeguard'
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
