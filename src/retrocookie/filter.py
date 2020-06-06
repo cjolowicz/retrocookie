@@ -1,4 +1,5 @@
 """Interface for git-filter-repo."""
+import re
 from pathlib import Path
 from typing import Any
 from typing import Container
@@ -6,6 +7,7 @@ from typing import Dict
 from typing import Iterable
 from typing import Iterator
 from typing import List
+from typing import Optional
 from typing import overload
 from typing import Sequence
 from typing import Tuple
@@ -33,6 +35,17 @@ def get_replacements(
     ]
 
 
+def find_token(
+    string: bytes, pos: int, tokens: Sequence[bytes]
+) -> Tuple[Optional[bytes], int]:
+    """Find the first occurrence of any of multiple tokens."""
+    pattern = re.compile(b"|".join(re.escape(token) for token in tokens))
+    match = pattern.search(string, pos)
+    if match is None:
+        return None, -1
+    return match.group(), match.start()
+
+
 def quote_tokens(
     text: bytes, quotes: Tuple[bytes, bytes], tokens: Sequence[bytes]
 ) -> bytes:
@@ -42,12 +55,9 @@ def quote_tokens(
         index = 0
 
         while index < len(text):
-            for token in tokens:
-                found = text.find(token, index)
-                if found != -1:
-                    break
+            token, found = find_token(text, index, tokens)
 
-            if found == -1:
+            if token is None:
                 yield text[index:]
                 break
 
