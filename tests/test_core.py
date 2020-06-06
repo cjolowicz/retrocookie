@@ -17,6 +17,7 @@ class Example:
 
     path = Path("README.md")
     text = "Lorem Ipsum\n"
+    template_path = in_template(path)
 
 
 @pytest.mark.parametrize(
@@ -50,7 +51,7 @@ def test_rewrite(
     )
 
     with branch(cookiecutter, "topic"):
-        assert expected in cookiecutter.read_text(in_template(Example.path))
+        assert expected in cookiecutter.read_text(Example.template_path)
 
 
 def test_branch(
@@ -71,7 +72,7 @@ def test_branch(
     )
 
     with branch(cookiecutter, "just-another-branch"):
-        assert Example.text in cookiecutter.read_text(in_template(Example.path))
+        assert Example.text in cookiecutter.read_text(Example.template_path)
 
 
 def test_single_commit(
@@ -84,7 +85,7 @@ def test_single_commit(
     append(instance, Example.path, Example.text)
     retrocookie(instance.path, ["HEAD"], path=cookiecutter.path)
 
-    assert Example.text in cookiecutter.read_text(in_template(Example.path))
+    assert Example.text in cookiecutter.read_text(Example.template_path)
 
 
 def test_multiple_commits_sequential(
