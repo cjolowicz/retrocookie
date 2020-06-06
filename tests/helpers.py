@@ -51,8 +51,3 @@ def branch(
         yield
     finally:
         repository.switch_branch(original)
-
-
-def in_template(path: Path) -> Path:
-    """Prepend the template directory to the path."""
-    return "{{ cookiecutter.project_slug }}" / path
