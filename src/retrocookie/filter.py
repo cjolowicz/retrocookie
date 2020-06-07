@@ -25,7 +25,7 @@ def get_replacements(
     """Return replacements to be applied to commits from the template instance."""
 
     def ref(key: str) -> str:
-        return f"{{{{ cookiecutter.{key} }}}}"
+        return f"{{{{cookiecutter.{key}}}}}"
 
     return [
         (value.encode(), ref(key).encode())
@@ -86,7 +86,7 @@ def to_bytes(args: Tuple[str, ...]) -> Tuple[bytes, ...]:
 
 def escape_jinja(text: bytes) -> bytes:
     """Escape Jinja tokens."""
-    quotes = to_bytes(('{{ "', '" }}'))
+    quotes = to_bytes(('{{"', '"}}'))
     tokens = to_bytes(("{{", "}}", "{%", "%}", "{#", "#}"))
     return quote_tokens(text, quotes, tokens)
 
