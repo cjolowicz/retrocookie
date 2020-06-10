@@ -36,7 +36,7 @@ def cookiecutter_json(cookiecutter_path: Path, context: Dict[str, str]) -> Path:
 @pytest.fixture
 def cookiecutter_subdirectory(cookiecutter_path: Path) -> Path:
     """The template directory in the cookiecutter."""
-    path = cookiecutter_path / "{{ cookiecutter.project_slug }}"
+    path = cookiecutter_path / "{{cookiecutter.project_slug}}"
     path.mkdir()
     return path
 
@@ -46,9 +46,9 @@ def cookiecutter_readme(cookiecutter_subdirectory: Path) -> Path:
     """The README file in the cookiecutter."""
     path = cookiecutter_subdirectory / "README.md"
     text = """\
-    # {{ cookiecutter.project_slug }}
+    # {{cookiecutter.project_slug}}
 
-    Welcome to `{{ cookiecutter.project_slug }}`!
+    Welcome to `{{cookiecutter.project_slug}}`!
     """
     path.write_text(textwrap.dedent(text))
     return path
@@ -59,7 +59,7 @@ def dot_cookiecutter_json(cookiecutter_subdirectory: Path) -> Path:
     """The .cookiecutter.json file in the cookiecutter."""
     path = cookiecutter_subdirectory / ".cookiecutter.json"
     text = """\
-    {{ cookiecutter | jsonify }}
+    {{cookiecutter | jsonify}}
     """
     path.write_text(textwrap.dedent(text))
     return path

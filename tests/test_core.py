@@ -13,7 +13,7 @@ from retrocookie import retrocookie
 
 def in_template(path: Path) -> Path:
     """Prepend the template directory to the path."""
-    return "{{ cookiecutter.project_slug }}" / path
+    return "{{cookiecutter.project_slug}}" / path
 
 
 class Example:
@@ -30,11 +30,11 @@ class Example:
         ("Lorem Ipsum\n", "Lorem Ipsum\n"),
         (
             "This project is called example.\n",
-            "This project is called {{ cookiecutter.project_slug }}.\n",
+            "This project is called {{cookiecutter.project_slug}}.\n",
         ),
         (
             "python-version: ${{ matrix.python-version }}",
-            'python-version: ${{ "{{" }} matrix.python-version {{ "}}" }}',
+            'python-version: ${{"{{"}} matrix.python-version {{"}}"}}',
         ),
     ],
 )
