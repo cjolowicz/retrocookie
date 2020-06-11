@@ -13,7 +13,6 @@ from nox.sessions import Session
 package = "retrocookie"
 python_versions = ["3.8", "3.7"]
 nox.options.sessions = "pre-commit", "safety", "mypy", "tests", "typeguard"
-locations = "src", "tests", "noxfile.py", "docs/conf.py"
 
 
 class Poetry:
@@ -130,6 +129,7 @@ def safety(session: Session) -> None:
 @nox.session(python=python_versions)
 def mypy(session: Session) -> None:
     """Type-check using mypy."""
+    locations = "src", "tests", "noxfile.py", "docs/conf.py"
     args = session.posargs or locations
     install_package(session)
     install(session, "mypy")
