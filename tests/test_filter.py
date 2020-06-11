@@ -8,10 +8,10 @@ from retrocookie.filter import escape_jinja
     "text, expected",
     [
         ("", ""),
-        ("{{}}", '{{ "{{" }}{{ "}}" }}'),
-        ("${{ matrix.os }}", '${{ "{{" }} matrix.os {{ "}}" }}'),
-        ("lorem {# ipsum #} dolor", 'lorem {{ "{#" }} ipsum {{ "#}" }} dolor'),
-        ("{{ a }} {{ b }}", '{{ "{{" }} a {{ "}}" }} {{ "{{" }} b {{ "}}" }}'),
+        ("{{}}", '{{"{{"}}{{"}}"}}'),
+        ("${{ matrix.os }}", '${{"{{"}} matrix.os {{"}}"}}'),
+        ("lorem {# ipsum #} dolor", 'lorem {{"{#"}} ipsum {{"#}"}} dolor'),
+        ("{{ a }} {{ b }}", '{{"{{"}} a {{"}}"}} {{"{{"}} b {{"}}"}}'),
     ],
 )
 def test_escape_jinja(text: str, expected: str) -> None:
