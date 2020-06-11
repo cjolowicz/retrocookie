@@ -52,8 +52,8 @@ def rewrite_commits(
     repository: git.Repository,
     source: git.Repository,
     template_directory: Path,
-    whitelist: Container[str],
-    blacklist: Container[str],
+    include_variables: Container[str],
+    exclude_variables: Container[str],
     commits: Iterable[str],
 ) -> List[str]:
     """Rewrite the repository using template variables."""
@@ -68,8 +68,8 @@ def rewrite_commits(
         commits=with_parents,
         template_directory=template_directory,
         context=context,
-        include_variables=whitelist,
-        exclude_variables=blacklist,
+        include_variables=include_variables,
+        exclude_variables=exclude_variables,
     ).run()
     return [repository.lookup_replacement(commit) for commit in commits]
 
@@ -99,8 +99,8 @@ def retrocookie(
     branch: Optional[str] = None,
     upstream: str = "master",
     create_branch: Optional[str] = None,
-    whitelist: Container[str] = (),
-    blacklist: Container[str] = (),
+    include_variables: Container[str] = (),
+    exclude_variables: Container[str] = (),
 ) -> None:  # noqa: DAR101 https://github.com/terrencepreilly/darglint/issues/56
     """Import commits from instance repository into template repository.
 
@@ -128,11 +128,12 @@ def retrocookie(
             repository. By default, commits are imported onto the current
             branch.
 
-        whitelist: The Cookiecutter variables which should be rewritten. If
-            this is not specified, all variables from cookiecutter.json are
-            rewritten.
+        include_variables: The Cookiecutter variables which should be
+            rewritten. If this is not specified, all variables from
+            cookiecutter.json are rewritten.
 
-        blacklist: Any Cookiecutter variables which should not be rewritten.
+        exclude_variables: Any Cookiecutter variables which should not be
+            rewritten.
 
     """
     repository = git.Repository(path)
@@ -142,7 +143,12 @@ def retrocookie(
 
     with temporary_repository() as scratch:
         commits = rewrite_commits(
-            scratch, instance, template_directory, whitelist, blacklist, commits
+            scratch,
+            instance,
+            template_directory,
+            include_variables,
+            exclude_variables,
+            commits,
         )
 
         apply_commits(repository, scratch, commits, create_branch)

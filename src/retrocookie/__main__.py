@@ -117,8 +117,8 @@ def main(
         branch=branch,
         upstream=upstream,
         create_branch=create_branch,
-        whitelist=whitelist,
-        blacklist=blacklist,
+        include_variables=whitelist,
+        exclude_variables=blacklist,
         path=path,
     )
 
