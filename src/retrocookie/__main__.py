@@ -32,13 +32,15 @@ from .core import retrocookie
     help="Create a local branch for the imported commits",
 )
 @click.option(
-    "--whitelist",
+    "--include-variable",
+    "include_variables",
     metavar="VAR",
     multiple=True,
     help="Only rewrite these Cookiecutter variables",
 )
 @click.option(
-    "--blacklist",
+    "--exclude-variable",
+    "exclude_variables",
     metavar="VAR",
     multiple=True,
     help="Do not rewrite these Cookiecutter variables",
@@ -57,8 +59,8 @@ def main(
     upstream: str,
     create: bool,
     create_branch: Optional[str],
-    whitelist: Container[str],
-    blacklist: Container[str],
+    include_variables: Container[str],
+    exclude_variables: Container[str],
     directory: Optional[str],
     repository: str,
     commits: Iterable[str],
@@ -93,8 +95,8 @@ def main(
       - Values from .cookiecutter.json are replaced by templating tags
         with the corresponding variable name
 
-    Use the --whitelist and --blacklist options to include or exclude
-    specific variables from .cookiecutter.json.
+    Use the --include-variable and --exclude-variable options to include or
+    exclude specific variables from .cookiecutter.json.
     """
     if create:
         if create_branch:
@@ -117,8 +119,8 @@ def main(
         branch=branch,
         upstream=upstream,
         create_branch=create_branch,
-        include_variables=whitelist,
-        exclude_variables=blacklist,
+        include_variables=include_variables,
+        exclude_variables=exclude_variables,
         path=path,
     )
 
