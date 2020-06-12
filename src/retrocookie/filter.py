@@ -20,7 +20,9 @@ from . import git
 
 
 def get_replacements(
-    context: Dict[str, str], whitelist: Container[str], blacklist: Container[str],
+    context: Dict[str, str],
+    include_variables: Container[str],
+    exclude_variables: Container[str],
 ) -> List[Tuple[bytes, bytes]]:
     """Return replacements to be applied to commits from the template instance."""
 
@@ -30,7 +32,8 @@ def get_replacements(
     return [
         (value.encode(), ref(key).encode())
         for key, value in context.items()
-        if key not in blacklist and not (whitelist and key not in whitelist)
+        if key not in exclude_variables
+        and not (include_variables and key not in include_variables)
     ]
 
 
@@ -101,15 +104,17 @@ class RepositoryFilter:
         commits: Iterable[str],
         template_directory: Path,
         context: Dict[str, str],
-        whitelist: Container[str],
-        blacklist: Container[str],
+        include_variables: Container[str],
+        exclude_variables: Container[str],
     ) -> None:
         """Initialize."""
         self.repository = repository
         self.source = source
         self.commits = commits
         self.template_directory = str(template_directory).encode()
-        self.replacements = get_replacements(context, whitelist, blacklist)
+        self.replacements = get_replacements(
+            context, include_variables, exclude_variables
+        )
 
     def filename_callback(self, filename: bytes) -> bytes:
         """Rewrite filenames."""

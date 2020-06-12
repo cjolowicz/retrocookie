@@ -68,8 +68,8 @@ def rewrite_commits(
         commits=with_parents,
         template_directory=template_directory,
         context=context,
-        whitelist=whitelist,
-        blacklist=blacklist,
+        include_variables=whitelist,
+        exclude_variables=blacklist,
     ).run()
     return [repository.lookup_replacement(commit) for commit in commits]
 
