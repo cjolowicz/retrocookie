@@ -315,6 +315,18 @@ version = "1.0.2"
 flake8 = "*"
 
 [[package]]
+category = "dev"
+description = "Python docstring reStructuredText (RST) validator"
+name = "flake8-rst-docstrings"
+optional = false
+python-versions = "*"
+version = "0.0.13"
+
+[package.dependencies]
+flake8 = ">=3.0.0"
+restructuredtext_lint = "*"
+
+[[package]]
 category = "main"
 description = "Quickly rewrite git repository history"
 name = "git-filter-repo"
@@ -738,6 +750,17 @@ socks = ["PySocks (>=1.5.6,<1.5.7 || >1.5.7)", "win-inet-pton"]
 
 [[package]]
 category = "dev"
+description = "reStructuredText linter"
+name = "restructuredtext-lint"
+optional = false
+python-versions = "*"
+version = "1.3.1"
+
+[package.dependencies]
+docutils = ">=0.11,<1.0"
+
+[[package]]
+category = "dev"
 description = "Checks installed dependencies for known vulnerabilities."
 name = "safety"
 optional = false
@@ -1045,7 +1068,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "879c02734cd918111eed77f20cf28c2adeb417d2e81b2274013b95caf3432b52"
+content-hash = "cdf446712210578b0fab948fab5ca6b78c5b4ce46102938bab7fc243f39ff39b"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -1213,6 +1236,9 @@ flake8-docstrings = [
 flake8-polyfill = [
     {file = "flake8-polyfill-1.0.2.tar.gz", hash = "sha256:e44b087597f6da52ec6393a709e7108b2905317d0c0b744cdca6208e670d8eda"},
     {file = "flake8_polyfill-1.0.2-py2.py3-none-any.whl", hash = "sha256:12be6a34ee3ab795b19ca73505e7b55826d5f6ad7230d31b18e106400169b9e9"},
+]
+flake8-rst-docstrings = [
+    {file = "flake8-rst-docstrings-0.0.13.tar.gz", hash = "sha256:b1b619d81d879b874533973ac04ee5d823fdbe8c9f3701bfe802bb41813997b4"},
 ]
 git-filter-repo = [
     {file = "git-filter-repo-2.27.0.tar.gz", hash = "sha256:66f19dedc10a5d44e09437b2beebc277dd5224e549d0d2f33bb3767410b29ed3"},
@@ -1441,6 +1467,9 @@ regex = [
 requests = [
     {file = "requests-2.23.0-py2.py3-none-any.whl", hash = "sha256:43999036bfa82904b6af1d99e4882b560e5e2c68e5c4b0aa03b655f3d7d73fee"},
     {file = "requests-2.23.0.tar.gz", hash = "sha256:b3f43d496c6daba4493e7c431722aeb7dbc6288f52a6e04e7b6023b0247817e6"},
+]
+restructuredtext-lint = [
+    {file = "restructuredtext_lint-1.3.1.tar.gz", hash = "sha256:470e53b64817211a42805c3a104d2216f6f5834b22fe7adb637d1de4d6501fb8"},
 ]
 safety = [
     {file = "safety-1.9.0-py2.py3-none-any.whl", hash = "sha256:86c1c4a031fe35bd624fce143fbe642a0234d29f7cbf7a9aa269f244a955b087"},
