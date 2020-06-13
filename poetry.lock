@@ -35,6 +35,17 @@ python-dateutil = "*"
 
 [[package]]
 category = "dev"
+description = "Utilities for refactoring imports in python-like syntax."
+name = "aspy.refactor-imports"
+optional = false
+python-versions = ">=3.6.1"
+version = "2.1.1"
+
+[package.dependencies]
+cached-property = "*"
+
+[[package]]
+category = "dev"
 description = "Atomic file writes."
 marker = "sys_platform == \"win32\""
 name = "atomicwrites"
@@ -751,6 +762,17 @@ version = "2020.6.8"
 
 [[package]]
 category = "dev"
+description = "Tool for reordering python imports"
+name = "reorder-python-imports"
+optional = false
+python-versions = ">=3.6.1"
+version = "2.3.1"
+
+[package.dependencies]
+"aspy.refactor-imports" = ">=2.1.0"
+
+[[package]]
+category = "dev"
 description = "Python HTTP for Humans."
 name = "requests"
 optional = false
@@ -1087,7 +1109,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "cacaf696b11a34ce4198c7d9403531e45ef61569e7bbabe3005613aa8a021611"
+content-hash = "57b6e7e07a4322a18995b516e895cafd1b37faa943d84877b4a15bb1edc9ab66"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -1106,6 +1128,10 @@ argh = [
 arrow = [
     {file = "arrow-0.15.6-py2.py3-none-any.whl", hash = "sha256:a24c1de90850f6fb2033fd6bf8a11f281e84cb54825e5eabdda219e673b52aac"},
     {file = "arrow-0.15.6.tar.gz", hash = "sha256:eb5d339f00072cc297d7de252a2e75f272085d1231a3723f1026d1fa91367118"},
+]
+"aspy.refactor-imports" = [
+    {file = "aspy.refactor_imports-2.1.1-py2.py3-none-any.whl", hash = "sha256:9df76bf19ef81620068b785a386740ab3c8939fcbdcebf20c4a4e0057230d782"},
+    {file = "aspy.refactor_imports-2.1.1.tar.gz", hash = "sha256:eec8d1a73bedf64ffb8b589ad919a030c1fb14acf7d1ce0ab192f6eedae895c5"},
 ]
 atomicwrites = [
     {file = "atomicwrites-1.4.0-py2.py3-none-any.whl", hash = "sha256:6d1784dea7c0c8d4a5172b6c620f40b6e4cbfdf96d783691f2e1302a7b88e197"},
@@ -1490,6 +1516,10 @@ regex = [
     {file = "regex-2020.6.8-cp38-cp38-win32.whl", hash = "sha256:97712e0d0af05febd8ab63d2ef0ab2d0cd9deddf4476f7aa153f76feef4b2754"},
     {file = "regex-2020.6.8-cp38-cp38-win_amd64.whl", hash = "sha256:6ad8663c17db4c5ef438141f99e291c4d4edfeaacc0ce28b5bba2b0bf273d9b5"},
     {file = "regex-2020.6.8.tar.gz", hash = "sha256:e9b64e609d37438f7d6e68c2546d2cb8062f3adb27e6336bc129b51be20773ac"},
+]
+reorder-python-imports = [
+    {file = "reorder_python_imports-2.3.1-py2.py3-none-any.whl", hash = "sha256:c0a9d60d84db9e6425d9379296d296cce78699967a6012972b8f4f074e22c3f5"},
+    {file = "reorder_python_imports-2.3.1.tar.gz", hash = "sha256:e2a4712866aee291c1c019aa67f95a3be2fffa5ebd801cab5d98ab2b66cfd512"},
 ]
 requests = [
     {file = "requests-2.23.0-py2.py3-none-any.whl", hash = "sha256:43999036bfa82904b6af1d99e4882b560e5e2c68e5c4b0aa03b655f3d7d73fee"},
