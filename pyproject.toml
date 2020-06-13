@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "retrocookie"
-version = "0.2.0"
+version = "0.3.0"
 description = "Update Cookiecutter templates with changes from their instances"
 authors = ["Claudio Jolowicz <mail@claudiojolowicz.com>"]
 license = "MIT"
