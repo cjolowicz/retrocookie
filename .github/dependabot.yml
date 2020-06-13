@@ -1,12 +1,12 @@
 version: 2
 updates:
-  - package-ecosystem: github-actions
+  - package-ecosystem: pip
     directory: "/"
     schedule:
       interval: daily
       time: "04:00"
     open-pull-requests-limit: 99
-  - package-ecosystem: pip
+  - package-ecosystem: github-actions
     directory: "/"
     schedule:
       interval: daily
