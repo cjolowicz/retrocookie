@@ -14,14 +14,15 @@ jobs:
         include:
           - { python-version: 3.8, os: ubuntu-latest, session: "pre-commit" }
           - { python-version: 3.8, os: ubuntu-latest, session: "safety" }
-          - { python-version: 3.8, os: ubuntu-latest, session: "mypy-3.8" }
-          - { python-version: 3.7, os: ubuntu-latest, session: "mypy-3.7" }
-          - { python-version: 3.6, os: ubuntu-latest, session: "mypy-3.6" }
-          - { python-version: 3.8, os: ubuntu-latest, session: "tests-3.8" }
-          - { python-version: 3.7, os: ubuntu-latest, session: "tests-3.7" }
-          - { python-version: 3.6, os: ubuntu-latest, session: "tests-3.6" }
-          - { python-version: 3.8, os: windows-latest, session: "tests-3.8" }
-          - { python-version: 3.8, os: macos-latest, session: "tests-3.8" }
+          - { python-version: 3.8, os: ubuntu-latest, session: "mypy" }
+          - { python-version: 3.7, os: ubuntu-latest, session: "mypy" }
+          - { python-version: 3.6, os: ubuntu-latest, session: "mypy" }
+          - { python-version: 3.8, os: ubuntu-latest, session: "tests" }
+          - { python-version: 3.7, os: ubuntu-latest, session: "tests" }
+          - { python-version: 3.6, os: ubuntu-latest, session: "tests" }
+          - { python-version: 3.8, os: windows-latest, session: "tests" }
+          - { python-version: 3.8, os: macos-latest, session: "tests" }
+          - { python-version: 3.8, os: ubuntu-latest, session: "typeguard" }
           - { python-version: 3.8, os: ubuntu-latest, session: "docs" }
 
     env:
@@ -29,7 +30,7 @@ jobs:
 
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v2.1.1
+        uses: actions/checkout@v2.2.0
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
@@ -67,7 +68,7 @@ jobs:
           print("::set-output name=result::{}".format(result))
 
       - name: Restore pre-commit cache
-        uses: actions/cache@v1.2.0
+        uses: actions/cache@v2
         if: matrix.session == 'pre-commit'
         with:
           path: ~/.cache/pre-commit
@@ -77,7 +78,7 @@ jobs:
 
       - name: Run Nox
         run: |
-          nox --force-color
+          nox --force-color --python=${{ matrix.python-version }}
 
       - name: Upload documentation
         if: matrix.session == 'docs'
