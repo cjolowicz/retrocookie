@@ -787,7 +787,7 @@ description = "Tool for reordering python imports"
 name = "reorder-python-imports"
 optional = false
 python-versions = ">=3.6.1"
-version = "2.3.2"
+version = "2.3.5"
 
 [package.dependencies]
 "aspy.refactor-imports" = ">=2.1.0"
@@ -1148,7 +1148,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "478af4e42d1c7f7ea1f37653ecdaf2be27bd40ba546cb2b3633d1359c83c2412"
+content-hash = "8491f7a7c5e1f6e34298cfe33422c9a1c7b8143dc54ac13cd67417ed061b74e7"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -1572,8 +1572,8 @@ regex = [
     {file = "regex-2020.6.8.tar.gz", hash = "sha256:e9b64e609d37438f7d6e68c2546d2cb8062f3adb27e6336bc129b51be20773ac"},
 ]
 reorder-python-imports = [
-    {file = "reorder_python_imports-2.3.2-py2.py3-none-any.whl", hash = "sha256:8094a1f24dccaa6706cb2fad3c9c94cb96201df2ad574e23fa2d7a940de59b26"},
-    {file = "reorder_python_imports-2.3.2.tar.gz", hash = "sha256:609846e796595cf11d11c8129ae6b0712083362aacb2f7b168f726b9bd37a797"},
+    {file = "reorder_python_imports-2.3.5-py2.py3-none-any.whl", hash = "sha256:6e8d3baba68c409ec87242757cf579a7ad2b133d1efed498be987b97ee385ac3"},
+    {file = "reorder_python_imports-2.3.5.tar.gz", hash = "sha256:7c46593d39899e3fb249248b448bde93ee7417889904f015c0c5a738c23fd0e0"},
 ]
 requests = [
     {file = "requests-2.23.0-py2.7.egg", hash = "sha256:5d2d0ffbb515f39417009a46c14256291061ac01ba8f875b90cad137de83beb4"},
