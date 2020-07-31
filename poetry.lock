@@ -351,7 +351,7 @@ description = "Quickly rewrite git repository history"
 name = "git-filter-repo"
 optional = false
 python-versions = ">=3.5"
-version = "2.27.1"
+version = "2.28.0"
 
 [[package]]
 category = "dev"
@@ -1332,8 +1332,8 @@ flake8-rst-docstrings = [
     {file = "flake8-rst-docstrings-0.0.13.tar.gz", hash = "sha256:b1b619d81d879b874533973ac04ee5d823fdbe8c9f3701bfe802bb41813997b4"},
 ]
 git-filter-repo = [
-    {file = "git-filter-repo-2.27.1.tar.gz", hash = "sha256:6d12729c1c79141d9ad4d3e47add234f316a8c8557d5e90005caaae5d01fb39e"},
-    {file = "git_filter_repo-2.27.1-py2.py3-none-any.whl", hash = "sha256:15ef399708efb4ca7b6b2db597e168c9d24e0328de1e2c37c040b0233aa869af"},
+    {file = "git-filter-repo-2.28.0.tar.gz", hash = "sha256:9b35f72b8386489a80404c694f0a01cb539f65ca88c39f674b33c421b75ffb7d"},
+    {file = "git_filter_repo-2.28.0-py2.py3-none-any.whl", hash = "sha256:33904a2589b28f78dc5907fd143435847f01e816a1c68a41ca79138f72239a1d"},
 ]
 gitdb = [
     {file = "gitdb-4.0.5-py3-none-any.whl", hash = "sha256:91f36bfb1ab7949b3b40e23736db18231bf7593edada2ba5c3a174a7b23657ac"},
