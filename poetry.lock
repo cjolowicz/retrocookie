@@ -1085,15 +1085,17 @@ description = "A rewrite of the builtin doctest module"
 name = "xdoctest"
 optional = false
 python-versions = "*"
-version = "0.13.0"
+version = "0.15.0"
 
 [package.dependencies]
 six = "*"
 
 [package.extras]
-all = ["six", "pytest", "pytest-cov", "codecov", "scikit-build", "cmake", "ninja", "pybind11", "pygments", "colorama"]
-optional = ["pygments", "colorama"]
-tests = ["pytest", "pytest-cov", "codecov", "scikit-build", "cmake", "ninja", "pybind11"]
+all = ["six", "pytest", "pytest-cov", "codecov", "scikit-build", "cmake", "ninja", "pybind11", "pygments", "colorama", "nbformat", "nbconvert", "jupyter-client", "ipython", "ipykernel"]
+colors = ["pygments", "colorama"]
+jupyter = ["nbformat", "nbconvert", "jupyter-client", "ipython", "ipykernel"]
+optional = ["pygments", "colorama", "nbformat", "nbconvert", "jupyter-client", "ipython", "ipykernel"]
+tests = ["pytest", "pytest-cov", "codecov", "scikit-build", "cmake", "ninja", "pybind11", "nbformat", "nbconvert", "jupyter-client", "ipython", "ipykernel"]
 
 [[package]]
 category = "dev"
@@ -1109,7 +1111,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "1eb52583c36c8bb69e8354d90e6e913de5c4c3c71617bbe18b5406b41d9dee03"
+content-hash = "9af5e27076bb92dae34edb3d21bf9c0b50a584a44d4393527068bd8651e48406"
 lock-version = "1.0"
 python-versions = "^3.7"
 
@@ -1673,8 +1675,8 @@ virtualenv = [
     {file = "virtualenv-20.0.21.tar.gz", hash = "sha256:a116629d4e7f4d03433b8afa27f43deba09d48bc48f5ecefa4f015a178efb6cf"},
 ]
 xdoctest = [
-    {file = "xdoctest-0.13.0-py2.py3-none-any.whl", hash = "sha256:de861fd5230a46bd26c054b4981169dd963f813768cb62b62e104e4d2644ac94"},
-    {file = "xdoctest-0.13.0.tar.gz", hash = "sha256:4f113a430076561a9d7f31af65b5d5acda62ee06b05cb6894264cb9efb8196ac"},
+    {file = "xdoctest-0.15.0-py2.py3-none-any.whl", hash = "sha256:695ea04303a48cbb319709270d43f7bae7f3de3701aec73f09d90a216499992e"},
+    {file = "xdoctest-0.15.0.tar.gz", hash = "sha256:7f0a184d403b69b166ebec1aadb13c98c96c59101e974ae2e4db4c3a803ec371"},
 ]
 zipp = [
     {file = "zipp-3.1.0-py3-none-any.whl", hash = "sha256:aa36550ff0c0b7ef7fa639055d797116ee891440eac1a56f378e2d3179e0320b"},
