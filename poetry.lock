@@ -659,7 +659,7 @@ description = "Python bindings for libgit2."
 name = "pygit2"
 optional = false
 python-versions = "*"
-version = "1.2.1"
+version = "1.3.0"
 
 [package.dependencies]
 cached-property = "*"
@@ -1453,19 +1453,19 @@ pyflakes = [
     {file = "pyflakes-2.2.0.tar.gz", hash = "sha256:35b2d75ee967ea93b55750aa9edbbf72813e06a66ba54438df2cfac9e3c27fc8"},
 ]
 pygit2 = [
-    {file = "pygit2-1.2.1-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:ea756028a8a3e94ee814054e61ad1680abecc51de7281b5184ee2a3b38db836c"},
-    {file = "pygit2-1.2.1-cp36-cp36m-manylinux2010_x86_64.whl", hash = "sha256:9252ee6f728e8d5b3b0b22545b7a7119d1f4a8e5b2fbe4d074c1913875152392"},
-    {file = "pygit2-1.2.1-cp36-cp36m-win32.whl", hash = "sha256:efa6aabfcfada75add98374dc36238069239127f7e1865409047f5ef3f7bee58"},
-    {file = "pygit2-1.2.1-cp36-cp36m-win_amd64.whl", hash = "sha256:cbd2ae41df7ce4ae911d2c51762f651b78e8b6fc00048ff6065e04448afde147"},
-    {file = "pygit2-1.2.1-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:d42ff6839e756e83ac65c7a4c3eb063e55967450bc9a4ccc8154269a2d59fb9e"},
-    {file = "pygit2-1.2.1-cp37-cp37m-manylinux2010_x86_64.whl", hash = "sha256:bbe671ace219bc02ad0a4d83d7611949d7bf4d8f44e91cedc6f03958cff71cc4"},
-    {file = "pygit2-1.2.1-cp37-cp37m-win32.whl", hash = "sha256:97a8313cdb8e33dc47c6beef78b0222c23653186377520dc6811d6d276c19d1f"},
-    {file = "pygit2-1.2.1-cp37-cp37m-win_amd64.whl", hash = "sha256:a159e2a9ecb397ff85b62199956d932ef4b72375bcaa21090a359ea530a187e5"},
-    {file = "pygit2-1.2.1-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:6bf0409149a5cb0863203508d060feea51c32f618e8d9d9d4b910ed3b4edd7bd"},
-    {file = "pygit2-1.2.1-cp38-cp38-manylinux2010_x86_64.whl", hash = "sha256:db98476484d40d3372d3626947f66ada85caf6f44837350db180083fdf43551a"},
-    {file = "pygit2-1.2.1-cp38-cp38-win32.whl", hash = "sha256:efe14d916a75ea50c122bf12478d67b52c2e0c8e3f59d7b64e3b5b560eb60bc0"},
-    {file = "pygit2-1.2.1-cp38-cp38-win_amd64.whl", hash = "sha256:44f55b92ca386ff4823be302354de6627634f7a916d590cae4543376b190cafb"},
-    {file = "pygit2-1.2.1.tar.gz", hash = "sha256:de9421118a99c79cbba1e512d60e5caed1d63273ce30a0e8d4edef4a2e500387"},
+    {file = "pygit2-1.3.0-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:64d033b76b7e489cf968e9a7cf5d9b9928ca7b3d41c1285b9c098b663e7c12ec"},
+    {file = "pygit2-1.3.0-cp36-cp36m-manylinux2010_x86_64.whl", hash = "sha256:d1615a0e91a0de4fdc7e6e076604e66efa41eefc93fb051448ad6345e640fec0"},
+    {file = "pygit2-1.3.0-cp36-cp36m-win32.whl", hash = "sha256:cfb5b690c87f53a55d34b1a9999175c9f4084cfb7a246a5c90b2680ab952d771"},
+    {file = "pygit2-1.3.0-cp36-cp36m-win_amd64.whl", hash = "sha256:5afd0965eb2f17f310b7ed7fc392db14dee9f087229a5780436cc16699df0a18"},
+    {file = "pygit2-1.3.0-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:78c77b15ac5bb3734db1eda3cb4f1a106e5b866a419f4873f0c0d8163b448298"},
+    {file = "pygit2-1.3.0-cp37-cp37m-manylinux2010_x86_64.whl", hash = "sha256:2c6ba5654c983ccfa1729230357a19cb2b4b6b2c3013f0659bef9f60525cb515"},
+    {file = "pygit2-1.3.0-cp37-cp37m-win32.whl", hash = "sha256:7eedb40feebaab2f9f15497e42f5348d583d22ffa7935df84a296d777324ca8c"},
+    {file = "pygit2-1.3.0-cp37-cp37m-win_amd64.whl", hash = "sha256:7cffdf836c39276e0fbeadb8256488f2be6273beb096bda15f256f0ce5466370"},
+    {file = "pygit2-1.3.0-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:95d3222771809687ddc210ba32b1ed80327f13f0c6f1eaa4ae276c99ff2a5566"},
+    {file = "pygit2-1.3.0-cp38-cp38-manylinux2010_x86_64.whl", hash = "sha256:d344ea8684f4c16608713a3e8664b3862090729cfcab5839f9a18c6d224f9a6b"},
+    {file = "pygit2-1.3.0-cp38-cp38-win32.whl", hash = "sha256:ae6e7d267add6ff7d727d78030a1075e18bef6a77cf15115e143b108755e7082"},
+    {file = "pygit2-1.3.0-cp38-cp38-win_amd64.whl", hash = "sha256:283ea4d162f31ced6e27d42f58d532cec51764551ace4ef6b7810035ff1403e8"},
+    {file = "pygit2-1.3.0.tar.gz", hash = "sha256:0be93f6a8d7cbf0cc79ae2f0afb1993fc055fc0018c27e2bd01ba143e51d4452"},
 ]
 pygments = [
     {file = "Pygments-2.7.1-py3-none-any.whl", hash = "sha256:307543fe65c0947b126e83dd5a61bd8acbd84abec11f43caebaf5534cbc17998"},
