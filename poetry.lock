@@ -70,6 +70,14 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 pytz = ">=2015.7"
 
 [[package]]
+name = "bacon"
+version = "0.2.0"
+description = "Bacon Game Engine"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "bandit"
 version = "1.6.2"
 description = "Security oriented static analyser for python code."
@@ -223,6 +231,9 @@ category = "dev"
 optional = false
 python-versions = "*"
 
+[package.dependencies]
+bacon = "<=0.2"
+
 [[package]]
 name = "docutils"
 version = "0.16"
@@ -332,7 +343,7 @@ restructuredtext_lint = "*"
 
 [[package]]
 name = "git-filter-repo"
-version = "2.28.0"
+version = "2.29.0"
 description = "Quickly rewrite git repository history"
 category = "main"
 optional = false
@@ -1106,6 +1117,9 @@ babel = [
     {file = "Babel-2.8.0-py2.py3-none-any.whl", hash = "sha256:d670ea0b10f8b723672d3a6abeb87b565b244da220d76b4dba1b66269ec152d4"},
     {file = "Babel-2.8.0.tar.gz", hash = "sha256:1aac2ae2d0d8ea368fa90906567f5c08463d98ade155c0c4bfedd6a0f7160e38"},
 ]
+bacon = [
+    {file = "bacon-0.2.0.zip", hash = "sha256:62bd99edd7a3d3e8fddbc7cd7e164313fc01cad6e84c4a010026aadc3129cc0f"},
+]
 bandit = [
     {file = "bandit-1.6.2-py2.py3-none-any.whl", hash = "sha256:336620e220cf2d3115877685e264477ff9d9abaeb0afe3dc7264f55fa17a3952"},
     {file = "bandit-1.6.2.tar.gz", hash = "sha256:41e75315853507aa145d62a78a2a6c5e3240fe14ee7c601459d0df9418196065"},
@@ -1254,8 +1268,8 @@ flake8-rst-docstrings = [
     {file = "flake8-rst-docstrings-0.0.14.tar.gz", hash = "sha256:8f8bcb18f1408b506dd8ba2c99af3eac6128f6911d4bf6ff874b94caa70182a2"},
 ]
 git-filter-repo = [
-    {file = "git-filter-repo-2.28.0.tar.gz", hash = "sha256:9b35f72b8386489a80404c694f0a01cb539f65ca88c39f674b33c421b75ffb7d"},
-    {file = "git_filter_repo-2.28.0-py2.py3-none-any.whl", hash = "sha256:33904a2589b28f78dc5907fd143435847f01e816a1c68a41ca79138f72239a1d"},
+    {file = "git-filter-repo-2.29.0.tar.gz", hash = "sha256:f0fc21bcb158fdda5862c642a1a32b7429a009dba7c8f423555c39c6eb2c7c7f"},
+    {file = "git_filter_repo-2.29.0-py2.py3-none-any.whl", hash = "sha256:9096b9dbd420eede5ce128bb8edae4d632e9b4bfd1a5d52f1d73e0b7b1da3c0a"},
 ]
 gitdb = [
     {file = "gitdb-4.0.5-py3-none-any.whl", hash = "sha256:91f36bfb1ab7949b3b40e23736db18231bf7593edada2ba5c3a174a7b23657ac"},
