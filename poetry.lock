@@ -70,14 +70,6 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 pytz = ">=2015.7"
 
 [[package]]
-name = "bacon"
-version = "0.2.0"
-description = "Bacon Game Engine"
-category = "dev"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "bandit"
 version = "1.6.2"
 description = "Security oriented static analyser for python code."
@@ -230,9 +222,6 @@ description = "Distribution utilities"
 category = "dev"
 optional = false
 python-versions = "*"
-
-[package.dependencies]
-bacon = "<=0.2"
 
 [[package]]
 name = "docutils"
@@ -587,7 +576,7 @@ virtualenv = ">=20.0.8"
 
 [[package]]
 name = "pre-commit-hooks"
-version = "3.2.0"
+version = "3.3.0"
 description = "Some out-of-the-box hooks for pre-commit."
 category = "dev"
 optional = false
@@ -1086,7 +1075,7 @@ testing = ["jaraco.itertools", "func-timeout"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "d1c0c8867ce1077316366c84ec92638b225582c1cee305177269ad8e0fdc7607"
+content-hash = "38e80fefebb1315f02608f11ca4729da6898359148eda76963828eb5a55173df"
 
 [metadata.files]
 alabaster = [
@@ -1116,9 +1105,6 @@ attrs = [
 babel = [
     {file = "Babel-2.8.0-py2.py3-none-any.whl", hash = "sha256:d670ea0b10f8b723672d3a6abeb87b565b244da220d76b4dba1b66269ec152d4"},
     {file = "Babel-2.8.0.tar.gz", hash = "sha256:1aac2ae2d0d8ea368fa90906567f5c08463d98ade155c0c4bfedd6a0f7160e38"},
-]
-bacon = [
-    {file = "bacon-0.2.0.zip", hash = "sha256:62bd99edd7a3d3e8fddbc7cd7e164313fc01cad6e84c4a010026aadc3129cc0f"},
 ]
 bandit = [
     {file = "bandit-1.6.2-py2.py3-none-any.whl", hash = "sha256:336620e220cf2d3115877685e264477ff9d9abaeb0afe3dc7264f55fa17a3952"},
@@ -1401,8 +1387,8 @@ pre-commit = [
     {file = "pre_commit-2.7.1.tar.gz", hash = "sha256:c54fd3e574565fe128ecc5e7d2f91279772ddb03f8729645fa812fe809084a70"},
 ]
 pre-commit-hooks = [
-    {file = "pre_commit_hooks-3.2.0-py2.py3-none-any.whl", hash = "sha256:8a174237326576c5f2279eba18ccbf2ca2a19fcaab8844db80f576c8fe76c2c2"},
-    {file = "pre_commit_hooks-3.2.0.tar.gz", hash = "sha256:917bce8feb048f8271e3a4a900c6d780118d23e8ddf4557ddec9384c0d1dba79"},
+    {file = "pre_commit_hooks-3.3.0-py2.py3-none-any.whl", hash = "sha256:2190d72ac867bd9b8880de32d9304ec54182c89720cce56f22742890ed8ba90f"},
+    {file = "pre_commit_hooks-3.3.0.tar.gz", hash = "sha256:1e18c0451279fb88653c7b9f8fd73ccc35925e95b636c5b64095538f68a23b06"},
 ]
 py = [
     {file = "py-1.9.0-py2.py3-none-any.whl", hash = "sha256:366389d1db726cd2fcfc79732e75410e5fe4d31db13692115529d34069a043c2"},
