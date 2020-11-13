@@ -65,6 +65,7 @@ pr = ["appdirs", "github3.py", "rich", "tenacity", "typing-extensions"]
 
 [tool.poetry.scripts]
 retrocookie = "retrocookie.__main__:main"
+retrocookie-pr = "retrocookie.pr.__main__:main"
 
 [tool.coverage.paths]
 source = ["src", "*/site-packages"]
