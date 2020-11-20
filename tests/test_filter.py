@@ -1,4 +1,10 @@
 """Tests for filter module."""
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Tuple
+from typing import Union
+
 import pytest
 
 from retrocookie.filter import escape_jinja
@@ -33,6 +39,8 @@ def test_escape_jinja(text: str, expected: str) -> None:
         ),
     ],
 )
-def test_get_replacements(context: str, expected: str) -> None:
+def test_get_replacements(
+    context: Dict[str, Union[str, List[Any], None]], expected: List[Tuple[bytes, bytes]]
+) -> None:
     """It ignore non string values."""
     assert expected == get_replacements(context, "", "")
