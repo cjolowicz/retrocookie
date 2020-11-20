@@ -34,8 +34,8 @@ def get_replacements(
         (value.encode(), ref(key).encode())
         for key, value in context.items()
         if key not in exclude_variables
-        and isinstance(value, str)
         and not (include_variables and key not in include_variables)
+        and isinstance(value, str)
     ]
 
 
