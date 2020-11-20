@@ -31,7 +31,10 @@ def load_context(
     """Load the context from the .cookiecutter.json file."""
     path = Path(".cookiecutter.json")
     text = repository.read_text(path, ref=ref)
-    return cast(Dict[str, Union[str, List[Any], None]], json.loads(text))
+    data = json.loads(text)
+    if not isinstance(data, dict) or not all(isinstance(key, str) for key in data):
+        raise TypeError(".cookiecutter.json does not contain an object")
+    return cast(Dict[str, Any], data)
 
 
 def get_commits(
