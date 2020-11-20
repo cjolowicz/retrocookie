@@ -3,7 +3,6 @@ from typing import Any
 from typing import Dict
 from typing import List
 from typing import Tuple
-from typing import Union
 
 import pytest
 
@@ -40,7 +39,7 @@ def test_escape_jinja(text: str, expected: str) -> None:
     ],
 )
 def test_get_replacements(
-    context: Dict[str, Union[str, List[Any], None]], expected: List[Tuple[bytes, bytes]]
+    context: Dict[str, Any], expected: List[Tuple[bytes, bytes]]
 ) -> None:
     """It ignore non string values."""
     assert expected == get_replacements(context, "", "")

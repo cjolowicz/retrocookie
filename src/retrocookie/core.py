@@ -9,7 +9,6 @@ from typing import Iterable
 from typing import Iterator
 from typing import List
 from typing import Optional
-from typing import Union
 
 from . import git
 from .filter import RepositoryFilter
@@ -25,9 +24,7 @@ def find_template_directory(repository: git.Repository) -> Path:
     raise Exception("cannot find template directory")
 
 
-def load_context(
-    repository: git.Repository, ref: str
-) -> Dict[str, Union[str, List[Any], None]]:
+def load_context(repository: git.Repository, ref: str) -> Dict[str, Any]:
     """Load the context from the .cookiecutter.json file."""
     path = Path(".cookiecutter.json")
     text = repository.read_text(path, ref=ref)

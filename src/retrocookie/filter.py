@@ -11,7 +11,6 @@ from typing import Optional
 from typing import overload
 from typing import Sequence
 from typing import Tuple
-from typing import Union
 
 from git_filter_repo import Blob
 from git_filter_repo import FilteringOptions
@@ -21,7 +20,7 @@ from . import git
 
 
 def get_replacements(
-    context: Dict[str, Union[str, List[Any], None]],
+    context: Dict[str, Any],
     include_variables: Container[str],
     exclude_variables: Container[str],
 ) -> List[Tuple[bytes, bytes]]:
@@ -105,7 +104,7 @@ class RepositoryFilter:
         source: git.Repository,
         commits: Iterable[str],
         template_directory: Path,
-        context: Dict[str, Union[str, List[Any], None]],
+        context: Dict[str, Any],
         include_variables: Container[str],
         exclude_variables: Container[str],
     ) -> None:
