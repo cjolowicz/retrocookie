@@ -136,8 +136,9 @@ def test_find_template_directory_fails(tmp_path: Path) -> None:
     with pytest.raises(Exception):
         core.find_template_directory(repository)
 
+
 def test_load_context_error(cookiecutter_instance_repository: git.Repository) -> None:
     """It raises an exception when .cookiecutter.json is not JSON dictionary."""
-    write(cookiecutter_instance_repository, ".cookiecutter.json", "[]")
+    write(cookiecutter_instance_repository, Path(".cookiecutter.json"), "[]")
     with pytest.raises(TypeError):
         core.load_context(cookiecutter_instance_repository, "HEAD")
