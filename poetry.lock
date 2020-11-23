@@ -209,11 +209,11 @@ toml = ["toml"]
 
 [[package]]
 name = "darglint"
-version = "1.5.5"
+version = "1.5.7"
 description = "A utility for ensuring Google-style docstrings stay up to date with the source code."
 category = "dev"
 optional = false
-python-versions = ">=3.5,<4.0"
+python-versions = ">=3.6,<4.0"
 
 [[package]]
 name = "distlib"
@@ -1075,7 +1075,7 @@ testing = ["jaraco.itertools", "func-timeout"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "ee6ea7a977974ab0e8f81bcbaf335874ee6f73d216755799fea81e274633adc9"
+content-hash = "403a7dbe5389d6a4ca93f3425d00e868803d8cb3373b926f6700cae8ddbc0303"
 
 [metadata.files]
 alabaster = [
@@ -1213,8 +1213,8 @@ coverage = [
     {file = "coverage-5.3.tar.gz", hash = "sha256:280baa8ec489c4f542f8940f9c4c2181f0306a8ee1a54eceba071a449fb870a0"},
 ]
 darglint = [
-    {file = "darglint-1.5.5-py3-none-any.whl", hash = "sha256:cd882c812f28ee3b5577259bfd8d6d25962386dd87fc1f3756eac24370aaa060"},
-    {file = "darglint-1.5.5.tar.gz", hash = "sha256:2f12ce2ef3d8189279a8f2eb4c53fd215dbacae50e37765542a91310400a9cd6"},
+    {file = "darglint-1.5.7-py3-none-any.whl", hash = "sha256:d4c6eb04fe4534ad9b6f27e9d113eedce7616056bffd26a52c212609ea50d157"},
+    {file = "darglint-1.5.7.tar.gz", hash = "sha256:9e0cbdd0dde72160296d68d313539d81ec2050c5ff2d8295c4125d3400c62435"},
 ]
 distlib = [
     {file = "distlib-0.3.1-py2.py3-none-any.whl", hash = "sha256:8c09de2c67b3e7deef7184574fc060ab8a793e7adbb183d942c389c8b13c52fb"},
