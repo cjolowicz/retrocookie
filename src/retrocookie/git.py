@@ -144,7 +144,12 @@ class Repository:
         committer = self.repo.default_signature
 
         self.repo.create_commit(
-            head.name, commit.author, committer, commit.message, tree, [head.target],
+            head.name,
+            commit.author,
+            committer,
+            commit.message,
+            tree,
+            [head.target],
         )
 
         self.repo.state_cleanup()
