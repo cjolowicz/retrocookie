@@ -1,35 +1,36 @@
 Retrocookie
 ===========
 
-|Tests| |Codecov| |PyPI| |Python Version| |Read the Docs| |License| |Black| |pre-commit| |Dependabot|
+|PyPI| |Python Version| |License|
 
-.. |Tests| image:: https://github.com/cjolowicz/retrocookie/workflows/Tests/badge.svg
-   :target: https://github.com/cjolowicz/retrocookie/actions?workflow=Tests
-   :alt: Tests
-.. |Codecov| image:: https://codecov.io/gh/cjolowicz/retrocookie/branch/master/graph/badge.svg
-   :target: https://codecov.io/gh/cjolowicz/retrocookie
-   :alt: Codecov
+|Read the Docs| |Tests| |Codecov|
+
+|pre-commit| |Black|
+
 .. |PyPI| image:: https://img.shields.io/pypi/v/retrocookie.svg
    :target: https://pypi.org/project/retrocookie/
    :alt: PyPI
 .. |Python Version| image:: https://img.shields.io/pypi/pyversions/retrocookie
    :target: https://pypi.org/project/retrocookie
    :alt: Python Version
-.. |Read the Docs| image:: https://readthedocs.org/projects/retrocookie/badge/
-   :target: https://retrocookie.readthedocs.io/
-   :alt: Read the Docs
 .. |License| image:: https://img.shields.io/pypi/l/retrocookie
    :target: https://opensource.org/licenses/MIT
    :alt: License
-.. |Black| image:: https://img.shields.io/badge/code%20style-black-000000.svg
-   :target: https://github.com/psf/black
-   :alt: Black
+.. |Read the Docs| image:: https://img.shields.io/readthedocs/retrocookie/latest.svg?label=Read%20the%20Docs
+   :target: https://retrocookie.readthedocs.io/
+   :alt: Read the documentation at https://retrocookie.readthedocs.io/
+.. |Tests| image:: https://github.com/cjolowicz/retrocookie/workflows/Tests/badge.svg
+   :target: https://github.com/cjolowicz/retrocookie/actions?workflow=Tests
+   :alt: Tests
+.. |Codecov| image:: https://codecov.io/gh/cjolowicz/retrocookie/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/cjolowicz/retrocookie
+   :alt: Codecov
 .. |pre-commit| image:: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
    :target: https://github.com/pre-commit/pre-commit
    :alt: pre-commit
-.. |Dependabot| image:: https://api.dependabot.com/badges/status?host=github&repo=cjolowicz/retrocookie
-   :target: https://dependabot.com
-   :alt: Dependabot
+.. |Black| image:: https://img.shields.io/badge/code%20style-black-000000.svg
+   :target: https://github.com/psf/black
+   :alt: Black
 
 
 Features
@@ -57,7 +58,7 @@ You can install *Retrocookie* via pip_ from PyPI_:
 Usage
 -----
 
-* TODO
+Please see the `Command-line Reference <Usage_>`_ for details.
 
 
 Contributing
@@ -96,3 +97,4 @@ This project was generated from `@cjolowicz`_'s `Hypermodern Python Cookiecutter
 .. _pip: https://pip.pypa.io/
 .. github-only
 .. _Contributor Guide: CONTRIBUTING.rst
+.. _Usage: https://retrocookie.readthedocs.io/en/latest/usage.html
