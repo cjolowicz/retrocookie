@@ -5,7 +5,7 @@ updates:
     schedule:
       interval: daily
   - package-ecosystem: pip
-    directory: "/.github"
+    directory: "/.github/workflows"
     schedule:
       interval: daily
   - package-ecosystem: pip

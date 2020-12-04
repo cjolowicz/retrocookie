@@ -40,17 +40,17 @@ jobs:
 
       - name: Upgrade pip
         run: |
-          pip install --constraint=.github/requirements.txt pip
+          pip install --constraint=.github/workflows/constraints.txt pip
           pip --version
 
       - name: Install Poetry
         run: |
-          pip install --constraint=.github/requirements.txt poetry
+          pip install --constraint=.github/workflows/constraints.txt poetry
           poetry --version
 
       - name: Install Nox
         run: |
-          pip install --constraint=.github/requirements.txt nox nox-poetry
+          pip install --constraint=.github/workflows/constraints.txt nox nox-poetry
           nox --version
 
       - name: Compute pre-commit cache key
