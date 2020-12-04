@@ -40,7 +40,7 @@ def get_default_branch() -> str:
         with contextlib.suppress(IOError, KeyError):
             config = get_config()
             branch = config["init.defaultBranch"]
-            assert isinstance(branch, str)
+            assert isinstance(branch, str)  # noqa: S101
             return branch
 
     return "master"
