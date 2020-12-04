@@ -69,6 +69,19 @@ One cannot reconstruct a Jinja template from its rendered output.
 However, simple replacements of template variables work well in practice
 when you're only importing a handful of commits at a time.
 
+**Important:**
+
+Retrocookie relies on a ``.cookiecutter.json`` file in the generated project
+to work out how to rewrite commits.
+This file is similar to the ``cookiecutter.json`` file in the template,
+but contains the specific values chosen during project generation.
+You can generate this file by putting it into the template directory in the Cookiecutter,
+with the following contents:
+
+.. code:: jinja
+
+   {{ cookiecutter | jsonify }}
+
 
 Requirements
 ------------
