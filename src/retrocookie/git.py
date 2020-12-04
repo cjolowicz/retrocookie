@@ -1,6 +1,7 @@
 """Git interface."""
 from __future__ import annotations
 
+import contextlib
 import functools
 import operator
 import subprocess  # noqa: S404
@@ -27,6 +28,20 @@ class Conflict(Exception):
     def __init__(self, conflicts: ConflictCollection):
         """Initialize."""
         super().__init__(conflicts)
+
+
+def get_default_branch() -> str:
+    """Return the default branch for new repositories."""
+
+    def _configs():
+        yield pygit2.Config.get_global_config()
+        yield pygit2.Config.get_system_config()
+
+    for config in _configs():
+        with contextlib.suppress(KeyError):
+            return config["init.defaultBranch"]
+
+    return "master"
 
 
 class Repository:
