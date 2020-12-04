@@ -8,6 +8,7 @@ import subprocess  # noqa: S404
 from pathlib import Path
 from typing import Any
 from typing import cast
+from typing import Iterator
 from typing import List
 from typing import Optional
 
@@ -33,7 +34,7 @@ class Conflict(Exception):
 def get_default_branch() -> str:
     """Return the default branch for new repositories."""
 
-    def _configs():
+    def _configs() -> Iterator[pygit2.Config]:
         yield pygit2.Config.get_global_config()
         yield pygit2.Config.get_system_config()
 
