@@ -47,6 +47,7 @@ You need Python 3.6+ and the following tools:
 
 - Poetry_
 - Nox_
+- nox-poetry_
 
 Install the package with development requirements:
 
@@ -64,6 +65,7 @@ or the command-line interface:
 
 .. _Poetry: https://python-poetry.org/
 .. _Nox: https://nox.thea.codes/
+.. _nox-poetry: https://nox-poetry.readthedocs.io/
 
 
 How to test the project
@@ -107,16 +109,15 @@ Your pull request needs to meet the following guidelines for acceptance:
 
 Feel free to submit early, though—we can always iterate on this.
 
-You can ensure that your changes adhere to the code style by reformatting with Black_:
+To run linting and code formatting checks before commiting your change, you can install pre-commit as a Git hook by running the following command:
 
 .. code:: console
 
-   $ nox --session=black
+   $ nox --session=pre-commit -- install
 
 It is recommended to open an issue before starting work on anything.
 This will allow a chance to talk it over with the owners and validate your approach.
 
 .. _pull request: https://github.com/cjolowicz/retrocookie/pulls
-.. _Black: https://black.readthedocs.io/
 .. github-only
 .. _Code of Conduct: CODE_OF_CONDUCT.rst

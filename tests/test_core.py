@@ -52,7 +52,10 @@ def test_rewrite(
         append(instance, Example.path, text)
 
     retrocookie(
-        instance.path, path=cookiecutter.path, branch="topic", create_branch="topic",
+        instance.path,
+        path=cookiecutter.path,
+        branch="topic",
+        create_branch="topic",
     )
 
     with branch(cookiecutter, "topic"):
