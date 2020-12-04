@@ -83,6 +83,33 @@ def test_branch(
         assert Example.text in cookiecutter.read_text(Example.template_path)
 
 
+def test_upstream(
+    cookiecutter_repository: git.Repository,
+    cookiecutter_instance_repository: git.Repository,
+) -> None:
+    """It does not apply changes from the upstream branch."""
+    cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
+
+    another = Path("file.txt")
+
+    with branch(instance, "upstream", create=True):
+        touch(instance, another)
+        with branch(instance, "topic", create=True):
+            append(instance, Example.path, Example.text)
+
+    retrocookie(
+        instance.path,
+        path=cookiecutter.path,
+        upstream="upstream",
+        branch="topic",
+        create_branch="topic",
+    )
+
+    with branch(cookiecutter, "topic"):
+        assert not cookiecutter.exists(another)
+        assert Example.text in cookiecutter.read_text(Example.template_path)
+
+
 def test_single_commit(
     cookiecutter_repository: git.Repository,
     cookiecutter_instance_repository: git.Repository,

@@ -101,7 +101,7 @@ def retrocookie(
     *,
     path: Optional[Path] = None,
     branch: Optional[str] = None,
-    upstream: str = "master",
+    upstream: Optional[str] = None,
     create_branch: Optional[str] = None,
     include_variables: Container[str] = (),
     exclude_variables: Container[str] = (),
@@ -126,7 +126,9 @@ def retrocookie(
             This is equivalent to passing ``["master..branch"]`` in the
             ``commits`` parameter.
 
-        upstream: The upstream for ``branch``, by default the master branch.
+        upstream: The upstream for ``branch``. This defaults to the value of the
+            ``init.defaultBranch`` option in git. If the option is not set,
+            ``master`` is used.
 
         create_branch: The name of the branch to be created in the target
             repository. By default, commits are imported onto the current
@@ -140,6 +142,9 @@ def retrocookie(
             rewritten.
 
     """
+    if upstream is None:
+        upstream = git.get_default_branch()
+
     repository = git.Repository(path)
     instance = git.Repository(instance_path)
     template_directory = find_template_directory(repository)

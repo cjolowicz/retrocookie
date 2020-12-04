@@ -1,7 +1,9 @@
 """Tests for git interface."""
 from pathlib import Path
+from typing import Dict
 
 import pytest
+from _pytest.monkeypatch import MonkeyPatch
 
 from .helpers import branch
 from .helpers import commit
@@ -15,6 +17,23 @@ from retrocookie.utils import chdir
 def repository(tmp_path: Path) -> git.Repository:
     """Initialize repository in a temporary directory."""
     return git.Repository.init(tmp_path / "repository")
+
+
+@pytest.mark.parametrize(
+    "config,expected",
+    [
+        ({}, "master"),
+        ({"init.defaultBranch": "main"}, "main"),
+    ],
+)
+def test_get_default_branch(
+    config: Dict[str, str], expected: str, monkeypatch: MonkeyPatch
+) -> None:
+    """It returns the default branch."""
+    monkeypatch.setattr("pygit2.Config.get_global_config", dict)
+    monkeypatch.setattr("pygit2.Config.get_system_config", lambda: config)
+
+    assert expected == git.get_default_branch()
 
 
 def test_commit(repository: git.Repository) -> None:
