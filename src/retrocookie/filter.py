@@ -20,7 +20,7 @@ from . import git
 
 
 def get_replacements(
-    context: Dict[str, str],
+    context: Dict[str, Any],
     include_variables: Container[str],
     exclude_variables: Container[str],
 ) -> List[Tuple[bytes, bytes]]:
@@ -34,6 +34,7 @@ def get_replacements(
         for key, value in context.items()
         if key not in exclude_variables
         and not (include_variables and key not in include_variables)
+        and isinstance(value, str)
     ]
 
 
@@ -103,7 +104,7 @@ class RepositoryFilter:
         source: git.Repository,
         commits: Iterable[str],
         template_directory: Path,
-        context: Dict[str, str],
+        context: Dict[str, Any],
         include_variables: Container[str],
         exclude_variables: Container[str],
     ) -> None:

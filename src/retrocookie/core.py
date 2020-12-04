@@ -1,6 +1,7 @@
 """Core module."""
 import json
 from pathlib import Path
+from typing import Any
 from typing import cast
 from typing import Container
 from typing import Dict
@@ -23,11 +24,14 @@ def find_template_directory(repository: git.Repository) -> Path:
     raise Exception("cannot find template directory")
 
 
-def load_context(repository: git.Repository, ref: str) -> Dict[str, str]:
+def load_context(repository: git.Repository, ref: str) -> Dict[str, Any]:
     """Load the context from the .cookiecutter.json file."""
     path = Path(".cookiecutter.json")
     text = repository.read_text(path, ref=ref)
-    return cast(Dict[str, str], json.loads(text))
+    data = json.loads(text)
+    if not isinstance(data, dict) or not all(isinstance(key, str) for key in data):
+        raise TypeError(".cookiecutter.json does not contain an object")
+    return cast(Dict[str, Any], data)
 
 
 def get_commits(

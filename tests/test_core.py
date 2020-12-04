@@ -6,6 +6,7 @@ import pytest
 from .helpers import append
 from .helpers import branch
 from .helpers import touch
+from .helpers import write
 from retrocookie import core
 from retrocookie import git
 from retrocookie import retrocookie
@@ -134,3 +135,10 @@ def test_find_template_directory_fails(tmp_path: Path) -> None:
     repository = git.Repository.init(tmp_path)
     with pytest.raises(Exception):
         core.find_template_directory(repository)
+
+
+def test_load_context_error(cookiecutter_instance_repository: git.Repository) -> None:
+    """It raises an exception when .cookiecutter.json is not JSON dictionary."""
+    write(cookiecutter_instance_repository, Path(".cookiecutter.json"), "[]")
+    with pytest.raises(TypeError):
+        core.load_context(cookiecutter_instance_repository, "HEAD")
