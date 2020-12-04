@@ -87,6 +87,68 @@ You can install *Retrocookie* via pip_ from PyPI_:
    $ pip install retrocookie
 
 
+Example
+-------
+
+Here's an example to demonstrate the general workflow.
+
+To start with, we clone the repository of your Cookiecutter template.
+For this example, I'll use my own `Hypermodern Python Cookiecutter`_.
+
+.. code:: console
+
+   $ git clone https://github.com/cjolowicz/cookiecutter-hypermodern-python
+
+Next, we'll create a project from the template,
+and set up a git repository for it:
+
+.. code:: console
+
+   $ cookiecutter --no-input cookiecutter-hypermodern-python
+   $ cd hypermodern-python
+   $ git init
+   $ git add .
+   $ git commit --message="Initial commit"
+
+Let's open a feature branch in the project repository,
+and make a fictitious change involving the default project name *hypermodern-python*:
+
+.. code:: console
+
+   $ git switch --create add-example
+   $ echo '# hypermodern-python' > EXAMPLE.md
+   $ git add EXAMPLE.md
+   $ git commit --message="Add example"
+
+Back in the Cookiecutter repository,
+we can now invoke retrocookie to import the changes from the feature branch:
+
+.. code:: console
+
+   $ cd ../cookiecutter-hypermodern-python
+   $ retrocookie --branch add-example --create ../hypermodern-python
+
+A ``git show`` in the Cookiecutter shows the file under the template directory,
+on a branch named as in the original repository,
+with the project name replaced by a Jinja tag:
+
+.. code:: diff
+
+   commit abb4f823b9f1760e3a678c927ec9797c0a40a9b6 (HEAD -> add-example)
+   Author: Your Name <your.name@example.com>
+   Date:   Fri Dec 4 23:40:41 2020 +0100
+
+       Add example
+
+   diff --git a/{{cookiecutter.project_name}}/EXAMPLE.md b/{{cookiecutter.project_name}}/EXAMPLE.md
+   new file mode 100644
+   index 0000000..a158618
+   --- /dev/null
+   +++ b/{{cookiecutter.project_name}}/EXAMPLE.md
+   @@ -0,0 +1 @@
+   +# {{cookiecutter.project_name}}
+
+
 Usage
 -----
 
