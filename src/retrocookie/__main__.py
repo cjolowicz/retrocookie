@@ -19,9 +19,7 @@ from .core import retrocookie
 @click.option(
     "--upstream",
     metavar="REF",
-    default="master",
     help="Remote upstream branch",
-    show_default=True,
 )
 @click.option(
     "--create",
@@ -59,7 +57,7 @@ from .core import retrocookie
 @click.version_option()
 def main(
     branch: Optional[str],
-    upstream: str,
+    upstream: Optional[str],
     create: bool,
     create_branch: Optional[str],
     include_variables: Container[str],
