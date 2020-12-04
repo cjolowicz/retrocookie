@@ -138,7 +138,8 @@ class Repository:
             refname = head.name
             parents = [head.target]
         except pygit2.GitError:
-            refname = "refs/heads/master"
+            branch = get_default_branch()
+            refname = f"refs/heads/{branch}"
             parents = []
 
         tree = self.repo.index.write_tree()
