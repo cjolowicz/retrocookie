@@ -170,3 +170,10 @@ class Repository:
         )
 
         return Repository(path)
+
+    def remove_worktree(self, path: Path, *, force: bool = False) -> None:
+        """Remove a worktree."""
+        if force:
+            self.git("worktree", "remove", "--force", str(path))
+        else:
+            self.git("worktree", "remove", str(path))
