@@ -8,6 +8,7 @@ import subprocess  # noqa: S404
 from pathlib import Path
 from typing import Any
 from typing import cast
+from typing import Iterator
 from typing import List
 from typing import Optional
 
@@ -149,6 +150,23 @@ class Repository:
     def cherrypick(self, *refs: str) -> None:
         """Cherry-pick the given commits."""
         self.git("cherry-pick", *refs)
+
+    @contextlib.contextmanager
+    def worktree(
+        self,
+        branch: str,
+        path: Path,
+        *,
+        base: str = "HEAD",
+        force: bool = False,
+        force_remove: bool = False,
+    ) -> Iterator[Repository]:
+        """Context manager to add and remove a worktree."""
+        repository = self.add_worktree(branch, path, base=base, force=force)
+        try:
+            yield repository
+        finally:
+            self.remove_worktree(path, force=force_remove)
 
     def add_worktree(
         self,
