@@ -1,5 +1,5 @@
 """Tests for git interface."""
-import subprocess
+import subprocess  # noqa: S404
 from pathlib import Path
 from typing import Dict
 
