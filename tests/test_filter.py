@@ -42,4 +42,4 @@ def test_get_replacements(
     context: Dict[str, Any], expected: List[Tuple[bytes, bytes]]
 ) -> None:
     """It ignore non string values."""
-    assert expected == get_replacements(context, "", "")
+    assert expected == get_replacements(context, [], [])
