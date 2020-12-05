@@ -1,4 +1,5 @@
 """Tests for git interface."""
+import subprocess  # noqa: S404
 from pathlib import Path
 from typing import Dict
 
@@ -112,6 +113,7 @@ def test_cherrypick_index(repository: git.Repository) -> None:
 
     repository.cherrypick("install")
 
+    repository.repo.index.read()  # refresh stale index
     assert "INSTALL" in {e.path for e in repository.repo.index}
 
 
@@ -140,7 +142,7 @@ def test_cherrypick_conflict(repository: git.Repository) -> None:
 
     write(repository, path, "b")
 
-    with pytest.raises(git.Conflict):
+    with pytest.raises(subprocess.CalledProcessError):
         repository.cherrypick("topic")
 
 

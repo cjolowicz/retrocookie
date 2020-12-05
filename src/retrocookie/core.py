@@ -91,8 +91,7 @@ def apply_commits(
         repository.create_branch(create_branch)
         repository.switch_branch(create_branch)
 
-    for commit in commits:
-        repository.cherrypick(commit)
+    repository.cherrypick(*commits)
 
 
 def retrocookie(
