@@ -1,4 +1,5 @@
 """Tests for core module."""
+from dataclasses import dataclass
 from pathlib import Path
 
 import pytest
@@ -17,12 +18,18 @@ def in_template(path: Path) -> Path:
     return "{{cookiecutter.project_slug}}" / path
 
 
+@dataclass
 class Example:
     """Example data for the test cases."""
 
-    path = Path("README.md")
-    text = "Lorem Ipsum\n"
-    template_path = in_template(path)
+    path: Path = Path("README.md")
+    text: str = "Lorem Ipsum\n"
+
+
+@pytest.fixture
+def example() -> Example:
+    """Fixture with example data."""
+    return Example()
 
 
 @pytest.mark.parametrize(
@@ -44,12 +51,13 @@ def test_rewrite(
     cookiecutter_instance_repository: git.Repository,
     text: str,
     expected: str,
+    example: Example,
 ) -> None:
     """It rewrites the file contents as expected."""
     cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
 
     with branch(instance, "topic", create=True):
-        append(instance, Example.path, text)
+        append(instance, example.path, text)
 
     retrocookie(
         instance.path,
@@ -59,18 +67,19 @@ def test_rewrite(
     )
 
     with branch(cookiecutter, "topic"):
-        assert expected in cookiecutter.read_text(Example.template_path)
+        assert expected in cookiecutter.read_text(in_template(example.path))
 
 
 def test_branch(
     cookiecutter_repository: git.Repository,
     cookiecutter_instance_repository: git.Repository,
+    example: Example,
 ) -> None:
     """It creates the specified branch."""
     cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
 
     with branch(instance, "topic", create=True):
-        append(instance, Example.path, Example.text)
+        append(instance, example.path, example.text)
 
     retrocookie(
         instance.path,
@@ -80,12 +89,13 @@ def test_branch(
     )
 
     with branch(cookiecutter, "just-another-branch"):
-        assert Example.text in cookiecutter.read_text(Example.template_path)
+        assert example.text in cookiecutter.read_text(in_template(example.path))
 
 
 def test_upstream(
     cookiecutter_repository: git.Repository,
     cookiecutter_instance_repository: git.Repository,
+    example: Example,
 ) -> None:
     """It does not apply changes from the upstream branch."""
     cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
@@ -95,7 +105,7 @@ def test_upstream(
     with branch(instance, "upstream", create=True):
         touch(instance, another)
         with branch(instance, "topic", create=True):
-            append(instance, Example.path, Example.text)
+            append(instance, example.path, example.text)
 
     retrocookie(
         instance.path,
@@ -107,20 +117,21 @@ def test_upstream(
 
     with branch(cookiecutter, "topic"):
         assert not cookiecutter.exists(another)
-        assert Example.text in cookiecutter.read_text(Example.template_path)
+        assert example.text in cookiecutter.read_text(in_template(example.path))
 
 
 def test_single_commit(
     cookiecutter_repository: git.Repository,
     cookiecutter_instance_repository: git.Repository,
+    example: Example,
 ) -> None:
     """It cherry-picks the specified commit."""
     cookiecutter, instance = cookiecutter_repository, cookiecutter_instance_repository
 
-    append(instance, Example.path, Example.text)
+    append(instance, example.path, example.text)
     retrocookie(instance.path, ["HEAD"], path=cookiecutter.path)
 
-    assert Example.text in cookiecutter.read_text(Example.template_path)
+    assert example.text in cookiecutter.read_text(in_template(example.path))
 
 
 def test_multiple_commits_sequential(
