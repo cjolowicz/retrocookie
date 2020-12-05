@@ -149,3 +149,24 @@ class Repository:
     def cherrypick(self, *refs: str) -> None:
         """Cherry-pick the given commits."""
         self.git("cherry-pick", *refs)
+
+    def add_worktree(
+        self,
+        branch: str,
+        path: Path,
+        *,
+        base: str = "HEAD",
+        force: bool = False,
+    ) -> Repository:
+        """Add a worktree."""
+        self.git(
+            "worktree",
+            "add",
+            str(path),
+            "--no-track",
+            "-B" if force else "-b",
+            branch,
+            base,
+        )
+
+        return Repository(path)
