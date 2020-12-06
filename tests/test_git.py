@@ -179,3 +179,13 @@ def test_fetch_relative_path(repository: git.Repository) -> None:
         repository.fetch_commits(source, commit)
 
     assert repository.read_text(path, ref=commit) == ""
+
+
+def test_add_worktree(repository: git.Repository, tmp_path: Path) -> None:
+    """It creates a worktree."""
+    commit(repository)
+
+    path = tmp_path / "worktree"
+    repository.add_worktree("branch", path)
+
+    assert path.exists()
