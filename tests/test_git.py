@@ -203,3 +203,14 @@ def test_remove_worktree(
     repository.remove_worktree(path, force=force)
 
     assert not path.exists()
+
+
+def test_worktree(repository: git.Repository, tmp_path: Path) -> None:
+    """It creates and removes a worktree."""
+    commit(repository)
+
+    path = tmp_path / "worktree"
+    with repository.worktree("branch", path):
+        assert path.exists()
+
+    assert not path.exists()
