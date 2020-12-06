@@ -189,3 +189,17 @@ def test_add_worktree(repository: git.Repository, tmp_path: Path) -> None:
     repository.add_worktree("branch", path)
 
     assert path.exists()
+
+
+@pytest.mark.parametrize("force", [False, True])
+def test_remove_worktree(
+    repository: git.Repository, tmp_path: Path, force: bool
+) -> None:
+    """It removes the worktree."""
+    commit(repository)
+
+    path = tmp_path / "worktree"
+    repository.add_worktree("branch", path)
+    repository.remove_worktree(path, force=force)
+
+    assert not path.exists()
