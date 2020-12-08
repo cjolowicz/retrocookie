@@ -1,0 +1,1 @@
+"""Fakes for retrocookie.pr."""
