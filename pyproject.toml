@@ -28,6 +28,7 @@ python = "^3.7"
 click = "^7.0"
 git-filter-repo = "^2.26.0"
 pygit2 = "^1.2.1"
+typing-extensions = {version = "^3.7.4", optional = true}
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.1"
@@ -56,7 +57,7 @@ sphinx-click = "^2.5.0"
 Pygments = "^2.7.4"
 
 [tool.poetry.extras]
-pr = []
+pr = ["typing-extensions"]
 
 [tool.poetry.scripts]
 retrocookie = "retrocookie.__main__:main"
