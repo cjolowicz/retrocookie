@@ -10,7 +10,7 @@ python-versions = "*"
 name = "appdirs"
 version = "1.4.4"
 description = "A small Python module for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
-category = "dev"
+category = "main"
 optional = false
 python-versions = "*"
 
@@ -1175,12 +1175,12 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [extras]
-pr = ["github3.py", "tenacity", "typing-extensions"]
+pr = ["appdirs", "github3.py", "tenacity", "typing-extensions"]
 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "c2d8425701bb2413986d57e355d13e59129c38ed95517edebc6bcaa1bdb5bb32"
+content-hash = "6ab31ad94c76a58671b06f2c168347e24ece422746838e5fbe51c92403cf7f53"
 
 [metadata.files]
 alabaster = [
