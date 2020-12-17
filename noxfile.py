@@ -107,7 +107,7 @@ def safety(session: Session) -> None:
 def mypy(session: Session) -> None:
     """Type-check using mypy."""
     args = session.posargs or ["src", "tests", "docs/conf.py"]
-    session.install(".")
+    session.install(".[pr]")
     session.install("mypy", "pytest")
     session.run("mypy", *args)
     if not session.posargs:
@@ -117,7 +117,7 @@ def mypy(session: Session) -> None:
 @nox.session(python=python_versions)
 def tests(session: Session) -> None:
     """Run the test suite."""
-    session.install(".")
+    session.install(".[pr]")
     session.install("cookiecutter", "coverage[toml]", "pygments", "pytest")
     try:
         session.run("coverage", "run", "--parallel", "-m", "pytest", *session.posargs)
@@ -144,7 +144,7 @@ def coverage(session: Session) -> None:
 @nox.session(python=python_versions)
 def typeguard(session: Session) -> None:
     """Runtime type checking using Typeguard."""
-    session.install(".")
+    session.install(".[pr]")
     session.install("cookiecutter", "pytest", "typeguard", "pygments")
     session.run("pytest", f"--typeguard-packages={package}", *session.posargs)
 
@@ -153,7 +153,7 @@ def typeguard(session: Session) -> None:
 def xdoctest(session: Session) -> None:
     """Run examples with xdoctest."""
     args = session.posargs or ["all"]
-    session.install(".")
+    session.install(".[pr]")
     session.install("xdoctest[colors]")
     session.run("python", "-m", "xdoctest", package, *args)
 
@@ -162,7 +162,7 @@ def xdoctest(session: Session) -> None:
 def docs_build(session: Session) -> None:
     """Build the documentation."""
     args = session.posargs or ["docs", "docs/_build"]
-    session.install(".")
+    session.install(".[pr]")
     session.install("sphinx", "sphinx-click", "sphinx-rtd-theme")
 
     build_dir = Path("docs", "_build")
@@ -176,7 +176,7 @@ def docs_build(session: Session) -> None:
 def docs(session: Session) -> None:
     """Build and serve the documentation with live reloading on file changes."""
     args = session.posargs or ["--open-browser", "docs", "docs/_build"]
-    session.install(".")
+    session.install(".[pr]")
     session.install("sphinx", "sphinx-autobuild", "sphinx-click", "sphinx-rtd-theme")
 
     build_dir = Path("docs", "_build")
