@@ -83,6 +83,11 @@ jobs:
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
 
+      - name: Enable functional tests
+        if: matrix.session == 'tests' && matrix.python-version == '3.9' && (matrix.os == 'windows-latest' || matrix.os == 'ubuntu-latest')
+        run: |
+          echo TEST_GITHUB_TOKEN=${{ secrets.TEST_GITHUB_TOKEN }} >> $GITHUB_ENV
+
       - name: Run Nox
         run: |
           nox --force-color --python=${{ matrix.python-version }}
