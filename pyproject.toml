@@ -55,6 +55,9 @@ sphinx-rtd-theme = "^0.5.1"
 sphinx-click = "^2.5.0"
 Pygments = "^2.7.4"
 
+[tool.poetry.extras]
+pr = []
+
 [tool.poetry.scripts]
 retrocookie = "retrocookie.__main__:main"
 
