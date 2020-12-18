@@ -1,9 +1,11 @@
 """Fixtures for retrocookie.pr."""
+import sys
 from pathlib import Path
 from typing import Callable
 from typing import Iterator
 
 import pytest
+from pytest import MonkeyPatch
 from tests.pr.unit.fakes.github import API as FakeAPI  # noqa: N811
 from tests.pr.unit.fakes.retrocookie import retrocookie
 
@@ -48,3 +50,9 @@ def repository(api: github.API, cache: Cache) -> Callable[[str], Repository]:
         return Repository.load(fullname, api=api, cache=cache)
 
     return _repository
+
+
+@pytest.fixture(autouse=sys.platform == "win32")
+def mock_cache_repository_path(monkeypatch: MonkeyPatch) -> None:
+    """Avoid errors due to excessively long paths on Windows."""
+    monkeypatch.setattr("retrocookie.pr.cache.DIGEST_SIZE", 3)
