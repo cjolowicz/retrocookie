@@ -58,9 +58,9 @@ class Repository:
         return git(*args, cwd=self.path, **kwargs)
 
     @classmethod
-    def init(cls, path: Path) -> Repository:
+    def init(cls, path: Path, *, bare: bool = False) -> Repository:
         """Create a repository."""
-        repo = pygit2.init_repository(path)
+        repo = pygit2.init_repository(path, bare=bare)
         return cls(path, repo=repo)
 
     def create_branch(self, branch: str, ref: str = "HEAD") -> None:
