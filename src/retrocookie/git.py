@@ -46,8 +46,12 @@ class Repository:
         self, path: Optional[Path] = None, *, repo: Optional[pygit2.Repository] = None
     ) -> None:
         """Initialize."""
-        self.path = path or Path.cwd() if repo is None else Path(repo.path).parent
-        self.repo = repo or pygit2.Repository(self.path)
+        if repo is None:
+            self.path = path or Path.cwd()
+            self.repo = pygit2.Repository(self.path)
+        else:
+            self.path = Path(repo.workdir or repo.path)
+            self.repo = repo
 
     def git(self, *args: str, **kwargs: Any) -> subprocess.CompletedProcess[str]:
         """Invoke git."""
