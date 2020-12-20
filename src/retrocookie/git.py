@@ -90,6 +90,10 @@ class Repository:
         """Switch the current branch."""
         self.repo.checkout(self.repo.branches[branch])
 
+    def update_remote(self) -> None:
+        """Update the remotes."""
+        self.git("remote", "update")
+
     def fetch_commits(self, source: Repository, *commits: str) -> None:
         """Fetch the given commits and their immediate parents."""
         path = source.path.resolve()
