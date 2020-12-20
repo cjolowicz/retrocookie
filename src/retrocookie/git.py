@@ -66,6 +66,13 @@ class Repository:
         repo = pygit2.init_repository(path, bare=bare)
         return cls(path, repo=repo)
 
+    @classmethod
+    def clone(cls, url: str, path: Path, *, mirror: bool = False) -> Repository:
+        """Clone a repository."""
+        options = ["--mirror"] if mirror else []
+        git("clone", *options, url, str(path))
+        return cls(path)
+
     def create_branch(self, branch: str, ref: str = "HEAD") -> None:
         """Create a branch."""
         commit = self.repo.revparse_single(ref)
