@@ -60,6 +60,8 @@ class Repository:
     @classmethod
     def init(cls, path: Path, *, bare: bool = False) -> Repository:
         """Create a repository."""
+        # https://github.com/libgit2/libgit2/issues/2849
+        path.parent.mkdir(exist_ok=True, parents=True)
         repo = pygit2.init_repository(path, bare=bare)
         return cls(path, repo=repo)
 
