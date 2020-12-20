@@ -99,6 +99,11 @@ class Repository:
         path = source.path.resolve()
         self.git("fetch", "--no-tags", "--depth=2", str(path), *commits)
 
+    def push(self, remote: str, *refs: str, force: bool = False) -> None:
+        """Update remote refs."""
+        options = ["--force-with-lease"] if force else []
+        self.git("push", *options, remote, *refs)
+
     def parse_revisions(self, *revisions: str) -> List[str]:
         """Parse revisions using the format specified in gitrevisions(7)."""
         process = self.git("rev-list", "--no-walk", *revisions)
