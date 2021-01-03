@@ -17,6 +17,8 @@ from typing import Optional
 
 import pygit2
 
+from retrocookie.utils import removeprefix
+
 
 def git(
     *args: str, check: bool = True, **kwargs: Any
@@ -67,6 +69,13 @@ class Version:
             if self._text is not None
             else f"{self.major}.{self.minor}.{self.patch}"
         )
+
+
+def version() -> Version:
+    """Return the git version."""
+    text = git("version").stdout.strip()
+    text = removeprefix(text, "git version ")
+    return Version.parse(text)
 
 
 def get_default_branch() -> str:
