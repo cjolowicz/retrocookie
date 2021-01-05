@@ -1,5 +1,7 @@
 """Core module."""
+import contextlib
 import json
+import tempfile
 from pathlib import Path
 from typing import Any
 from typing import cast
@@ -12,7 +14,14 @@ from typing import Optional
 
 from . import git
 from .filter import RepositoryFilter
-from .utils import temporary_repository
+
+
+@contextlib.contextmanager
+def temporary_repository() -> Iterator[git.Repository]:
+    """Create repository in temporary directory."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        path = Path(tmpdir)
+        yield git.Repository.init(path)
 
 
 def find_template_directory(repository: git.Repository) -> Path:
