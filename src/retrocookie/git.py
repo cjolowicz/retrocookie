@@ -4,7 +4,10 @@ from __future__ import annotations
 import contextlib
 import functools
 import operator
+import re
 import subprocess  # noqa: S404
+from dataclasses import dataclass
+from dataclasses import field
 from pathlib import Path
 from typing import Any
 from typing import cast
@@ -22,6 +25,48 @@ def git(
     return subprocess.run(  # noqa: S603,S607
         ["git", *args], check=check, text=True, capture_output=True, **kwargs
     )
+
+
+VERSION_PATTERN = re.compile(
+    r"""
+    (?P<major>\d+)\.
+    (?P<minor>\d+)
+    (\.(?P<patch>\d+))?
+    """,
+    re.VERBOSE,
+)
+
+
+@dataclass(frozen=True, order=True)
+class Version:
+    """Simplistic representation of git versions."""
+
+    major: int
+    minor: int
+    patch: int
+    _text: Optional[str] = field(default=None, compare=False)
+
+    @classmethod
+    def parse(cls, text: str) -> Version:
+        """Extract major.minor[.patch] from the start of the text."""
+        match = VERSION_PATTERN.match(text)
+
+        if match is None:
+            raise ValueError(f"invalid version {text!r}")
+
+        parts = match.groupdict(default="0")
+
+        return cls(
+            int(parts["major"]), int(parts["minor"]), int(parts["patch"]), _text=text
+        )
+
+    def __str__(self) -> str:
+        """Return the original representation."""
+        return (
+            self._text
+            if self._text is not None
+            else f"{self.major}.{self.minor}.{self.patch}"
+        )
 
 
 def get_default_branch() -> str:
