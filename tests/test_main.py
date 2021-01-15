@@ -3,8 +3,8 @@ from pathlib import Path
 from typing import Iterable
 
 import pytest
-from _pytest.monkeypatch import MonkeyPatch
 from click.testing import CliRunner
+from pytest import MonkeyPatch
 
 from .helpers import append
 from .helpers import branch

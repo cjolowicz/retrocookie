@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Dict
 
 import pytest
-from _pytest.monkeypatch import MonkeyPatch
+from pytest import MonkeyPatch
 
 from .helpers import branch
 from .helpers import commit
