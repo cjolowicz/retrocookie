@@ -18,7 +18,9 @@ def git(
     *args: str, check: bool = True, **kwargs: Any
 ) -> subprocess.CompletedProcess[str]:
     """Invoke git."""
-    return subprocess.run(["git", *args], check=check, **kwargs)  # noqa: S603,S607
+    return subprocess.run(  # noqa: S603,S607
+        ["git", *args], check=check, text=True, capture_output=True, **kwargs
+    )
 
 
 def get_default_branch() -> str:
@@ -81,9 +83,7 @@ class Repository:
 
     def parse_revisions(self, *revisions: str) -> List[str]:
         """Parse revisions using the format specified in gitrevisions(7)."""
-        process = self.git(
-            "rev-list", "--no-walk", *revisions, text=True, capture_output=True
-        )
+        process = self.git("rev-list", "--no-walk", *revisions)
         result = process.stdout.split()
         result.reverse()
         return result

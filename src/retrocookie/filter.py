@@ -1,4 +1,6 @@
 """Interface for git-filter-repo."""
+import contextlib
+import io
 import re
 from pathlib import Path
 from typing import Any
@@ -148,5 +150,7 @@ class RepositoryFilter:
 
     def run(self) -> None:
         """Run the filter."""
-        repofilter = self._create_filter()
-        repofilter.run()
+        null = io.StringIO()
+        with contextlib.redirect_stdout(null), contextlib.redirect_stderr(null):
+            repofilter = self._create_filter()
+            repofilter.run()
