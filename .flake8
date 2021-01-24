@@ -8,3 +8,4 @@ per-file-ignores =
     src/*/__main__.py:D301
     tests/*:S101
     tests/test_git.py:S101,E241
+rst-roles = class, func
