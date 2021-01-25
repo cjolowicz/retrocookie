@@ -10,11 +10,11 @@ to determine which handlers to invoke when an event is published.
 >>> class Timber(Event):
 ...     pass
 ...
-... def shout(event: Timber):
+>>> def shout(event: Timber):
 ...     print("Timber!")
 ...
-... bus = Bus()
-... bus.events.subscribe(shout)
+>>> bus = Bus()
+>>> bus.events.subscribe(shout)
 >>> bus.events.publish(Timber())
 Timber!
 
@@ -38,9 +38,9 @@ context.
 >>> class Copy(Context):
 ...     pass
 ...
-... import contextlib
+>>> import contextlib
 ...
-... @contextlib.contextmanager
+>>> @contextlib.contextmanager
 ... def handle_copy(context: Copy):
 ...     print("starting copy...")
 ...     try:
@@ -51,7 +51,7 @@ context.
 ...     else:
 ...         print("copy complete.")
 ...
-... bus.contexts.subscribe(handle_copy)
+>>> bus.contexts.subscribe(handle_copy)
 >>> with bus.contexts.publish(Copy()):
 ...     print("copy: file a")
 ...     print("copy: file b")
