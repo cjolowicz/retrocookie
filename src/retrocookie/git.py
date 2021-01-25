@@ -4,14 +4,20 @@ from __future__ import annotations
 import contextlib
 import functools
 import operator
+import re
 import subprocess  # noqa: S404
+from dataclasses import dataclass
+from dataclasses import field
 from pathlib import Path
 from typing import Any
 from typing import cast
+from typing import Iterator
 from typing import List
 from typing import Optional
 
 import pygit2
+
+from retrocookie.utils import removeprefix
 
 
 def git(
@@ -21,6 +27,55 @@ def git(
     return subprocess.run(  # noqa: S603,S607
         ["git", *args], check=check, text=True, capture_output=True, **kwargs
     )
+
+
+VERSION_PATTERN = re.compile(
+    r"""
+    (?P<major>\d+)\.
+    (?P<minor>\d+)
+    (\.(?P<patch>\d+))?
+    """,
+    re.VERBOSE,
+)
+
+
+@dataclass(frozen=True, order=True)
+class Version:
+    """Simplistic representation of git versions."""
+
+    major: int
+    minor: int
+    patch: int
+    _text: Optional[str] = field(default=None, compare=False)
+
+    @classmethod
+    def parse(cls, text: str) -> Version:
+        """Extract major.minor[.patch] from the start of the text."""
+        match = VERSION_PATTERN.match(text)
+
+        if match is None:
+            raise ValueError(f"invalid version {text!r}")
+
+        parts = match.groupdict(default="0")
+
+        return cls(
+            int(parts["major"]), int(parts["minor"]), int(parts["patch"]), _text=text
+        )
+
+    def __str__(self) -> str:
+        """Return the original representation."""
+        return (
+            self._text
+            if self._text is not None
+            else f"{self.major}.{self.minor}.{self.patch}"
+        )
+
+
+def version() -> Version:
+    """Return the git version."""
+    text = git("version").stdout.strip()
+    text = removeprefix(text, "git version ")
+    return Version.parse(text)
 
 
 def get_default_branch() -> str:
@@ -46,18 +101,31 @@ class Repository:
         self, path: Optional[Path] = None, *, repo: Optional[pygit2.Repository] = None
     ) -> None:
         """Initialize."""
-        self.path = path or Path.cwd() if repo is None else Path(repo.path).parent
-        self.repo = repo or pygit2.Repository(self.path)
+        if repo is None:
+            self.path = path or Path.cwd()
+            self.repo = pygit2.Repository(self.path)
+        else:
+            self.path = Path(repo.workdir or repo.path)
+            self.repo = repo
 
     def git(self, *args: str, **kwargs: Any) -> subprocess.CompletedProcess[str]:
         """Invoke git."""
         return git(*args, cwd=self.path, **kwargs)
 
     @classmethod
-    def init(cls, path: Path) -> Repository:
+    def init(cls, path: Path, *, bare: bool = False) -> Repository:
         """Create a repository."""
-        repo = pygit2.init_repository(path)
+        # https://github.com/libgit2/libgit2/issues/2849
+        path.parent.mkdir(exist_ok=True, parents=True)
+        repo = pygit2.init_repository(path, bare=bare)
         return cls(path, repo=repo)
+
+    @classmethod
+    def clone(cls, url: str, path: Path, *, mirror: bool = False) -> Repository:
+        """Clone a repository."""
+        options = ["--mirror"] if mirror else []
+        git("clone", *options, url, str(path))
+        return cls(path)
 
     def create_branch(self, branch: str, ref: str = "HEAD") -> None:
         """Create a branch."""
@@ -76,10 +144,19 @@ class Repository:
         """Switch the current branch."""
         self.repo.checkout(self.repo.branches[branch])
 
+    def update_remote(self) -> None:
+        """Update the remotes."""
+        self.git("remote", "update")
+
     def fetch_commits(self, source: Repository, *commits: str) -> None:
         """Fetch the given commits and their immediate parents."""
         path = source.path.resolve()
         self.git("fetch", "--no-tags", "--depth=2", str(path), *commits)
+
+    def push(self, remote: str, *refs: str, force: bool = False) -> None:
+        """Update remote refs."""
+        options = ["--force-with-lease"] if force else []
+        self.git("push", *options, remote, *refs)
 
     def parse_revisions(self, *revisions: str) -> List[str]:
         """Parse revisions using the format specified in gitrevisions(7)."""
@@ -143,3 +220,48 @@ class Repository:
     def cherrypick(self, *refs: str) -> None:
         """Cherry-pick the given commits."""
         self.git("cherry-pick", *refs)
+
+    @contextlib.contextmanager
+    def worktree(
+        self,
+        branch: str,
+        path: Path,
+        *,
+        base: str = "HEAD",
+        force: bool = False,
+        force_remove: bool = False,
+    ) -> Iterator[Repository]:
+        """Context manager to add and remove a worktree."""
+        repository = self.add_worktree(branch, path, base=base, force=force)
+        try:
+            yield repository
+        finally:
+            self.remove_worktree(path, force=force_remove)
+
+    def add_worktree(
+        self,
+        branch: str,
+        path: Path,
+        *,
+        base: str = "HEAD",
+        force: bool = False,
+    ) -> Repository:
+        """Add a worktree."""
+        self.git(
+            "worktree",
+            "add",
+            str(path),
+            "--no-track",
+            "-B" if force else "-b",
+            branch,
+            base,
+        )
+
+        return Repository(path)
+
+    def remove_worktree(self, path: Path, *, force: bool = False) -> None:
+        """Remove a worktree."""
+        if force:
+            self.git("worktree", "remove", "--force", str(path))
+        else:
+            self.git("worktree", "remove", str(path))

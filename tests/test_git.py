@@ -179,3 +179,82 @@ def test_fetch_relative_path(repository: git.Repository) -> None:
         repository.fetch_commits(source, commit)
 
     assert repository.read_text(path, ref=commit) == ""
+
+
+def test_add_worktree(repository: git.Repository, tmp_path: Path) -> None:
+    """It creates a worktree."""
+    commit(repository)
+
+    path = tmp_path / "worktree"
+    repository.add_worktree("branch", path)
+
+    assert path.exists()
+
+
+@pytest.mark.parametrize("force", [False, True])
+def test_remove_worktree(
+    repository: git.Repository, tmp_path: Path, force: bool
+) -> None:
+    """It removes the worktree."""
+    commit(repository)
+
+    path = tmp_path / "worktree"
+    repository.add_worktree("branch", path)
+    repository.remove_worktree(path, force=force)
+
+    assert not path.exists()
+
+
+def test_worktree(repository: git.Repository, tmp_path: Path) -> None:
+    """It creates and removes a worktree."""
+    commit(repository)
+
+    path = tmp_path / "worktree"
+    with repository.worktree("branch", path):
+        assert path.exists()
+
+    assert not path.exists()
+
+
+@pytest.mark.parametrize(
+    "version,expected",
+    [
+        # fmt: off
+        ("0.99",             git.Version(major=0, minor=99, patch=0)),
+        ("0.99.9n",          git.Version(major=0, minor=99, patch=9)),
+        ("1.0rc6",           git.Version(major=1, minor=0,  patch=0)),
+        ("1.0.0",            git.Version(major=1, minor=0,  patch=0)),
+        ("1.0.0b",           git.Version(major=1, minor=0,  patch=0)),
+        ("1.8.5.6",          git.Version(major=1, minor=8,  patch=5)),
+        ("1.9-rc2",          git.Version(major=1, minor=9,  patch=0)),
+        ("2.4.12",           git.Version(major=2, minor=4,  patch=12)),
+        ("2.29.2.windows.3", git.Version(major=2, minor=29, patch=2)),  # GitHub Actions
+        ("2.30.0",           git.Version(major=2, minor=30, patch=0)),
+        ("2.30.0-rc0",       git.Version(major=2, minor=30, patch=0)),
+        ("2.30.0-rc2",       git.Version(major=2, minor=30, patch=0)),
+        # fmt: on
+    ],
+)
+def test_valid_version(version: str, expected: git.Version) -> None:
+    """It produces the expected version."""
+    assert expected == git.Version.parse(version)
+
+
+@pytest.mark.parametrize(
+    "version",
+    [
+        "",
+        "0",
+        "1",
+        "a",
+        "1a",
+        "1.a",
+        "1a.0.0",
+        "lorem.1.0.0",
+        "1:1.0.0",
+    ],
+)
+def test_invalid_version(version: str) -> None:
+    """It raises an exception."""
+    with pytest.raises(ValueError):
+        git.Version.parse(version)

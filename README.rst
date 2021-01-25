@@ -33,7 +33,7 @@ Retrocookie
    :alt: Black
 
 
-Retrocookie updates Cookiecutter_ templates with changes from their instances.
+Retrocookie updates Cookiecutter_ templates with changes from generated projects.
 
 When developing Cookiecutter templates,
 you often need to work in a generated project rather than the template itself.
@@ -98,6 +98,12 @@ You can install *Retrocookie* via pip_ from PyPI_:
 .. code:: console
 
    $ pip install retrocookie
+
+Optionally, install the ``pr`` extra for the retrocookie-pr_ command:
+
+.. code:: console
+
+   $ pip install retrocookie[pr]
 
 
 Example
@@ -240,6 +246,56 @@ Import ``HEAD`` into a new branch ``topic``:
 Please see the `Command-line Reference <Usage_>`_ for further details.
 
 
+.. _retrocookie-pr:
+
+Importing pull requests from generated projects with retrocookie-pr
+-------------------------------------------------------------------
+
+You can import pull requests from a generated project to the project template,
+assuming their repositories are on GitHub_.
+This requires activating the ``pr`` extra when installing with pip_:
+
+.. code::
+
+  $ pip install retrocookie[pr]
+
+The command ``retrocookie-pr`` has the basic form:
+
+.. code::
+
+   $ retrocookie-pr [-R <repository>] [<pr>...]
+   $ retrocookie-pr [-R <repository>] --user=<user>
+   $ retrocookie-pr [-R <repository>] --all
+
+Command-line arguments specify pull requests to import, by number or by branch.
+Pull requests from forks are currently not supported.
+
+Use the ``-R <repository>`` option to specify the GitHub repository of the generated project
+from which the pull requests should be imported.
+Provide the full name of the repository on GitHub in the form ``owner/name``.
+The owner can be omitted if the repository is owned by the authenticated user.
+This option can be omitted when the command is invoked from a local clone.
+
+You can also select pull requests by specifying the user that opened them, via the ``--user`` option.
+This is handy for importing automated pull requests, such as dependency updates from Dependabot_.
+
+Use the ``--all`` option to import all open pull requests in the generated project.
+
+You can update previously imported pull requests by specifying ``--force``.
+By default, ``retrocookie-pr`` refuses to overwrite existing pull requests.
+
+The command needs a `personal access token`_ to access the GitHub API.
+(This token is also used to push to the GitHub repository of the project template.)
+You will be prompted for the token when you invoke the command for the first time.
+On subsequent invocations, the token is read from the application cache.
+Alternatively, you can specify the token using the ``--token`` option or the ``GITHUB_TOKEN`` environment variable;
+both of these methods bypass the cache.
+
+Use the ``--open`` option to open each imported pull request in a web browser.
+
+Please see the `Command-line Reference <Usage_>`_ for further details.
+
+
 Contributing
 ------------
 
@@ -269,6 +325,8 @@ This project was generated from `@cjolowicz`_'s `Hypermodern Python Cookiecutter
 
 .. _@cjolowicz: https://github.com/cjolowicz
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
+.. _Dependabot: https://dependabot.com/
+.. _GitHub: https://github.com/
 .. _Hypermodern Python Cookiecutter: https://github.com/cjolowicz/cookiecutter-hypermodern-python
 .. _MIT: http://opensource.org/licenses/MIT
 .. _PyPI: https://pypi.org/
@@ -276,6 +334,7 @@ This project was generated from `@cjolowicz`_'s `Hypermodern Python Cookiecutter
 .. _git-filter-repo: https://github.com/newren/git-filter-repo
 .. _git rebase: https://git-scm.com/docs/git-rebase
 .. _pip: https://pip.pypa.io/
+.. _personal access token: https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token
 .. _pygit2: https://github.com/libgit2/pygit2
 .. github-only
 .. _Contributor Guide: CONTRIBUTING.rst
