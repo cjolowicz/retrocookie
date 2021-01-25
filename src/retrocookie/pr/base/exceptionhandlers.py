@@ -8,7 +8,7 @@ Consider the following imaginary application:
 >>> class ApplicationError(Exception):
 ...     pass
 ...
-... def main():
+>>> def main():
 ...     pass
 
 Conventionally, application errors would be handled using a ``try...except``
