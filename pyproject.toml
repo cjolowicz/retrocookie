@@ -35,7 +35,7 @@ appdirs = {version = "^1.4.4", optional = true}
 rich = {version = "^9.5.1", optional = true}
 
 [tool.poetry.dev-dependencies]
-pytest = "^6.2.1"
+pytest = "^6.2.3"
 coverage = {extras = ["toml"], version = "^5.3"}
 safety = "^1.10.3"
 mypy = "^0.800"
