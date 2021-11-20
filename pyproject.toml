@@ -42,7 +42,7 @@ sphinx = "^3.4.3"
 sphinx-autobuild = "^2020.9.1"
 pre-commit = "^2.15.0"
 cookiecutter = "^1.7.2"
-pygments = "^2.7.4"
+pygments = "^2.10.0"
 flake8 = "^3.8.4"
 black = "^21.10b0"
 flake8-bandit = "^2.1.2"
@@ -55,7 +55,7 @@ reorder-python-imports = "^2.3.6"
 pre-commit-hooks = "^3.4.0"
 sphinx-rtd-theme = "^0.5.1"
 sphinx-click = "^2.5.0"
-Pygments = "^2.7.4"
+Pygments = "^2.10.0"
 
 [tool.poetry.extras]
 pr = ["appdirs", "github3.py", "rich", "tenacity", "typing-extensions"]
