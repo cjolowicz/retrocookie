@@ -16,6 +16,13 @@ from github3.repos.repo import Repository
 from retrocookie.pr import appname
 
 
+# Wait four seconds before creating each pull request. GitHub requests one
+# second between each request for a single user, but we run these tests
+# concurrently for two platforms and two event types (pull_request and push).
+# See https://docs.github.com/en/rest/guides/best-practices-for-integrators
+GITHUB_REQUEST_RATE_SECONDS = 4
+
+
 session_fixture = pytest.fixture(scope="session")
 skip_without_token = pytest.mark.skipif(
     "TEST_GITHUB_TOKEN" not in os.environ,
@@ -59,7 +66,7 @@ def create_repository(github: github3.GitHub) -> CreateRepository:
                 if retry >= 3:
                     raise
 
-            time.sleep(4)
+            time.sleep(GITHUB_REQUEST_RATE_SECONDS)
 
         raise AssertionError("unreachable")
 
@@ -134,11 +141,7 @@ def create_project_pull_request(project: Repository, branch: str) -> CreatePullR
     """Return a pull request for the template project."""
 
     def _create(path: Path, content: str) -> PullRequest:
-        # Wait four seconds before creating each pull request. GitHub requests one
-        # second between each request for a single user, but we run these tests
-        # concurrently for two platforms and two event types (pull_request and push).
-        # See https://docs.github.com/en/rest/guides/best-practices-for-integrators
-        time.sleep(4)
+        time.sleep(GITHUB_REQUEST_RATE_SECONDS)
 
         project_default_branch = project.branch(project.default_branch)
         project.create_ref(f"refs/heads/{branch}", project_default_branch.commit.sha)
