@@ -8,23 +8,89 @@ jobs:
   tests:
     name: ${{ matrix.session }} ${{ matrix.python-version }} / ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    concurrency: ${{ matrix.concurrency }}
     strategy:
       fail-fast: false
       matrix:
         include:
-          - { python-version: 3.9, os: ubuntu-latest, session: "pre-commit" }
-          - { python-version: 3.9, os: ubuntu-latest, session: "safety" }
-          - { python-version: 3.9, os: ubuntu-latest, session: "mypy" }
-          - { python-version: 3.8, os: ubuntu-latest, session: "mypy" }
-          - { python-version: 3.7, os: ubuntu-latest, session: "mypy" }
-          - { python-version: 3.9, os: ubuntu-latest, session: "tests" }
-          - { python-version: 3.8, os: ubuntu-latest, session: "tests" }
-          - { python-version: 3.7, os: ubuntu-latest, session: "tests" }
-          - { python-version: 3.9, os: windows-latest, session: "tests" }
-          - { python-version: 3.9, os: macos-latest, session: "tests" }
-          - { python-version: 3.9, os: ubuntu-latest, session: "typeguard" }
-          - { python-version: 3.9, os: ubuntu-latest, session: "xdoctest" }
-          - { python-version: 3.8, os: ubuntu-latest, session: "docs-build" }
+          - {
+              python-version: 3.9,
+              os: ubuntu-latest,
+              session: "pre-commit",
+              concurrency: "${{ github.run_attempt }}-1",
+            }
+          - {
+              python-version: 3.9,
+              os: ubuntu-latest,
+              session: "safety",
+              concurrency: "${{ github.run_attempt }}-2",
+            }
+          - {
+              python-version: 3.9,
+              os: ubuntu-latest,
+              session: "mypy",
+              concurrency: "${{ github.run_attempt }}-3",
+            }
+          - {
+              python-version: 3.8,
+              os: ubuntu-latest,
+              session: "mypy",
+              concurrency: "${{ github.run_attempt }}-4",
+            }
+          - {
+              python-version: 3.7,
+              os: ubuntu-latest,
+              session: "mypy",
+              concurrency: "${{ github.run_attempt }}-5",
+            }
+          - {
+              python-version: 3.9,
+              os: ubuntu-latest,
+              session: "tests",
+              concurrency: single,
+            }
+          - {
+              python-version: 3.8,
+              os: ubuntu-latest,
+              session: "tests",
+              concurrency: "${{ github.run_attempt }}-6",
+            }
+          - {
+              python-version: 3.7,
+              os: ubuntu-latest,
+              session: "tests",
+              concurrency: "${{ github.run_attempt }}-7",
+            }
+          - {
+              python-version: 3.9,
+              os: windows-latest,
+              session: "tests",
+              concurrency: single,
+            }
+          - {
+              python-version: 3.9,
+              os: macos-latest,
+              session: "tests",
+              concurrency: "${{ github.run_attempt }}-8",
+            }
+          - {
+              python-version: 3.9,
+              os: ubuntu-latest,
+              session: "typeguard",
+              concurrency: "${{ github.run_attempt }}-9",
+            }
+          - {
+              python-version: 3.9,
+              os: ubuntu-latest,
+              session: "xdoctest",
+              concurrency: "${{ github.run_attempt }}-10",
+            }
+          - {
+              python-version: 3.8,
+              os: ubuntu-latest,
+              session: "docs-build",
+              concurrency: "${{ github.run_attempt }}-11",
+            }
 
     env:
       NOXSESSION: ${{ matrix.session }}
