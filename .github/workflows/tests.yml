@@ -47,7 +47,7 @@ jobs:
               python-version: 3.9,
               os: ubuntu-latest,
               session: "tests",
-              concurrency: "${{ github.actor }}-ubuntu",
+              concurrency: "${{ github.actor }}-${{ github.event_name }}-ubuntu",
             }
           - {
               python-version: 3.8,
@@ -65,7 +65,7 @@ jobs:
               python-version: 3.9,
               os: windows-latest,
               session: "tests",
-              concurrency: "${{ github.actor }}-windows",
+              concurrency: "${{ github.actor }}-${{ github.event_name }}-windows",
             }
           - {
               python-version: 3.9,
