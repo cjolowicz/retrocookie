@@ -57,6 +57,7 @@ sphinx-click = "^3.0.2"
 Pygments = "^2.10.0"
 furo = ">=2021.11.12"
 types-click = "^7.1.7"
+types-requests = "^2.26.0"
 
 [tool.poetry.extras]
 pr = ["appdirs", "github3.py", "rich", "tenacity", "typing-extensions"]
