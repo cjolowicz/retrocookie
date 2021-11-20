@@ -5,14 +5,14 @@ from dataclasses import dataclass
 
 from retrocookie import git
 from retrocookie.pr.cache import Cache
-from retrocookie.pr.protocols import github
+from retrocookie.pr.protocols import github as gh
 
 
 @dataclass
 class Repository:
     """High-level repository abstraction."""
 
-    github: github.Repository
+    github: gh.Repository
     clone: git.Repository
 
     @classmethod
@@ -20,7 +20,7 @@ class Repository:
         cls,
         repository: str,
         *,
-        api: github.API,
+        api: gh.API,
         cache: Cache,
     ) -> Repository:
         """Load all the data associated with a GitHub repository."""
