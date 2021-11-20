@@ -17,79 +17,79 @@ jobs:
               python-version: 3.9,
               os: ubuntu-latest,
               session: "pre-commit",
-              concurrency: "${{ github.run_attempt }}-1",
+              concurrency: "${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}-1",
             }
           - {
               python-version: 3.9,
               os: ubuntu-latest,
               session: "safety",
-              concurrency: "${{ github.run_attempt }}-2",
+              concurrency: "${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}-2",
             }
           - {
               python-version: 3.9,
               os: ubuntu-latest,
               session: "mypy",
-              concurrency: "${{ github.run_attempt }}-3",
+              concurrency: "${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}-3",
             }
           - {
               python-version: 3.8,
               os: ubuntu-latest,
               session: "mypy",
-              concurrency: "${{ github.run_attempt }}-4",
+              concurrency: "${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}-4",
             }
           - {
               python-version: 3.7,
               os: ubuntu-latest,
               session: "mypy",
-              concurrency: "${{ github.run_attempt }}-5",
+              concurrency: "${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}-5",
             }
           - {
               python-version: 3.9,
               os: ubuntu-latest,
               session: "tests",
-              concurrency: ubuntu,
+              concurrency: "${{ github.actor }}-${{ github.event_name }}-ubuntu",
             }
           - {
               python-version: 3.8,
               os: ubuntu-latest,
               session: "tests",
-              concurrency: "${{ github.run_attempt }}-6",
+              concurrency: "${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}-6",
             }
           - {
               python-version: 3.7,
               os: ubuntu-latest,
               session: "tests",
-              concurrency: "${{ github.run_attempt }}-7",
+              concurrency: "${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}-7",
             }
           - {
               python-version: 3.9,
               os: windows-latest,
               session: "tests",
-              concurrency: windows,
+              concurrency: "${{ github.actor }}-${{ github.event_name }}-windows",
             }
           - {
               python-version: 3.9,
               os: macos-latest,
               session: "tests",
-              concurrency: "${{ github.run_attempt }}-8",
+              concurrency: "${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}-8",
             }
           - {
               python-version: 3.9,
               os: ubuntu-latest,
               session: "typeguard",
-              concurrency: "${{ github.run_attempt }}-9",
+              concurrency: "${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}-9",
             }
           - {
               python-version: 3.9,
               os: ubuntu-latest,
               session: "xdoctest",
-              concurrency: "${{ github.run_attempt }}-10",
+              concurrency: "${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}-10",
             }
           - {
               python-version: 3.8,
               os: ubuntu-latest,
               session: "docs-build",
-              concurrency: "${{ github.run_attempt }}-11",
+              concurrency: "${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}-11",
             }
 
     env:

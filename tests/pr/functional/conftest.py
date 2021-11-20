@@ -2,6 +2,7 @@
 import json
 import os
 import secrets
+import time
 from pathlib import Path
 from typing import Callable
 from typing import Iterator
@@ -119,6 +120,12 @@ def create_project_pull_request(project: Repository, branch: str) -> CreatePullR
     """Return a pull request for the template project."""
 
     def _create(path: Path, content: str) -> PullRequest:
+        # Wait four seconds before creating each pull request. GitHub requests one
+        # second between each request for a single user, but we run these tests
+        # concurrently for two platforms and two event types (pull_request and push).
+        # See https://docs.github.com/en/rest/guides/best-practices-for-integrators
+        time.sleep(4)
+
         project_default_branch = project.branch(project.default_branch)
         project.create_ref(f"refs/heads/{branch}", project_default_branch.commit.sha)
 
