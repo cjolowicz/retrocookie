@@ -3,6 +3,7 @@ import json
 import os
 import secrets
 import time
+from itertools import count
 from pathlib import Path
 from typing import Callable
 from typing import Iterator
@@ -40,14 +41,27 @@ CreateRepository = Callable[[str], Repository]
 @session_fixture
 def create_repository(github: github3.GitHub) -> CreateRepository:
     """Create a GitHub repository."""
+    owner: str = github.me().login
     random = secrets.token_hex(nbytes=3)
 
     def _create(slug: str) -> Repository:
-        return github.create_repository(
-            f"{appname}-test-{slug}-{random}",
+        name = f"{appname}-test-{slug}-{random}"
+        github.create_repository(
+            name,
             description=f"Generated repository for {appname} tests",
             has_wiki=False,
         )
+
+        for retry in count(start=1):
+            try:
+                return github.repository(owner, name)
+            except github3.exceptions.NotFoundError:
+                if retry >= 3:
+                    raise
+
+            time.sleep(4)
+
+        raise AssertionError("unreachable")
 
     return _create
 
