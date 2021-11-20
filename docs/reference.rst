@@ -1,9 +1,8 @@
 Reference
 =========
 
-.. contents::
-    :local:
-    :backlinks: none
 
+retrocookie
+-----------
 
 .. autofunction:: retrocookie.retrocookie
