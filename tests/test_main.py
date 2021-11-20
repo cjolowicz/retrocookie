@@ -1,6 +1,6 @@
 """Test cases for the __main__ module."""
 from pathlib import Path
-from typing import Iterable
+from typing import List
 
 import pytest
 from click.testing import CliRunner
@@ -48,7 +48,7 @@ def mock_retrocookie(monkeypatch: MonkeyPatch) -> None:
     ],
 )
 def test_usage_success(
-    runner: CliRunner, args: Iterable[str], mock_retrocookie: None
+    runner: CliRunner, args: List[str], mock_retrocookie: None
 ) -> None:
     """It succeeds when invoked with the given arguments."""
     result = runner.invoke(__main__.main, args)
@@ -65,7 +65,7 @@ def test_usage_success(
     ],
 )
 def test_usage_error(
-    runner: CliRunner, args: Iterable[str], mock_retrocookie: None
+    runner: CliRunner, args: List[str], mock_retrocookie: None
 ) -> None:
     """It fails when invoked with the given arguments."""
     result = runner.invoke(__main__.main, args)
