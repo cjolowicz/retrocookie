@@ -22,7 +22,7 @@ Changelog = "https://github.com/cjolowicz/retrocookie/releases"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-click = "^7.0"
+click = "^8.0.3"
 git-filter-repo = "^2.26.0"
 pygit2 = "^1.2.1"
 typing-extensions = {version = ">=3.7.4,<5.0.0", optional = true}
@@ -36,7 +36,7 @@ pytest = ">=6.2.5"
 coverage = {extras = ["toml"], version = ">=6.1"}
 safety = ">=1.10.3"
 mypy = ">=0.800"
-typeguard = ">=2.9.1"
+typeguard = ">=2.9.1,!=2.13.0"
 xdoctest = {extras = ["colors"], version = ">=0.15.2"}
 sphinx = ">=4.3.0"
 sphinx-autobuild = ">=2020.9.1"
@@ -56,6 +56,7 @@ pre-commit-hooks = ">=4.0.1"
 sphinx-click = ">=3.0.2"
 Pygments = ">=2.10.0"
 furo = ">=2021.11.12"
+types-requests = "^2.26.0"
 
 [tool.poetry.extras]
 pr = ["appdirs", "github3.py", "rich", "tenacity", "typing-extensions"]

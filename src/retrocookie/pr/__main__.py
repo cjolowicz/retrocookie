@@ -12,6 +12,7 @@ from typing import Optional
 import appdirs
 import click
 
+from retrocookie.compat.contextlib import contextmanager
 from retrocookie.pr import appname
 from retrocookie.pr import console
 from retrocookie.pr import events
@@ -23,7 +24,6 @@ from retrocookie.pr.base.exceptionhandlers import ExceptionHandler
 from retrocookie.pr.base.exceptionhandlers import exceptionhandler
 from retrocookie.pr.base.exceptionhandlers import nullhandler
 from retrocookie.pr.cache import Cache
-from retrocookie.pr.compat.contextlib import contextmanager
 from retrocookie.pr.core import import_pull_requests
 
 

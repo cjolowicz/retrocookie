@@ -1,5 +1,4 @@
 """Core module."""
-import contextlib
 import json
 import tempfile
 from pathlib import Path
@@ -14,6 +13,7 @@ from typing import Optional
 
 from . import git
 from .filter import RepositoryFilter
+from retrocookie.compat import contextlib
 
 
 @contextlib.contextmanager

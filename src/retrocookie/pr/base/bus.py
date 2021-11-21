@@ -74,9 +74,9 @@ from typing import Type
 from typing import TypeVar
 from typing import Union
 
+from retrocookie.compat.contextlib import contextmanager
 from retrocookie.pr.base.exceptionhandlers import ExceptionHandler
 from retrocookie.pr.base.exceptionhandlers import exceptionhandler
-from retrocookie.pr.compat.contextlib import contextmanager
 from retrocookie.pr.compat.typing import Protocol
 
 

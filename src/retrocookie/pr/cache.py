@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Iterator
 
 from retrocookie import git
-from retrocookie.pr.compat import contextlib
+from retrocookie.compat import contextlib
 
 
 # Windows does not properly support files and directories longer than

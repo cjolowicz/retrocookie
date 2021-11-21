@@ -1,13 +1,17 @@
 """Fixtures."""
+from __future__ import annotations
+
 import json
 import textwrap
 from pathlib import Path
 from typing import Dict
+from typing import TYPE_CHECKING
 
 import pytest
 from cookiecutter.main import cookiecutter
 
-from retrocookie import git
+if TYPE_CHECKING:
+    from retrocookie import git
 
 
 @pytest.fixture
@@ -78,6 +82,8 @@ def cookiecutter_project(
 
 def make_repository(path: Path) -> git.Repository:
     """Turn a directory into a git repository."""
+    from retrocookie import git
+
     repository = git.Repository.init(path)
     repository.add()
     repository.commit("Initial commit")

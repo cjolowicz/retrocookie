@@ -17,6 +17,7 @@ from typing import Optional
 
 import pygit2
 
+from retrocookie.compat.contextlib import contextmanager
 from retrocookie.utils import removeprefix
 
 
@@ -221,7 +222,7 @@ class Repository:
         """Cherry-pick the given commits."""
         self.git("cherry-pick", *refs)
 
-    @contextlib.contextmanager
+    @contextmanager
     def worktree(
         self,
         branch: str,
