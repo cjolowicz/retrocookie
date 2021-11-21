@@ -8,7 +8,8 @@
    :hidden:
    :maxdepth: 1
 
-   usage
+   retrocookie <usage>
+   retrocookie-pr <usage-pr>
    reference
    contributing
    Code of Conduct <codeofconduct>
