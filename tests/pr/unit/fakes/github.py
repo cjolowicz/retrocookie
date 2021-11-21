@@ -110,7 +110,7 @@ class Repository:
     ) -> PullRequest:
         """Create a pull request."""
         user, _, branch = head.rpartition(":")
-        number = 1 + max([pr.number for pr in self._pull_requests], default=0)
+        number = 1 + max((pr.number for pr in self._pull_requests), default=0)
         html_url = f"https://github.com/{self.full_name}/pull/{number}"
         pull_request = PullRequest(
             number=number,
