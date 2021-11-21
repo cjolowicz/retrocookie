@@ -1268,7 +1268,7 @@ pr = ["appdirs", "github3.py", "rich", "tenacity", "typing-extensions"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "3b6fa3a2672e71fa6e433ca16413fd4873bd3d6605f093de1a372f3c5ca0330a"
+content-hash = "070092302e218cfab5ad728c4aef23badb580f2d9d71df0eafb6dbc5b69b6c81"
 
 [metadata.files]
 alabaster = [
