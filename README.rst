@@ -38,7 +38,7 @@ carefully replacing expanded variables from ``cookiecutter.json`` by templating 
 and escaping any use of ``{{`` and ``}}``
 or other tokens with special meaning in Jinja.
 
-Retrocookie helps you in this situation.
+✨ Retrocookie helps you in this situation. ✨
 
 It is designed to fetch commits from the repository of a generated project,
 and import them into your Cookiecutter repository,
