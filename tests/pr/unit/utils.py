@@ -4,8 +4,8 @@ from typing import Type
 
 import pytest
 
+from retrocookie.compat import contextlib
 from retrocookie.pr.base import bus
-from retrocookie.pr.compat import contextlib
 
 
 @contextlib.contextmanager

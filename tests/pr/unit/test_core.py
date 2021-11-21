@@ -11,12 +11,12 @@ from tests.pr.unit.fakes.retrocookie import retrocookie
 from tests.pr.unit.utils import raises
 
 from retrocookie import git
+from retrocookie.compat import contextlib
 from retrocookie.pr import appname
 from retrocookie.pr import events
 from retrocookie.pr.base.bus import Bus
 from retrocookie.pr.base.exceptionhandlers import nullhandler
 from retrocookie.pr.cache import Cache
-from retrocookie.pr.compat import contextlib
 from retrocookie.pr.core import check_git_version
 from retrocookie.pr.core import get_project_name
 from retrocookie.pr.core import get_template_name

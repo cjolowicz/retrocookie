@@ -13,7 +13,7 @@ from typing import Optional
 
 from . import git
 from .filter import RepositoryFilter
-from retrocookie.pr.compat import contextlib
+from retrocookie.compat import contextlib
 
 
 @contextlib.contextmanager

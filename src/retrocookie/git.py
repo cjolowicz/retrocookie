@@ -17,7 +17,7 @@ from typing import Optional
 
 import pygit2
 
-from retrocookie.pr.compat.contextlib import contextmanager
+from retrocookie.compat.contextlib import contextmanager
 from retrocookie.utils import removeprefix
 
 

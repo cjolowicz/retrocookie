@@ -7,9 +7,9 @@ import rich.theme
 import rich.traceback
 from rich.markup import escape
 
+from retrocookie.compat import contextlib
 from retrocookie.pr import events
 from retrocookie.pr.base.bus import Bus
-from retrocookie.pr.compat import contextlib
 from retrocookie.pr.compat import shlex
 
 
