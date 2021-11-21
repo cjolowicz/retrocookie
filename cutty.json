@@ -1,0 +1,18 @@
+{
+  "template": {
+    "location": "https://github.com/cjolowicz/cookiecutter-hypermodern-python",
+    "revision": "8f800d4f1e5b0e91d58584439c673858e34a5627",
+    "directory": null
+  },
+  "bindings": {
+    "project_name": "retrocookie",
+    "package_name": "retrocookie",
+    "friendly_name": "Retrocookie",
+    "author": "Claudio Jolowicz",
+    "email": "mail@claudiojolowicz.com",
+    "github_user": "cjolowicz",
+    "version": "0.1.0",
+    "license": "MIT",
+    "development_status": "Development Status :: 3 - Alpha"
+  }
+}
