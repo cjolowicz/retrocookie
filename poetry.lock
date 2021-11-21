@@ -273,7 +273,7 @@ test = ["pytest (>=6.2.0)", "pytest-cov", "pytest-subtests", "pytest-xdist", "pr
 
 [[package]]
 name = "darglint"
-version = "1.5.8"
+version = "1.8.1"
 description = "A utility for ensuring Google-style docstrings stay up to date with the source code."
 category = "dev"
 optional = false
@@ -1268,7 +1268,7 @@ pr = ["appdirs", "github3.py", "rich", "tenacity", "typing-extensions"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "46dcea7984a2e8fd962b933a617b0965db702622d59c1e70b55385d36a7170c0"
+content-hash = "a23c79c2cf11e18c35031a74d98467b67e92c1278e66eb90927a307bb685e28c"
 
 [metadata.files]
 alabaster = [
@@ -1453,8 +1453,8 @@ cryptography = [
     {file = "cryptography-35.0.0.tar.gz", hash = "sha256:9933f28f70d0517686bd7de36166dda42094eac49415459d9bdf5e7df3e0086d"},
 ]
 darglint = [
-    {file = "darglint-1.5.8-py3-none-any.whl", hash = "sha256:2e1012945a09d19a15cc87f9d15e7b14c18473ec9cf7769c641951b348de1353"},
-    {file = "darglint-1.5.8.tar.gz", hash = "sha256:529f4969029d5ff5f74bfec48adc14b6f003409141f722b6cc4b787dddc8a4dd"},
+    {file = "darglint-1.8.1-py3-none-any.whl", hash = "sha256:5ae11c259c17b0701618a20c3da343a3eb98b3bc4b5a83d31cdd94f5ebdced8d"},
+    {file = "darglint-1.8.1.tar.gz", hash = "sha256:080d5106df149b199822e7ee7deb9c012b49891538f14a11be681044f0bb20da"},
 ]
 distlib = [
     {file = "distlib-0.3.1-py2.py3-none-any.whl", hash = "sha256:8c09de2c67b3e7deef7184574fc060ab8a793e7adbb183d942c389c8b13c52fb"},
