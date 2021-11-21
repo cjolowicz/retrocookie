@@ -1,8 +1,9 @@
 """Utilities."""
-import contextlib
 import os
 from pathlib import Path
 from typing import Iterator
+
+from retrocookie.pr.compat import contextlib
 
 
 def removeprefix(string: str, prefix: str) -> str:
