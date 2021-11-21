@@ -10,69 +10,69 @@ from retrocookie.pr.base.exceptionhandlers import exceptionhandler
 from retrocookie.pr.base.exceptionhandlers import nullhandler
 
 
-class Red(Exception):
+class RedError(Exception):
     """Exception for testing."""
 
 
-class Green(Exception):
+class GreenError(Exception):
     """Exception for testing."""
 
 
-class Blue(Exception):
+class BlueError(Exception):
     """Exception for testing."""
 
 
-class Indigo(Blue):
+class IndigoError(BlueError):
     """Exception for testing."""
 
 
 @exceptionhandler
-def suppress_red(error: Red) -> bool:
-    """Suppress Red exceptions."""
+def suppress_red(error: RedError) -> bool:
+    """Suppress RedError exceptions."""
     return True
 
 
 @exceptionhandler()  # empty parentheses are equivalent to none
-def suppress_green(error: Green) -> bool:
-    """Suppress Green exceptions."""
+def suppress_green(error: GreenError) -> bool:
+    """Suppress GreenError exceptions."""
     return True
 
 
 @exceptionhandler
-def suppress_blue(error: Blue) -> bool:
-    """Suppress Blue exceptions."""
+def suppress_blue(error: BlueError) -> bool:
+    """Suppress BlueError exceptions."""
     return True
 
 
 @exceptionhandler
-def suppress_indigo(error: Indigo) -> bool:
-    """Suppress Indigo exceptions."""
+def suppress_indigo(error: IndigoError) -> bool:
+    """Suppress IndigoError exceptions."""
     return True
 
 
-@exceptionhandler(Red, Blue)
-def suppress_red_and_blue(error: Union[Red, Blue]) -> bool:
-    """Suppress Red and Blue exceptions."""
+@exceptionhandler(RedError, BlueError)
+def suppress_red_and_blue(error: Union[RedError, BlueError]) -> bool:
+    """Suppress RedError and BlueError exceptions."""
     return True
 
 
-@exceptionhandler(Red, Green)
-def suppress_red_and_green(error: Union[Red, Green]) -> bool:
-    """Suppress Red and Green exceptions."""
+@exceptionhandler(RedError, GreenError)
+def suppress_red_and_green(error: Union[RedError, GreenError]) -> bool:
+    """Suppress RedError and GreenError exceptions."""
     return True
 
 
-@exceptionhandler(Red, Green, Blue)
-def suppress_red_green_blue(error: Union[Red, Green, Blue]) -> bool:
-    """Suppress Red, Green, and Blue exceptions."""
+@exceptionhandler(RedError, GreenError, BlueError)
+def suppress_red_green_blue(error: Union[RedError, GreenError, BlueError]) -> bool:
+    """Suppress RedError, GreenError, and BlueError exceptions."""
     return True
 
 
 def test_nullhandler() -> None:
     """It does not swallow the error."""
-    with pytest.raises(Blue):
+    with pytest.raises(BlueError):
         with nullhandler:
-            raise Blue()
+            raise BlueError()
 
 
 def test_decorator_missing_annotation() -> None:
@@ -89,7 +89,7 @@ def test_decorator_decorator() -> None:
 
     @suppress_blue
     def raise_blue() -> None:
-        raise Blue()
+        raise BlueError()
 
     raise_blue()  # does not throw
 
@@ -106,7 +106,7 @@ def test_decorator_decorator() -> None:
 def test_decorator_positive(handler: ExceptionHandler) -> None:
     """The exception is handled."""
     with handler:
-        raise Indigo()
+        raise IndigoError()
 
 
 @pytest.mark.parametrize(
@@ -121,9 +121,9 @@ def test_decorator_positive(handler: ExceptionHandler) -> None:
 )
 def test_decorator_negative(handler: ExceptionHandler) -> None:
     """The exception is not handled."""
-    with pytest.raises(Blue):
+    with pytest.raises(BlueError):
         with handler:
-            raise Blue()
+            raise BlueError()
 
 
 @pytest.mark.parametrize(
@@ -139,7 +139,7 @@ def test_compose_lshift(handlers: Tuple[ExceptionHandler]) -> None:
     """The exception is handled."""
     handler = reduce(lambda a, b: a << b, handlers)
     with handler:
-        raise Indigo()
+        raise IndigoError()
 
 
 @pytest.mark.parametrize(
@@ -157,4 +157,4 @@ def test_compose_rshift(handlers: Tuple[ExceptionHandler]) -> None:
     """The exception is handled."""
     handler = reduce(lambda a, b: a >> b, handlers)
     with handler:
-        raise Indigo()
+        raise IndigoError()
