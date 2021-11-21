@@ -297,14 +297,14 @@ def _exceptionhandler(
 
 @overload
 def exceptionhandler(__callback: _Callback[E]) -> ExceptionHandler:
-    """Overload for the plain decorator."""
+    """Overload for the plain decorator."""  # noqa: D418
 
 
 @overload
 def exceptionhandler(
     *exception_types: Type[BaseException],
 ) -> Callable[[_Callback[E]], ExceptionHandler]:
-    """Overload for the decorator factory."""
+    """Overload for the decorator factory."""  # noqa: D418
 
 
 def exceptionhandler(
