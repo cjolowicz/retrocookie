@@ -32,29 +32,29 @@ appdirs = {version = "^1.4.4", optional = true}
 rich = {version = ">=9.5.1,<11.0.0", optional = true}
 
 [tool.poetry.dev-dependencies]
-pytest = "^6.2.5"
-coverage = {extras = ["toml"], version = "^6.1"}
-safety = "^1.10.3"
-mypy = "^0.800"
-typeguard = "^2.9.1"
-xdoctest = {extras = ["colors"], version = "^0.15.2"}
-sphinx = "^4.3.0"
+pytest = ">=6.2.5"
+coverage = {extras = ["toml"], version = ">=6.1"}
+safety = ">=1.10.3"
+mypy = ">=0.800"
+typeguard = ">=2.9.1"
+xdoctest = {extras = ["colors"], version = ">=0.15.2"}
+sphinx = ">=4.3.0"
 sphinx-autobuild = ">=2020.9.1"
-pre-commit = "^2.15.0"
-cookiecutter = "^1.7.3"
-pygments = "^2.10.0"
-flake8 = "^4.0.1"
+pre-commit = ">=2.15.0"
+cookiecutter = ">=1.7.3"
+pygments = ">=2.10.0"
+flake8 = ">=4.0.1"
 black = ">=21.10b0"
-flake8-bandit = "^2.1.2"
-flake8-bugbear = "^21.9.2"
-flake8-docstrings = "^1.6.0"
-flake8-rst-docstrings = "^0.2.3"
-pep8-naming = "^0.11.1"
-darglint = "^1.8.1"
-reorder-python-imports = "^2.6.0"
-pre-commit-hooks = "^4.0.1"
-sphinx-click = "^3.0.2"
-Pygments = "^2.10.0"
+flake8-bandit = ">=2.1.2"
+flake8-bugbear = ">=21.9.2"
+flake8-docstrings = ">=1.6.0"
+flake8-rst-docstrings = ">=0.2.3"
+pep8-naming = ">=0.11.1"
+darglint = ">=1.8.1"
+reorder-python-imports = ">=2.6.0"
+pre-commit-hooks = ">=4.0.1"
+sphinx-click = ">=3.0.2"
+Pygments = ">=2.10.0"
 furo = ">=2021.11.12"
 
 [tool.poetry.extras]
