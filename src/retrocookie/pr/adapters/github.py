@@ -148,7 +148,7 @@ class Repository:
 
         # The GitHub API sometimes responds with 404 when the issue for
         # a newly created pull request is requested.
-        for attempt in tenacity.Retrying(  # type: ignore[no-untyped-call]
+        for attempt in tenacity.Retrying(
             reraise=True,
             stop=tenacity.stop_after_attempt(3),  # type: ignore[attr-defined]
             wait=tenacity.wait_fixed(3),  # type: ignore[attr-defined]
