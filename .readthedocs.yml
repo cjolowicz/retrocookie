@@ -6,6 +6,9 @@ python:
   version: 3.9
   install:
     - requirements: docs/requirements.txt
-    - path: .
+    - method: pip
+      path: .
+      extra_requirements:
+        - pr
 build:
   image: testing
