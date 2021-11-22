@@ -35,11 +35,15 @@ def git(
         )
     except subprocess.CalledProcessError as error:
         command = " ".join(["git", *args[:1]])
-        status = error.returncode
-        message = "\n".join([error.stderr, error.stdout]).lstrip("\n")
-        message = removeprefix(message, "error: ")
-        message = message.replace("\n", "\n\n", 1)
-        raise CommandError(f"{command} ({status}): {message}") from error
+        message = f"{command} exited with status {error.returncode}"
+
+        for stream in ["stderr", "stdout"]:
+            output = getattr(error, stream)
+            output = output.strip()
+            if output:
+                message = "\n\n".join([message, f"==> {stream} <==", output])
+
+        raise CommandError(message) from error
 
 
 VERSION_PATTERN = re.compile(
