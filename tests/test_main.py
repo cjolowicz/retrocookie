@@ -1,6 +1,8 @@
 """Test cases for the __main__ module."""
 from pathlib import Path
+from typing import Any
 from typing import List
+from typing import NoReturn
 
 import pytest
 from click.testing import CliRunner
@@ -88,3 +90,17 @@ def test_functional(
     with utils.chdir(cookiecutter.path):
         result = runner.invoke(__main__.main, ["--branch=topic", str(instance.path)])
         assert result.exit_code == 0
+
+
+def test_giterror(runner: CliRunner, monkeypatch: MonkeyPatch) -> None:
+    """It prints an error message."""
+    message = "boom\nThis is the command output\n"
+
+    def _(*args: Any, **kwargs: Any) -> NoReturn:
+        raise git.CommandError(message)
+
+    monkeypatch.setattr(__main__, "retrocookie", _)
+
+    result = runner.invoke(__main__.main, ["repository"])
+
+    assert f"error: {message}" == result.output

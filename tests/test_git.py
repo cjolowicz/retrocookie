@@ -1,5 +1,4 @@
 """Tests for git interface."""
-import subprocess  # noqa: S404
 from pathlib import Path
 from typing import Dict
 
@@ -142,7 +141,7 @@ def test_cherrypick_conflict(repository: git.Repository) -> None:
 
     write(repository, path, "b")
 
-    with pytest.raises(subprocess.CalledProcessError):
+    with pytest.raises(Exception, match="conflict"):
         repository.cherrypick("topic")
 
 

@@ -1,11 +1,13 @@
 """Command-line interface."""
 from pathlib import Path
+from typing import Any
 from typing import Container
 from typing import Iterable
 from typing import Optional
 
 import click
 
+from . import git
 from .core import retrocookie
 
 
@@ -114,16 +116,38 @@ def main(
         commits = ["HEAD"]
 
     path = Path(directory) if directory else None
-    retrocookie(
-        Path(repository),
-        commits,
-        branch=branch,
-        upstream=upstream,
-        create_branch=create_branch,
-        include_variables=include_variables,
-        exclude_variables=exclude_variables,
-        path=path,
-    )
+    try:
+        retrocookie(
+            Path(repository),
+            commits,
+            branch=branch,
+            upstream=upstream,
+            create_branch=create_branch,
+            include_variables=include_variables,
+            exclude_variables=exclude_variables,
+            path=path,
+        )
+    except git.CommandError as error:
+        printerror(error)
+        raise SystemExit(1) from None
+
+
+def printerror(error: git.CommandError) -> None:
+    """Produce a friendly error message when git failed."""
+    styles: dict[str, dict[str, Any]] = {
+        "==>": {"fg": "bright_black", "bold": True},
+        "error": {"fg": "red"},
+        "fatal": {"fg": "red"},
+        "hint": {"fg": "yellow"},
+    }
+
+    for line in f"error: {error}".splitlines():
+        for prefix, style in styles.items():
+            if line.startswith(prefix):
+                click.secho(line, **style)
+                break
+        else:
+            click.echo(line)
 
 
 if __name__ == "__main__":
