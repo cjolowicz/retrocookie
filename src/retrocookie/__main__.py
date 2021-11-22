@@ -1,5 +1,6 @@
 """Command-line interface."""
 from pathlib import Path
+from typing import Any
 from typing import Container
 from typing import Iterable
 from typing import Optional
@@ -127,7 +128,26 @@ def main(
             path=path,
         )
     except git.CommandError as error:
-        click.secho(f"error: {error}", fg="red")
+        printerror(error)
+        raise SystemExit(1) from None
+
+
+def printerror(error: git.CommandError) -> None:
+    """Produce a friendly error message when git failed."""
+    styles: dict[str, dict[str, Any]] = {
+        "==>": {"fg": "bright_black", "bold": True},
+        "error": {"fg": "red"},
+        "fatal": {"fg": "red"},
+        "hint": {"fg": "yellow"},
+    }
+
+    for line in f"error: {error}".splitlines():
+        for prefix, style in styles.items():
+            if line.startswith(prefix):
+                click.secho(line, **style)
+                break
+        else:
+            click.echo(line)
 
 
 if __name__ == "__main__":
