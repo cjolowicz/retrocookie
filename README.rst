@@ -18,7 +18,7 @@ Retrocookie
 .. |Tests| image:: https://github.com/cjolowicz/retrocookie/workflows/Tests/badge.svg
    :target: https://github.com/cjolowicz/retrocookie/actions?workflow=Tests
    :alt: Tests
-.. |Codecov| image:: https://codecov.io/gh/cjolowicz/retrocookie/branch/master/graph/badge.svg
+.. |Codecov| image:: https://codecov.io/gh/cjolowicz/retrocookie/branch/main/graph/badge.svg
    :target: https://codecov.io/gh/cjolowicz/retrocookie
    :alt: Codecov
 
