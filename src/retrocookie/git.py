@@ -21,13 +21,25 @@ from retrocookie.compat.contextlib import contextmanager
 from retrocookie.utils import removeprefix
 
 
+class CommandError(Exception):
+    """The command exited with a non-zero status."""
+
+
 def git(
     *args: str, check: bool = True, **kwargs: Any
 ) -> subprocess.CompletedProcess[str]:
     """Invoke git."""
-    return subprocess.run(  # noqa: S603,S607
-        ["git", *args], check=check, text=True, capture_output=True, **kwargs
-    )
+    try:
+        return subprocess.run(  # noqa: S603,S607
+            ["git", *args], check=check, text=True, capture_output=True, **kwargs
+        )
+    except subprocess.CalledProcessError as error:
+        command = " ".join(["git", *args[:1]])
+        status = error.returncode
+        message = "\n".join([error.stderr, error.stdout]).lstrip("\n")
+        message = removeprefix(message, "error: ")
+        message = message.replace("\n", "\n\n", 1)
+        raise CommandError(f"{command} ({status}): {message}") from error
 
 
 VERSION_PATTERN = re.compile(
