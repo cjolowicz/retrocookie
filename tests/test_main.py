@@ -94,12 +94,13 @@ def test_functional(
 
 def test_giterror(runner: CliRunner, monkeypatch: MonkeyPatch) -> None:
     """It prints an error message."""
+    message = "boom\nThis is the command output\n"
 
     def _(*args: Any, **kwargs: Any) -> NoReturn:
-        raise git.CommandError("boom")
+        raise git.CommandError(message)
 
     monkeypatch.setattr(__main__, "retrocookie", _)
 
     result = runner.invoke(__main__.main, ["repository"])
 
-    assert "error: boom\n" == result.output
+    assert f"error: {message}" == result.output
