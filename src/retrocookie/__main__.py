@@ -6,6 +6,7 @@ from typing import Optional
 
 import click
 
+from . import git
 from .core import retrocookie
 
 
@@ -114,16 +115,19 @@ def main(
         commits = ["HEAD"]
 
     path = Path(directory) if directory else None
-    retrocookie(
-        Path(repository),
-        commits,
-        branch=branch,
-        upstream=upstream,
-        create_branch=create_branch,
-        include_variables=include_variables,
-        exclude_variables=exclude_variables,
-        path=path,
-    )
+    try:
+        retrocookie(
+            Path(repository),
+            commits,
+            branch=branch,
+            upstream=upstream,
+            create_branch=create_branch,
+            include_variables=include_variables,
+            exclude_variables=exclude_variables,
+            path=path,
+        )
+    except git.CommandError as error:
+        click.secho(f"error: {error}", fg="red")
 
 
 if __name__ == "__main__":
