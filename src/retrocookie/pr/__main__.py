@@ -80,7 +80,7 @@ def register_pull_request_viewer(*, bus: Bus) -> None:
     def _(event: events.PullRequestCreated) -> None:
         webbrowser.open(event.template_pull.html_url)
 
-    @bus.contexts.subscribe  # type: ignore[no-redef]
+    @bus.contexts.subscribe
     @contextmanager
     def _(event: events.UpdatePullRequest) -> Iterator[None]:
         yield

@@ -76,21 +76,19 @@ def start(*, bus: Bus) -> None:
 
 
 def _subscribe(console: Console, bus: Bus) -> None:  # noqa: C901
-    _ = None  # Ignoring redefinitions of this name below.
-
-    @bus.events.subscribe  # type: ignore[no-redef]
+    @bus.events.subscribe
     def _(event: events.GitNotFound) -> None:
         console.failure("git not found")
         console.hint("Do you have git installed?")
         console.hint("Is git on your PATH?")
         console.hint("Can you run [command]git version[/]?")
 
-    @bus.events.subscribe  # type: ignore[no-redef]
+    @bus.events.subscribe
     def _(event: events.BadGitVersion) -> None:
         console.failure(f"This program requires git [version]{event.expected}[/].")
         console.hint(f"You have git [version]{event.version}[/], which is too old.")
 
-    @bus.events.subscribe  # type: ignore[no-redef]
+    @bus.events.subscribe
     def _(event: events.GitFailed) -> None:
         def _lines() -> Iterator[str]:
             yield (
@@ -121,7 +119,7 @@ def _subscribe(console: Console, bus: Bus) -> None:  # noqa: C901
                 "Try running [command]retrocookie[/] on a local clone instead."
             )
 
-    @bus.events.subscribe  # type: ignore[no-redef]
+    @bus.events.subscribe
     def _(event: events.GitHubError) -> None:
         def _lines() -> Iterator[str]:
             yield "The GitHub API returned an error response."
@@ -131,7 +129,7 @@ def _subscribe(console: Console, bus: Bus) -> None:  # noqa: C901
 
         console.failure("\n".join(_lines()))
 
-    @bus.events.subscribe  # type: ignore[no-redef]
+    @bus.events.subscribe
     def _(event: events.ConnectionError) -> None:
         def _lines() -> Iterator[str]:
             yield "Connection to GitHub API could not be established."
@@ -140,13 +138,13 @@ def _subscribe(console: Console, bus: Bus) -> None:  # noqa: C901
         console.failure("\n".join(_lines()))
         console.highlight(event.error)
 
-    @bus.events.subscribe  # type: ignore[no-redef]
+    @bus.events.subscribe
     def _(event: events.ProjectNotFound) -> None:
         console.failure("Project not found")
         console.hint("Does the current directory contain a repository?")
         console.hint("Is the repository on GitHub?")
 
-    @bus.events.subscribe  # type: ignore[no-redef]
+    @bus.events.subscribe
     def _(event: events.TemplateNotFound) -> None:
         console.failure(
             f"Project template for [repository]{event.project.full_name}[/] not found"
@@ -157,26 +155,26 @@ def _subscribe(console: Console, bus: Bus) -> None:  # noqa: C901
         )
         console.hint("Is the template repository on GitHub?")
 
-    @bus.contexts.subscribe  # type: ignore[no-redef]
+    @bus.contexts.subscribe
     def _(event: events.LoadProject) -> ContextManager[None]:
         return console.progress(f"Loading project [repository]{event.repository}[/]")
 
-    @bus.contexts.subscribe  # type: ignore[no-redef]
+    @bus.contexts.subscribe
     def _(event: events.LoadTemplate) -> ContextManager[None]:
         return console.progress(f"Loading template [repository]{event.repository}[/]")
 
-    @bus.events.subscribe  # type: ignore[no-redef]
+    @bus.events.subscribe
     def _(event: events.RepositoryNotFound) -> None:
         console.failure(f"Repository [repository]{event.repository}[/] not found")
 
-    @bus.events.subscribe  # type: ignore[no-redef]
+    @bus.events.subscribe
     def _(event: events.PullRequestNotFound) -> None:
         spec = event.pull_request
         if spec.isnumeric():
             spec = f"#{spec}"
         console.failure(f"Pull request [pull]{spec}[/] not found")
 
-    @bus.events.subscribe  # type: ignore[no-redef]
+    @bus.events.subscribe
     def _(event: events.PullRequestAlreadyExists) -> None:
         console.failure(
             "Already imported"
@@ -186,14 +184,14 @@ def _subscribe(console: Console, bus: Bus) -> None:  # noqa: C901
         console.hint(f"See [pull]#{event.template_pull.number}[/]")
         console.hint("Use --force to update an existing pull request.")
 
-    @bus.contexts.subscribe  # type: ignore[no-redef]
+    @bus.contexts.subscribe
     def _(event: events.CreatePullRequest) -> ContextManager[None]:
         return console.progress(
             f"[pull]#{event.project_pull.number}[/]"
             f" [title]{escape(event.project_pull.title)}[/]"
         )
 
-    @bus.contexts.subscribe  # type: ignore[no-redef]
+    @bus.contexts.subscribe
     @contextlib.contextmanager
     def _(event: events.UpdatePullRequest) -> Iterator[None]:
         with console.progress(
@@ -209,7 +207,7 @@ def _subscribe(console: Console, bus: Bus) -> None:  # noqa: C901
             f" [pull]#{event.template_pull.number}[/]"
         )
 
-    @bus.events.subscribe  # type: ignore[no-redef]
+    @bus.events.subscribe
     def _(event: events.PullRequestCreated) -> None:
         console.success(
             f"[pull]#{event.project_pull.number}[/]"
