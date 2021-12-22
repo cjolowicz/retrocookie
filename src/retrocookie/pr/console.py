@@ -155,11 +155,11 @@ def _subscribe(console: Console, bus: Bus) -> None:  # noqa: C901
         )
         console.hint("Is the template repository on GitHub?")
 
-    @bus.contexts.subscribe
+    @bus.contexts.subscribe  # type: ignore[arg-type]
     def _(event: events.LoadProject) -> ContextManager[None]:
         return console.progress(f"Loading project [repository]{event.repository}[/]")
 
-    @bus.contexts.subscribe
+    @bus.contexts.subscribe  # type: ignore[arg-type]
     def _(event: events.LoadTemplate) -> ContextManager[None]:
         return console.progress(f"Loading template [repository]{event.repository}[/]")
 
@@ -184,7 +184,7 @@ def _subscribe(console: Console, bus: Bus) -> None:  # noqa: C901
         console.hint(f"See [pull]#{event.template_pull.number}[/]")
         console.hint("Use --force to update an existing pull request.")
 
-    @bus.contexts.subscribe
+    @bus.contexts.subscribe  # type: ignore[arg-type]
     def _(event: events.CreatePullRequest) -> ContextManager[None]:
         return console.progress(
             f"[pull]#{event.project_pull.number}[/]"
