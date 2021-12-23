@@ -4,11 +4,11 @@ from typing import Any
 import github3.exceptions
 import pytest
 import requests.exceptions
-from tests.pr.unit.utils import raises
 
 from retrocookie.pr import events
 from retrocookie.pr.adapters import github
 from retrocookie.pr.base.bus import Bus
+from tests.pr.unit.utils import raises
 
 
 class FakeRequest:

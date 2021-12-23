@@ -6,9 +6,6 @@ from typing import Iterator
 
 import pytest
 from pytest import MonkeyPatch
-from tests.helpers import write
-from tests.pr.unit.fakes.retrocookie import retrocookie
-from tests.pr.unit.utils import raises
 
 from retrocookie import git
 from retrocookie.compat import contextlib
@@ -23,6 +20,9 @@ from retrocookie.pr.core import get_template_name
 from retrocookie.pr.core import import_pull_requests
 from retrocookie.pr.protocols import github
 from retrocookie.pr.repository import Repository
+from tests.helpers import write
+from tests.pr.unit.fakes.retrocookie import retrocookie
+from tests.pr.unit.utils import raises
 
 
 def test_import(bus: Bus, cache: Cache, api: github.API) -> None:

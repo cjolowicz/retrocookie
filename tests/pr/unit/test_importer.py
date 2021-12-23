@@ -2,8 +2,6 @@
 from typing import Callable
 
 import pytest
-from tests.pr.unit.fakes import github
-from tests.pr.unit.utils import raises
 
 from retrocookie.pr import appname
 from retrocookie.pr import events
@@ -12,6 +10,8 @@ from retrocookie.pr.cache import Cache
 from retrocookie.pr.importer import Importer
 from retrocookie.pr.protocols.retrocookie import Retrocookie
 from retrocookie.pr.repository import Repository
+from tests.pr.unit.fakes import github
+from tests.pr.unit.utils import raises
 
 
 @pytest.fixture

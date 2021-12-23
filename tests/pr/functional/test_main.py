@@ -5,12 +5,12 @@ from typing import List
 
 import pytest
 from github3.repos.repo import Repository
-from tests.pr.functional.conftest import CreatePullRequest
-from tests.pr.functional.conftest import FindPullRequest
-from tests.pr.functional.conftest import skip_without_token
 
 from retrocookie.pr import __main__
 from retrocookie.pr import appname
+from tests.pr.functional.conftest import CreatePullRequest
+from tests.pr.functional.conftest import FindPullRequest
+from tests.pr.functional.conftest import skip_without_token
 
 
 InvokeMain = Callable[[List[str]], None]

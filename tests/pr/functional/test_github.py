@@ -1,10 +1,9 @@
 """Functional tests for retrocookie.pr.adapters.github."""
 from pathlib import Path
 
+from retrocookie.pr.adapters import github
 from tests.pr.functional.conftest import CreatePullRequest
 from tests.pr.functional.conftest import skip_without_token
-
-from retrocookie.pr.adapters import github
 
 
 @skip_without_token

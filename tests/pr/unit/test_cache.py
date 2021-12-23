@@ -2,10 +2,10 @@
 from pathlib import Path
 
 import pytest
-from tests.helpers import commit
 
 from retrocookie import git
 from retrocookie.pr.cache import Cache
+from tests.helpers import commit
 
 
 @pytest.fixture

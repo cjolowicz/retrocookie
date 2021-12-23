@@ -4,11 +4,11 @@ from typing import Iterable
 from typing import List
 
 import pytest
-from tests.pr.unit.fakes import github
 
 from retrocookie.pr.base.bus import Bus
 from retrocookie.pr.list import list_pull_requests
 from retrocookie.pr.protocols.github import PullRequest as AbstractPullRequest
+from tests.pr.unit.fakes import github
 
 
 @pytest.fixture
