@@ -82,6 +82,7 @@ fail_under = 90
 profile = "black"
 force_single_line = true
 order_by_type = false
+lines_after_imports = 2
 
 [tool.mypy]
 strict = true
