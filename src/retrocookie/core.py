@@ -11,9 +11,10 @@ from typing import Iterator
 from typing import List
 from typing import Optional
 
+from retrocookie.compat import contextlib
+
 from . import git
 from .filter import RepositoryFilter
-from retrocookie.compat import contextlib
 
 
 @contextlib.contextmanager

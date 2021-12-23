@@ -8,11 +8,12 @@ import pytest
 from click.testing import CliRunner
 from pytest import MonkeyPatch
 
-from .helpers import append
-from .helpers import branch
 from retrocookie import __main__
 from retrocookie import git
 from retrocookie import utils
+
+from .helpers import append
+from .helpers import branch
 
 
 @pytest.fixture
