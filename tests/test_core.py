@@ -4,13 +4,14 @@ from pathlib import Path
 
 import pytest
 
+from retrocookie import core
+from retrocookie import git
+from retrocookie import retrocookie
+
 from .helpers import append
 from .helpers import branch
 from .helpers import touch
 from .helpers import write
-from retrocookie import core
-from retrocookie import git
-from retrocookie import retrocookie
 
 
 def in_template(path: Path) -> Path:

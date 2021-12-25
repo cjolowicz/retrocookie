@@ -5,10 +5,6 @@ from typing import List
 import pytest
 from click.testing import CliRunner
 from pytest import MonkeyPatch
-from tests.pr.unit.data import EXAMPLE_PROJECT_PULL
-from tests.pr.unit.data import EXAMPLE_TEMPLATE
-from tests.pr.unit.data import EXAMPLE_TEMPLATE_PULL
-from tests.pr.unit.utils import raises
 
 from retrocookie.pr import __main__
 from retrocookie.pr import events
@@ -16,6 +12,10 @@ from retrocookie.pr.base.bus import Bus
 from retrocookie.pr.base.bus import Error
 from retrocookie.pr.base.bus import Event
 from retrocookie.pr.cache import Cache
+from tests.pr.unit.data import EXAMPLE_PROJECT_PULL
+from tests.pr.unit.data import EXAMPLE_TEMPLATE
+from tests.pr.unit.data import EXAMPLE_TEMPLATE_PULL
+from tests.pr.unit.utils import raises
 
 
 def test_get_token_from_cache(cache: Cache) -> None:

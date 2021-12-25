@@ -1,6 +1,7 @@
 """Compatibility shims for shlex."""
 import sys
 
+
 if sys.version_info >= (3, 8):
     from shlex import join
 else:

@@ -5,12 +5,13 @@ from typing import Dict
 import pytest
 from pytest import MonkeyPatch
 
+from retrocookie import git
+from retrocookie.utils import chdir
+
 from .helpers import branch
 from .helpers import commit
 from .helpers import touch
 from .helpers import write
-from retrocookie import git
-from retrocookie.utils import chdir
 
 
 @pytest.fixture

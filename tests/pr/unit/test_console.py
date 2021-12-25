@@ -6,10 +6,6 @@ from typing import Iterator
 from typing import Tuple
 
 import pytest
-from tests.pr.unit.data import EXAMPLE_PROJECT
-from tests.pr.unit.data import EXAMPLE_PROJECT_PULL
-from tests.pr.unit.data import EXAMPLE_TEMPLATE
-from tests.pr.unit.data import EXAMPLE_TEMPLATE_PULL
 
 from retrocookie import git
 from retrocookie.compat.contextlib import contextmanager
@@ -18,6 +14,10 @@ from retrocookie.pr import events
 from retrocookie.pr.base.bus import Bus
 from retrocookie.pr.base.bus import Context
 from retrocookie.pr.base.bus import Event
+from tests.pr.unit.data import EXAMPLE_PROJECT
+from tests.pr.unit.data import EXAMPLE_PROJECT_PULL
+from tests.pr.unit.data import EXAMPLE_TEMPLATE
+from tests.pr.unit.data import EXAMPLE_TEMPLATE_PULL
 
 
 @pytest.fixture

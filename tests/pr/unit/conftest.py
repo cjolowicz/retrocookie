@@ -6,14 +6,14 @@ from typing import Iterator
 
 import pytest
 from pytest import MonkeyPatch
-from tests.pr.unit.fakes.github import API as FakeAPI  # noqa: N811
-from tests.pr.unit.fakes.retrocookie import retrocookie
 
 from retrocookie.pr.base.bus import Bus
 from retrocookie.pr.cache import Cache
 from retrocookie.pr.protocols import github
 from retrocookie.pr.protocols.retrocookie import Retrocookie
 from retrocookie.pr.repository import Repository
+from tests.pr.unit.fakes.github import API as FakeAPI  # noqa: N811
+from tests.pr.unit.fakes.retrocookie import retrocookie
 
 
 @pytest.fixture

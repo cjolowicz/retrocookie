@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING
 import pytest
 from cookiecutter.main import cookiecutter
 
+
 if TYPE_CHECKING:
     from retrocookie import git
 

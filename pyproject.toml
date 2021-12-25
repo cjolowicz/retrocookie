@@ -51,13 +51,13 @@ flake8-docstrings = ">=1.6.0"
 flake8-rst-docstrings = ">=0.2.3"
 pep8-naming = ">=0.11.1"
 darglint = ">=1.8.1"
-reorder-python-imports = ">=2.6.0"
 pre-commit-hooks = ">=4.0.1"
 sphinx-click = ">=3.0.2"
 Pygments = ">=2.10.0"
 furo = ">=2021.11.12"
 types-requests = ">=2.26.0"
 pyupgrade = ">=2.29.0"
+isort = "^5.10.1"
 
 [tool.poetry.extras]
 pr = ["appdirs", "github3.py", "rich", "tenacity", "typing-extensions"]
@@ -76,6 +76,12 @@ source = ["retrocookie"]
 [tool.coverage.report]
 show_missing = true
 fail_under = 90
+
+[tool.isort]
+profile = "black"
+force_single_line = true
+order_by_type = false
+lines_after_imports = 2
 
 [tool.mypy]
 strict = true
