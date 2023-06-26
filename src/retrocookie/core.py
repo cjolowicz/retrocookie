@@ -35,12 +35,17 @@ def find_template_directory(repository: git.Repository) -> Path:
 
 
 def load_context(repository: git.Repository, ref: str) -> Dict[str, Any]:
-    """Load the context from the .cookiecutter.json file."""
-    path = Path(".cookiecutter.json")
-    text = repository.read_text(path, ref=ref)
-    data = json.loads(text)
+    """Load the context from the .cookiecutter.json or .cruft.json file."""
+    try:
+        path = Path(".cookiecutter.json")
+        text = repository.read_text(path, ref=ref)
+        data = json.loads(text)
+    except KeyError:
+        path = Path(".cruft.json")
+        text = repository.read_text(path, ref=ref)
+        data = json.loads(text)["context"]["cookiecutter"]
     if not isinstance(data, dict) or not all(isinstance(key, str) for key in data):
-        raise TypeError(".cookiecutter.json does not contain an object")
+        raise TypeError(f"{path} does not contain an object")
     return cast(Dict[str, Any], data)
 
 
@@ -124,7 +129,7 @@ def retrocookie(
 
     Args:
         instance_path: The source repository, an instance of the Cookiecutter
-            template with a ``.cookiecutter.json`` file.
+            template with a ``.cookiecutter.json`` or ``.cruft.json`` context file.
 
         commits: The commits to be imported from the source repository.
 

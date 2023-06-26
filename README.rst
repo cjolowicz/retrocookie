@@ -61,9 +61,9 @@ when you're only importing a handful of commits at a time.
 
 **Important:**
 
-Retrocookie relies on a ``.cookiecutter.json`` file in the generated project
-to work out how to rewrite commits.
-This file is similar to the ``cookiecutter.json`` file in the template,
+Retrocookie relies on a ``.cookiecutter.json`` or ``.cruft.json`` context file in
+the generated project to work out how to rewrite commits.
+The ``.cookiecutter.json`` file is similar to ``cookiecutter.json`` in the template,
 but contains the specific values chosen during project generation.
 You can generate this file by putting it into the template directory in the Cookiecutter,
 with the following contents:
@@ -71,6 +71,9 @@ with the following contents:
 .. code:: jinja
 
    {{ cookiecutter | jsonify }}
+
+The ``.cruft.json`` file is generated automatically by cruft_ when using it instead of
+Cookiecutter.
 
 
 Requirements
@@ -315,6 +318,7 @@ This project was generated from `@cjolowicz`_'s `Hypermodern Python Cookiecutter
 
 .. _@cjolowicz: https://github.com/cjolowicz
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
+.. _cruft: https://github.com/cruft/cruft
 .. _Dependabot: https://dependabot.com/
 .. _GitHub: https://github.com/
 .. _Hypermodern Python Cookiecutter: https://github.com/cjolowicz/cookiecutter-hypermodern-python
