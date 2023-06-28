@@ -149,9 +149,11 @@ def _subscribe(console: Console, bus: Bus) -> None:  # noqa: C901
         console.failure(
             f"Project template for [repository]{event.project.full_name}[/] not found"
         )
-        console.hint("Does the project contain a .cookiecutter.json file?")
         console.hint(
-            'Does the .cookiecutter.json contain the repository URL under "_template"?'
+            "Does the project contain a .cookiecutter.json or .cruft.json context file?"
+        )
+        console.hint(
+            'Does the context file contain the repository URL under "_template"?'
         )
         console.hint("Is the template repository on GitHub?")
 

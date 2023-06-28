@@ -5,6 +5,7 @@ import json
 import textwrap
 from pathlib import Path
 from typing import Dict
+from typing import Optional
 from typing import TYPE_CHECKING
 
 import pytest
@@ -21,10 +22,25 @@ def context() -> Dict[str, str]:
     return {"project_slug": "example"}
 
 
+@pytest.fixture(params=["vanilla", "cruft"])
+def flavor(request: pytest.FixtureRequest) -> str:
+    """Test flavor, either vanilla cookiecutter or cruft."""
+    out: str = request.param  # type: ignore[attr-defined]
+    return out
+
+
 @pytest.fixture
-def cookiecutter_path(tmp_path: Path) -> Path:
+def flavor_path(tmp_path: Path, flavor: str) -> Path:
+    """Temporary path to given flavor of test."""
+    path = tmp_path / flavor
+    path.mkdir()
+    return path
+
+
+@pytest.fixture
+def cookiecutter_path(flavor_path: Path) -> Path:
     """Cookiecutter path."""
-    path = tmp_path / "cookiecutter"
+    path = flavor_path / "cookiecutter"
     path.mkdir()
     return path
 
@@ -60,14 +76,18 @@ def cookiecutter_readme(cookiecutter_subdirectory: Path) -> Path:
 
 
 @pytest.fixture
-def dot_cookiecutter_json(cookiecutter_subdirectory: Path) -> Path:
+def dot_cookiecutter_json(
+    cookiecutter_subdirectory: Path, flavor: str
+) -> Optional[Path]:
     """The .cookiecutter.json file in the cookiecutter."""
-    path = cookiecutter_subdirectory / ".cookiecutter.json"
-    text = """\
-    {{cookiecutter | jsonify}}
-    """
-    path.write_text(textwrap.dedent(text))
-    return path
+    if flavor == "vanilla":
+        path = cookiecutter_subdirectory / ".cookiecutter.json"
+        text = """\
+        {{cookiecutter | jsonify}}
+        """
+        path.write_text(textwrap.dedent(text))
+        return path
+    return None
 
 
 @pytest.fixture
@@ -101,12 +121,22 @@ def cookiecutter_repository(cookiecutter_project: Path) -> git.Repository:
 def cookiecutter_instance(
     cookiecutter_repository: git.Repository,
     context: Dict[str, str],
-    tmp_path: Path,
+    flavor_path: Path,
+    flavor: str,
 ) -> Path:
     """The cookiecutter instance."""
     template = str(cookiecutter_repository.path)
-    cookiecutter(template, no_input=True, output_dir=str(tmp_path))
-    return tmp_path / context["project_slug"]
+    if flavor == "vanilla":
+        cookiecutter(template, no_input=True, output_dir=str(flavor_path))
+        return flavor_path / context["project_slug"]
+    elif flavor == "cruft":
+        import cruft  # type: ignore[import]
+
+        path: Path = cruft.create(
+            template_git_url=template, no_input=True, output_dir=flavor_path
+        )
+        return path
+    raise ValueError
 
 
 @pytest.fixture

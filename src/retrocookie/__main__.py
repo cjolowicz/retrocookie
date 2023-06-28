@@ -72,7 +72,7 @@ def main(
 
     The path to the source repository is passed as a positional argument.
     This should be an instance of the Cookiecutter template with a
-    .cookiecutter.json file.
+    .cookiecutter.json or .cruft.json context file.
 
     Additional positional arguments are the commits to be imported.
     See gitrevisions(7) for a list of ways to spell commits and commit
@@ -95,11 +95,11 @@ def main(
     \b
       - Files are moved to the template directory
       - Tokens with special meaning in Jinja are escaped
-      - Values from .cookiecutter.json are replaced by templating tags
+      - Values from the context file are replaced by templating tags
         with the corresponding variable name
 
     Use the --include-variable and --exclude-variable options to include or
-    exclude specific variables from .cookiecutter.json.
+    exclude specific variables from the context file.
     """
     if create:
         if create_branch:

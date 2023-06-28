@@ -131,7 +131,7 @@ def mypy(session: Session) -> None:
 def tests(session: Session) -> None:
     """Run the test suite."""
     session.install(".[pr]")
-    session.install("cookiecutter", "coverage[toml]", "pygments", "pytest")
+    session.install("cookiecutter", "cruft", "coverage[toml]", "pygments", "pytest")
     try:
         session.run("coverage", "run", "--parallel", "-m", "pytest", *session.posargs)
     finally:
@@ -156,7 +156,7 @@ def coverage(session: Session) -> None:
 def typeguard(session: Session) -> None:
     """Runtime type checking using Typeguard."""
     session.install(".[pr]")
-    session.install("cookiecutter", "pytest", "typeguard", "pygments")
+    session.install("cookiecutter", "cruft", "pytest", "typeguard", "pygments")
     session.run("pytest", f"--typeguard-packages={package}", *session.posargs)
 
 
