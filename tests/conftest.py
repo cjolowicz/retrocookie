@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Dict
 from typing import TYPE_CHECKING
 
+import cruft  # type: ignore[import]
 import pytest
 from cookiecutter.main import cookiecutter
 
@@ -81,6 +82,17 @@ def cookiecutter_project(
     return cookiecutter_path
 
 
+@pytest.fixture
+def cruft_project(
+    cookiecutter_path: Path,
+    cookiecutter_json: Path,
+    cookiecutter_readme: Path,
+) -> Path:
+    """The cookiecutter using cruft."""
+    # This still has `.cookiecutter.json` for some reason
+    return cookiecutter_path
+
+
 def make_repository(path: Path) -> git.Repository:
     """Turn a directory into a git repository."""
     from retrocookie import git
@@ -98,6 +110,12 @@ def cookiecutter_repository(cookiecutter_project: Path) -> git.Repository:
 
 
 @pytest.fixture
+def cruft_repository(cruft_project: Path) -> git.Repository:
+    """The cookiecutter repository using cruft."""
+    return make_repository(cruft_project)
+
+
+@pytest.fixture
 def cookiecutter_instance(
     cookiecutter_repository: git.Repository,
     context: Dict[str, str],
@@ -110,6 +128,33 @@ def cookiecutter_instance(
 
 
 @pytest.fixture
-def cookiecutter_instance_repository(cookiecutter_instance: Path) -> git.Repository:
-    """The cookiecutter instance repository."""
+def cruft_instance(
+    cruft_repository: git.Repository,
+    tmp_path: Path,
+) -> Path:
+    """The cookiecutter instance using cruft."""
+    template = str(cruft_repository.path)
+    path: Path = cruft.create(
+        template_git_url=template, no_input=True, output_dir=tmp_path
+    )
+    return path
+
+
+@pytest.fixture
+def vanilla_instance_repository(cookiecutter_instance: Path) -> git.Repository:
+    """The vanilla cookiecutter instance repository."""
     return make_repository(cookiecutter_instance)
+
+
+@pytest.fixture
+def cruft_instance_repository(cruft_instance: Path) -> git.Repository:
+    """The cookiecutter instance repository using cruft."""
+    return make_repository(cruft_instance)
+
+
+@pytest.fixture(params=["cruft_instance_repository"])
+def cookiecutter_instance_repository(request: pytest.FixtureRequest) -> git.Repository:
+    """The cookiecutter instance repository."""
+    param = request.param  # type: ignore[attr-defined]
+    repo: git.Repository = request.getfixturevalue(param)
+    return repo
