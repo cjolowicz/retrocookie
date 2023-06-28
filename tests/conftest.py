@@ -141,5 +141,5 @@ def cookiecutter_instance(
 
 @pytest.fixture
 def cookiecutter_instance_repository(cookiecutter_instance: Path) -> git.Repository:
-    """The vanilla cookiecutter instance repository."""
+    """The cookiecutter instance repository."""
     return make_repository(cookiecutter_instance)
