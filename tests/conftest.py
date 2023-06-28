@@ -152,7 +152,7 @@ def cruft_instance_repository(cruft_instance: Path) -> git.Repository:
     return make_repository(cruft_instance)
 
 
-@pytest.fixture(params=["cruft_instance_repository"])
+@pytest.fixture(params=["vanilla_instance_repository", "cruft_instance_repository"])
 def cookiecutter_instance_repository(request: pytest.FixtureRequest) -> git.Repository:
     """The cookiecutter instance repository."""
     param = request.param  # type: ignore[attr-defined]
