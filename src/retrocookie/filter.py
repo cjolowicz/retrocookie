@@ -119,18 +119,31 @@ class RepositoryFilter:
         self.replacements = get_replacements(
             context, include_variables, exclude_variables
         )
+        self._replacement_map = dict(self.replacements)
+        ordered_replacees = sorted(
+            self._replacement_map, key=len, reverse=True
+        )
+        self._replacement_regex = re.compile(b"|".join(
+            re.escape(s) for s in ordered_replacees
+        ))
+
+    def _single_substitution_replacer(self, match: re.Match) -> bytes:
+        return self._replacement_map[match.group(0)]
+
+    def _replacer(self, content: bytes) -> bytes:
+        return self._replacement_regex.sub(
+            self._single_substitution_replacer, content
+        )
 
     def filename_callback(self, filename: bytes) -> bytes:
         """Rewrite filenames."""
-        for old, new in self.replacements:
-            filename = filename.replace(old, new)
+        filename = self._replacer(filename)
         return b"/".join((self.template_directory, filename))
 
     def blob_callback(self, blob: Blob, metadata: Dict[str, Any]) -> None:
         """Rewrite blobs."""
         blob.data = escape_jinja(blob.data)
-        for old, new in self.replacements:
-            blob.data = blob.data.replace(old, new)
+        blob.data = self._replacer(blob.data)
 
     def _create_filter(self) -> RepoFilter:
         """Create the filter."""
